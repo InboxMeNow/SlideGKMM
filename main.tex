@@ -1,0 +1,332 @@
+\documentclass[aspectratio=169, 10pt]{beamer}
+
+% -----------------------------------------------------------------------------
+% Language & Modern Typography
+% -----------------------------------------------------------------------------
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1,T5]{fontenc}
+\usepackage[scaled=0.94]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+% -----------------------------------------------------------------------------
+% UET - VNU Beamer Theme (White Background + Blue & Green Theme)
+% -----------------------------------------------------------------------------
+\usepackage{beamerthemeUET}
+
+% -----------------------------------------------------------------------------
+% Additional Packages (Math, Tables, Code, Graphics, Icons)
+% -----------------------------------------------------------------------------
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{colortbl}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc}
+
+% -----------------------------------------------------------------------------
+% Code Listing Configuration
+% -----------------------------------------------------------------------------
+\lstset{
+  backgroundcolor=\color{uetlightgray},
+  basicstyle=\fontsize{6.8pt}{8.2pt}\ttfamily\color{uetdark},
+  keywordstyle=\bfseries\color{uetblue},
+  commentstyle=\itshape\color{uetgray},
+  stringstyle=\color{uetgreen},
+  numberstyle=\tiny\color{uetgray},
+  numbers=left,
+  numbersep=5pt,
+  frame=single,
+  frameround=tttt,
+  rulecolor=\color{uetborder},
+  breaklines=true,
+  showstringspaces=false,
+  tabsize=2,
+  captionpos=b
+}
+
+% -----------------------------------------------------------------------------
+% Presentation Metadata
+% -----------------------------------------------------------------------------
+\title[Sort topic]{Topic}
+
+\author[Le Van A]{Le Van A}
+\supervisor{Dr. Supervisor Name}
+\date{\today}
+
+% Footer University Name Customization:
+\setunivname{VNU University of Engineering and Technology}
+
+% Automatically enable elegant Section Transition Slides:
+\enableSectionSlides
+
+% -----------------------------------------------------------------------------
+% DOCUMENT CONTENT
+% -----------------------------------------------------------------------------
+\begin{document}
+
+% =============================================================================
+% SLIDE 1: TITLE PAGE (Cover Slide)
+% =============================================================================
+\begin{frame}[plain]
+	\titlepage
+\end{frame}
+
+% =============================================================================
+% SLIDE 2: TABLE OF CONTENTS
+% =============================================================================
+\begin{frame}{Table of Contents}{Presentation outline}
+	\tableofcontents
+\end{frame}
+
+% =============================================================================
+% SECTION 1: FIRST SECTION
+% =============================================================================
+\section{First Section}
+
+% -----------------------------------------------------------------------------
+% SLIDE 3: STANDARD BULLET POINTS TEMPLATE
+% -----------------------------------------------------------------------------
+\begin{frame}{Standard Slide Title}{Optional subtitle or topic description}
+	\begin{itemize}
+		\item First main point or observation
+		      \begin{itemize}
+			      \item Sub-point or supporting detail
+			      \item Additional explanation or note
+		      \end{itemize}
+		      \vspace{0.2cm}
+		\item Second main point or observation
+		      \begin{itemize}
+			      \item Sub-point or supporting detail
+			      \item Additional explanation or note
+		      \end{itemize}
+		      \vspace{0.2cm}
+		\item Third main point or observation
+		      \begin{itemize}
+			      \item Sub-point or supporting detail
+		      \end{itemize}
+	\end{itemize}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+% SLIDE 4: TWO-COLUMN COMPARISON WITH BADGES
+% -----------------------------------------------------------------------------
+\begin{frame}{Two-Column Slide Title}{Optional subtitle}
+	\begin{columns}[T]
+		\begin{column}{0.48\textwidth}
+			\begin{accentcard}[uetblue]{Left Column Title}
+				\begin{itemize}
+					\item \xmark\ Limitation or classical item 1
+					\item \xmark\ Limitation or classical item 2
+					\item \cmark\ Positive aspect or item 3
+				\end{itemize}
+			\end{accentcard}
+		\end{column}
+
+		\begin{column}{0.48\textwidth}
+			\begin{accentcard}[uetgreen]{Right Column Title}
+				\begin{itemize}
+					\item \cmark\ Proposed advantage or item 1
+					\item \cmark\ Proposed advantage or item 2
+					\item \cmark\ Proposed advantage or item 3
+				\end{itemize}
+			\end{accentcard}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+% =============================================================================
+% SECTION 2: SECOND SECTION
+% =============================================================================
+\section{Second Section}
+
+% -----------------------------------------------------------------------------
+% SLIDE 5: DIAGRAM / GRAPHICS & FORMULA TEMPLATE
+% -----------------------------------------------------------------------------
+\begin{frame}{Diagram \& Formulation Title}{Optional subtitle}
+	\centering
+	\begin{tikzpicture}[
+		node distance=1.6cm,
+		tnode/.style={circle, draw=uetblue, fill=uetaccentbg, line width=1.1pt, minimum size=0.95cm, font=\small\bfseries\color{uetblue}},
+		cnode/.style={circle, draw=uetgreen, fill=uetgreenbg, line width=1.1pt, minimum size=0.95cm, font=\small\bfseries\color{uetdarkgreen}},
+		edge/.style={line width=1pt, color=uetdark!80},
+		leg/.style={line width=1.2pt, color=uetgreen, -{Stealth[length=2mm]}}
+		]
+		% 4-factor Network Graph Template
+		\node[tnode] (G1) at (0, 1.4) {$G_1$};
+		\node[tnode] (G2) at (2.4, 1.4) {$G_2$};
+		\node[cnode] (G3) at (2.4, -0.6) {$G_3$};
+		\node[cnode] (G4) at (0, -0.6) {$G_4$};
+
+		% Fully Connected contraction lines
+		\draw[edge] (G1) -- (G2);
+		\draw[edge] (G2) -- (G3);
+		\draw[edge] (G3) -- (G4);
+		\draw[edge] (G4) -- (G1);
+		\draw[edge] (G1) -- (G3);
+		\draw[edge] (G2) -- (G4);
+
+		% Physical index legs
+		\draw[leg] (G1) -- ++(-0.9, 0.5) node[left, font=\scriptsize] {$i_1$};
+		\draw[leg] (G2) -- ++(0.9, 0.5) node[right, font=\scriptsize] {$i_2$};
+		\draw[leg] (G3) -- ++(0.9, -0.5) node[right, font=\scriptsize] {$i_3$};
+		\draw[leg] (G4) -- ++(-0.9, -0.5) node[left, font=\scriptsize] {$i_4$};
+	\end{tikzpicture}
+
+	\vspace{0.2cm}
+	\begin{block}{Theoretical Formulation / Equation}
+		$$\mathcal{X}(i_1, i_2, \dots, i_N) = \sum_{r_{1,2}, \dots, r_{N-1,N}} \prod_{k=1}^N G_k(i_k, r_{1,k}, \dots, r_{k,N})$$
+	\end{block}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+% SLIDE 6: BLOCKS & CARDS TEMPLATE
+% -----------------------------------------------------------------------------
+\begin{frame}{Blocks \& Cards Title}{Optional subtitle}
+	\begin{block}{Standard Block Title}
+		Your main content, definition, or mathematical formula here.
+	\end{block}
+
+	\begin{columns}[T]
+		\begin{column}{0.48\textwidth}
+			\begin{alertblock}{Alert Block Title}
+				Important note, warning, or limitation here.
+			\end{alertblock}
+		\end{column}
+
+		\begin{column}{0.48\textwidth}
+			\begin{exampleblock}{Example Block Title}
+				Example, case study, or positive result here.
+			\end{exampleblock}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+% =============================================================================
+% SECTION 3: THIRD SECTION
+% =============================================================================
+\section{Third Section}
+
+% -----------------------------------------------------------------------------
+% SLIDE 7: BIG STAT / METRIC CARDS TEMPLATE
+% -----------------------------------------------------------------------------
+\begin{frame}{Key Results at a Glance}{Optional subtitle}
+	\begin{columns}[T]
+		\begin{column}{0.31\textwidth}
+			\statcard[uetgreen]{+95.8\%}{Metric Label 1}
+		\end{column}
+		\begin{column}{0.31\textwidth}
+			\statcard[uetblue]{8.5$\times$}{Metric Label 2}
+		\end{column}
+		\begin{column}{0.31\textwidth}
+			\statcard[uetcyan]{-42\%}{Metric Label 3}
+		\end{column}
+	\end{columns}
+
+	\vspace{0.3cm}
+	\begin{uetcard}
+		\textbf{\color{uetblue}Summary Note:} Add any concluding observation or key takeaway about the metrics above.
+	\end{uetcard}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+% SLIDE 8: FORMATTED DATA TABLE TEMPLATE
+% -----------------------------------------------------------------------------
+\begin{frame}{Table Slide Title}{Optional subtitle}
+	\centering
+	\small
+	\begin{tabular}{l c c c c}
+		\toprule
+		\rowcolor{uetaccentbg}
+		\textbf{\color{uetblue}Method / Model}       & \textbf{\color{uetblue}Metric 1} & \textbf{\color{uetblue}Metric 2} & \textbf{\color{uetblue}Metric 3} & \textbf{\color{uetblue}Status} \\
+		\midrule
+		Baseline Method                              & 91.2                             & 10.5                             & $1.0\times$                      & Baseline                       \\
+		Alternative Method A                         & 93.4                             & 4.2                              & $2.5\times$                      & \cmark\ Pass                   \\
+		Alternative Method B                         & 94.8                             & 3.1                              & $3.4\times$                      & \cmark\ Pass                   \\
+		\rowcolor{uetgreenbg}
+		\textbf{\color{uetdarkgreen}Proposed Method} & \textbf{97.5}                    & \textbf{1.8}                     & $\mathbf{5.8\times}$             & \cmark\ \textbf{Best}          \\
+		\bottomrule
+	\end{tabular}
+
+	\vspace{0.35cm}
+	\begin{uetcard}
+		\textbf{\color{uetblue}Observation:} Highlight the primary findings or quantitative comparisons from the table.
+	\end{uetcard}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+% SLIDE 9: CODE SNIPPET TEMPLATE
+% -----------------------------------------------------------------------------
+\begin{frame}[fragile]{Code Snippet Title}{Optional subtitle}
+	\begin{lstlisting}[language=Python]
+# Write your code snippet here
+def sample_function(input_data):
+    """Docstring explanation."""
+    processed_result = input_data * 2
+    return processed_result
+
+# Example execution
+output = sample_function(10)
+print(f"Output: {output}")
+  \end{lstlisting}
+\end{frame}
+
+% =============================================================================
+% SECTION 4: CONCLUSION
+% =============================================================================
+\section{Conclusion}
+
+% -----------------------------------------------------------------------------
+% SLIDE 10: CONCLUSION / SUMMARY TEMPLATE
+% -----------------------------------------------------------------------------
+\begin{frame}{Conclusion \& Future Work}{Summary of key takeaways}
+	\begin{columns}[T]
+		\begin{column}{0.48\textwidth}
+			\begin{accentcard}[uetblue]{Key Takeaways}
+				\begin{enumerate}
+					\item Summary point 1
+					\item Summary point 2
+					\item Summary point 3
+				\end{enumerate}
+			\end{accentcard}
+		\end{column}
+
+		\begin{column}{0.48\textwidth}
+			\begin{accentcard}[uetgreen]{Future Work}
+				\begin{enumerate}
+					\item Future direction 1
+					\item Future direction 2
+					\item Future direction 3
+				\end{enumerate}
+			\end{accentcard}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+% SLIDE 11: CLOSING / Q&A TEMPLATE
+% -----------------------------------------------------------------------------
+\begin{frame}{Questions \& Answers}{Session for feedback and discussion}
+	\vspace{0.3cm}
+	\centering
+	{\Large\bfseries\color{uetblue} THANK YOU FOR YOUR ATTENTION!}\\[0.1cm]
+	{\normalsize\color{uetgreen}\textbf{QUESTIONS \& DISCUSSION}}\\[0.5cm]
+
+	\begin{tcolorbox}[
+			colback=uetlightgray,
+			colframe=uetblue,
+			width=0.75\textwidth,
+			arc=4pt,
+			boxrule=0.8pt,
+			halign=center
+		]
+		{\small
+			\textbf{\color{uetblue}Contact \& Inquiries}\\[3pt]
+			\color{uetdark}Email: \texttt{\color{uetblue}your.email@vnu.edu.vn}\\[1pt]
+			Website: \texttt{\color{uetblue}uet.vnu.edu.vn}
+		}
+	\end{tcolorbox}
+\end{frame}
+
+\end{document}

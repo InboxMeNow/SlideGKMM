@@ -1,0 +1,26 @@
+# LaTeX Auxiliary Files
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.nav
+*.out
+*.snm
+*.synctex.gz
+*.toc
+*.vrb
+*.bbl
+*.blg
+*.dvi
+*.bcf
+*.run.xml
+
+# Temporary Preview Files
+preview_*.png
+preview_*.jpg
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+*.bak
+*~

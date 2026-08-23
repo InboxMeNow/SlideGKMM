@@ -1,0 +1,432 @@
+\ProvidesPackage{beamerthemeUET}[2026/08/23 Beamer Theme for VNU University of Engineering and Technology]
+
+% -----------------------------------------------------------------------------
+% Required Packages
+% -----------------------------------------------------------------------------
+\RequirePackage{tikz}
+\RequirePackage{xcolor}
+\RequirePackage{graphicx}
+\RequirePackage{etoolbox}
+\RequirePackage{calc}
+\RequirePackage{tcolorbox}
+\RequirePackage{pifont}
+\RequirePackage{amssymb}
+\tcbuselibrary{skins,fitting}
+
+% -----------------------------------------------------------------------------
+% Color Palette Definition: Primary Blue & Green Scheme
+% -----------------------------------------------------------------------------
+\definecolor{uetblue}{RGB}{0, 58, 105}        % #003A69 (UET Primary Navy Blue)
+\definecolor{uetdarkblue}{RGB}{0, 34, 68}     % #002244 (Deep Midnight Blue)
+\definecolor{uetcyan}{RGB}{14, 165, 233}      % #0EA5E9 (Accent Cyan / Light Blue)
+
+% Green Colors (Primary Accent)
+\definecolor{uetgreen}{RGB}{16, 149, 74}      % #10954A (Vibrant Academic Emerald Green)
+\definecolor{uetdarkgreen}{RGB}{21, 128, 61}  % #15803D (Forest Green)
+\definecolor{uetlightgreen}{RGB}{34, 197, 94} % #22C55E (Bright Green)
+\definecolor{uetgreenbg}{RGB}{240, 253, 244}  % #F0FDF4 (Soft Green Card Background)
+
+% Neutral & Background Colors (Clean White Theme)
+\definecolor{uetdark}{RGB}{30, 41, 59}        % #1E293B (Slate Dark Text)
+\definecolor{uetgray}{RGB}{100, 116, 139}     % #64748B (Muted Slate Gray)
+\definecolor{uetlightgray}{RGB}{246, 248, 251}% #F6F8FB (Soft Card Background)
+\definecolor{uetborder}{RGB}{226, 232, 240}   % #E2E8F0 (Subtle Border Gray)
+\definecolor{uetaccentbg}{RGB}{239, 246, 255} % #EFF6FF (Light Blue Card Background)
+
+% Functional Colors
+\definecolor{uetred}{RGB}{225, 29, 72}        % #E11D48 (Alert/Warning)
+
+% -----------------------------------------------------------------------------
+% Beamer Color Mappings
+% -----------------------------------------------------------------------------
+\setbeamercolor{background canvas}{bg=white}
+\setbeamercolor{normal text}{fg=uetdark, bg=white}
+\setbeamercolor{structure}{fg=uetblue}
+
+\setbeamercolor{title}{fg=uetblue, bg=white}
+\setbeamercolor{subtitle}{fg=uetgreen, bg=white}
+\setbeamercolor{author}{fg=uetdark, bg=white}
+\setbeamercolor{institute}{fg=uetgray, bg=white}
+\setbeamercolor{date}{fg=uetgray, bg=white}
+
+\setbeamercolor{frametitle}{fg=uetblue, bg=white}
+\setbeamercolor{framesubtitle}{fg=uetgray, bg=white}
+
+\setbeamercolor{footline}{fg=uetgray, bg=white}
+\setbeamercolor{item}{fg=uetgreen}
+\setbeamercolor{subitem}{fg=uetblue}
+\setbeamercolor{subsubitem}{fg=uetdarkgreen}
+
+\setbeamercolor{section in toc}{fg=uetblue}
+\setbeamercolor{subsection in toc}{fg=uetdark}
+
+% -----------------------------------------------------------------------------
+% Font Settings
+% -----------------------------------------------------------------------------
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{subtitle}{size=\small, series=\normalfont}
+\setbeamerfont{author}{size=\normalsize, series=\bfseries}
+\setbeamerfont{institute}{size=\footnotesize, series=\normalfont}
+\setbeamerfont{date}{size=\footnotesize, series=\normalfont}
+
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{framesubtitle}{size=\footnotesize, series=\normalfont}
+\setbeamerfont{footline}{size=\tiny}
+\setbeamerfont{block title}{size=\small, series=\bfseries}
+\setbeamerfont{block body}{size=\small}
+
+% -----------------------------------------------------------------------------
+% Turn off standard navigation symbols
+% -----------------------------------------------------------------------------
+\setbeamertemplate{navigation symbols}{}
+
+% -----------------------------------------------------------------------------
+% Configurable University & Logo Strings
+% -----------------------------------------------------------------------------
+\newcommand{\univlogo}{assets/uet_logo.png}
+\newcommand{\setunivlogo}[1]{\renewcommand{\univlogo}{#1}}
+
+\newcommand{\univname}{VNU University of Engineering and Technology}
+\newcommand{\setunivname}[1]{\renewcommand{\univname}{#1}}
+
+\newcommand{\univsubname}{Vietnam National University, Hanoi}
+\newcommand{\setunivsubname}[1]{\renewcommand{\univsubname}{#1}}
+
+% -----------------------------------------------------------------------------
+% Custom Frametitle Template (With Section Breadcrumb & Accent Bar)
+% -----------------------------------------------------------------------------
+\setbeamertemplate{frametitle}{%
+  \vspace{0.32cm}%
+  \begin{beamercolorbox}[wd=\paperwidth, leftskip=0.8cm, rightskip=0.8cm]{frametitle}
+    \begin{minipage}[t]{0.70\textwidth}
+      \usebeamerfont{frametitle}\insertframetitle\par
+      \ifx\insertframesubtitle\@empty\else%
+        \vspace{0.04cm}%
+        {\usebeamerfont{framesubtitle}\usebeamercolor[fg]{framesubtitle}\insertframesubtitle}%
+      \fi
+    \end{minipage}%
+    \hfill%
+    \begin{minipage}[t]{0.28\textwidth}
+      \raggedleft
+      \ifx\insertsectionhead\@empty\else%
+        {\fontsize{5.5pt}{6.5pt}\selectfont\color{uetgray}\textbf{\uppercase\expandafter{\insertsectionhead}}}%
+      \fi
+    \end{minipage}
+  \end{beamercolorbox}%
+  \vspace{0.10cm}%
+  % Accent bar: Green + Blue
+  \begin{tikzpicture}[remember picture, overlay]
+    \node[anchor=north west, inner sep=0pt, xshift=0.8cm] at (0,0) {
+      \begin{tikzpicture}
+        \draw[uetborder, line width=0.8pt] (0,0) -- (\paperwidth-1.6cm, 0);
+        \draw[uetgreen, line width=1.8pt] (0,0) -- (1.5cm, 0);
+        \draw[uetblue, line width=1.8pt] (1.5cm,0) -- (3.2cm, 0);
+      \end{tikzpicture}
+    };
+  \end{tikzpicture}%
+  \vspace{0.15cm}%
+}
+
+% -----------------------------------------------------------------------------
+% Custom Footline Template (Bottom Footer: Logo + University Name)
+% -----------------------------------------------------------------------------
+\setbeamertemplate{footline}{%
+  \begin{beamercolorbox}[wd=\paperwidth, ht=0.46cm, dp=0.18cm]{footline}
+    % Subtle separator line closer to text and logo
+    \begin{tikzpicture}[remember picture, overlay]
+      \draw[uetborder, line width=0.6pt] (0, 0.46cm) -- (\paperwidth, 0.46cm);
+    \end{tikzpicture}%
+    \hspace{0.8cm}%
+    % Left: University Logo + University Name (Single clean line)
+    \begin{minipage}[c]{0.60\paperwidth}
+      \raggedright
+      \IfFileExists{\univlogo}{%
+        \parbox[c]{0.40cm}{\includegraphics[height=0.38cm, keepaspectratio]{\univlogo}}%
+        \hspace{0.15cm}%
+      }{}%
+      \parbox[c]{0.52\paperwidth}{%
+        {\fontsize{7.2pt}{8.5pt}\selectfont\textbf{\color{uetblue}\univname}}%
+      }%
+    \end{minipage}%
+    \hfill%
+    % Right: Short Title & Slide Number Badge
+    \begin{minipage}[c]{0.30\paperwidth}
+      \raggedleft
+      \ifx\insertshorttitle\@empty\else
+        {\fontsize{6pt}{7pt}\selectfont\color{uetgray}\insertshorttitle}\hspace{0.25cm}%
+      \fi
+      \tikz[baseline=-0.6ex]{
+        \node[fill=uetlightgray, draw=uetborder, rounded corners=2.5pt, inner sep=2pt, text=uetblue, font=\fontsize{5.8pt}{6.8pt}\selectfont\bfseries] {
+          \insertframenumber{}\,/\,\inserttotalframenumber
+        };
+      }%
+    \end{minipage}%
+    \hspace{0.8cm}%
+  \end{beamercolorbox}%
+}
+
+% -----------------------------------------------------------------------------
+% Itemize & Enumerate Styling (Green & Blue Badges)
+% -----------------------------------------------------------------------------
+\setbeamertemplate{itemize item}{%
+  \tikz[baseline=-0.5ex]\node[fill=uetgreen, rounded corners=0.8pt, inner sep=1.8pt]{};%
+}
+\setbeamertemplate{itemize subitem}{%
+  \tikz[baseline=-0.5ex]\node[fill=uetblue, rounded corners=0.5pt, inner sep=1.3pt]{};%
+}
+\setbeamertemplate{itemize subsubitem}{%
+  \tikz[baseline=-0.5ex]\node[draw=uetgreen, line width=0.6pt, fill=white, inner sep=1.1pt]{};%
+}
+
+\setbeamertemplate{enumerate item}{%
+  \tikz[baseline=-0.5ex]\node[fill=uetblue, circle, inner sep=1.3pt, text=white, font=\fontsize{5.5pt}{5.5pt}\selectfont\bfseries]{\insertenumlabel};%
+}
+\setbeamertemplate{enumerate subitem}{%
+  \tikz[baseline=-0.5ex]\node[fill=uetgreen, circle, inner sep=1.1pt, text=white, font=\fontsize{4.8pt}{4.8pt}\selectfont\bfseries]{\insertenumlabel.\insertsubenumlabel};%
+}
+
+% -----------------------------------------------------------------------------
+% Custom Block Styling
+% -----------------------------------------------------------------------------
+\setbeamertemplate{block begin}{%
+  \vspace{0.15cm}%
+  \begin{tcolorbox}[
+    colback=uetlightgray,
+    colframe=uetblue,
+    coltitle=white,
+    title={\textbf{\insertblocktitle}},
+    fonttitle=\footnotesize\bfseries,
+    fontupper=\footnotesize,
+    boxrule=0.7pt,
+    arc=2.5pt,
+    left=6pt, right=6pt, top=4pt, bottom=4pt,
+    boxsep=1pt,
+    shadow={0.8pt}{-0.8pt}{0pt}{black!6}
+  ]%
+}
+\setbeamertemplate{block end}{%
+  \end{tcolorbox}\vspace{0.1cm}%
+}
+
+\setbeamertemplate{block alerted begin}{%
+  \vspace{0.15cm}%
+  \begin{tcolorbox}[
+    colback=uetred!6,
+    colframe=uetred,
+    coltitle=white,
+    title={\textbf{\insertblocktitle}},
+    fonttitle=\footnotesize\bfseries,
+    fontupper=\footnotesize,
+    boxrule=0.7pt,
+    arc=2.5pt,
+    left=6pt, right=6pt, top=4pt, bottom=4pt,
+    boxsep=1pt,
+    shadow={0.8pt}{-0.8pt}{0pt}{black!6}
+  ]%
+}
+\setbeamertemplate{block alerted end}{%
+  \end{tcolorbox}\vspace{0.1cm}%
+}
+
+\setbeamertemplate{block example begin}{%
+  \vspace{0.15cm}%
+  \begin{tcolorbox}[
+    colback=uetgreenbg,
+    colframe=uetgreen,
+    coltitle=white,
+    title={\textbf{\insertblocktitle}},
+    fonttitle=\footnotesize\bfseries,
+    fontupper=\footnotesize,
+    boxrule=0.7pt,
+    arc=2.5pt,
+    left=6pt, right=6pt, top=4pt, bottom=4pt,
+    boxsep=1pt,
+    shadow={0.8pt}{-0.8pt}{0pt}{black!6}
+  ]%
+}
+\setbeamertemplate{block example end}{%
+  \end{tcolorbox}\vspace{0.1cm}%
+}
+
+% -----------------------------------------------------------------------------
+% Table of Contents Styling
+% -----------------------------------------------------------------------------
+\setbeamertemplate{section in toc}{%
+  \tikz[baseline=-0.5ex]\node[fill=uetblue, circle, inner sep=1.6pt, text=white, font=\fontsize{6.5pt}{6.5pt}\selectfont\bfseries]{\inserttocsectionnumber};%
+  \hspace{0.2cm}%
+  \textbf{\color{uetblue}\inserttocsection}%
+}
+
+\setbeamertemplate{subsection in toc}{%
+  \hspace{0.55cm}%
+  \tikz[baseline=-0.5ex]\node[fill=uetgreen, rounded corners=0.5pt, inner sep=1.1pt]{};%
+  \hspace{0.15cm}%
+  {\color{uetdark}\inserttocsubsection}%
+}
+
+% -----------------------------------------------------------------------------
+% Custom Title Page Layout (Centered & Larger Title)
+% -----------------------------------------------------------------------------
+\newcommand{\supervisor}[1]{\def\@supervisor{#1}}
+\newcommand{\studentid}[1]{\def\@studentid{#1}}
+\newcommand{\department}[1]{\def\@department{#1}}
+\supervisor{}
+\studentid{}
+\department{}
+
+\setbeamertemplate{title page}{%
+  \begin{tikzpicture}[remember picture, overlay]
+    % Decorative geometric accents in Blue & Green
+    \fill[uetblue!8] (current page.north east) -- ++(-4.5, 0) -- ++(4.5, -4.5) -- cycle;
+    \fill[uetgreen!12] (current page.north east) -- ++(-2.5, 0) -- ++(2.5, -2.5) -- cycle;
+    \draw[uetgreen!35, line width=1.2pt] ($(current page.north east)+(-5, 0)$) -- ($(current page.north east)+(0, -5)$);
+    
+    \draw[uetborder, line width=0.8pt] ($(current page.south west)+(0.8, 0.9)$) -- ($(current page.south east)+(-0.8, 0.9)$);
+    \draw[uetgreen, line width=2pt] ($(current page.south west)+(0.8, 0.9)$) -- ($(current page.south west)+(2.8, 0.9)$);
+  \end{tikzpicture}%
+  
+  \vspace{-0.1cm}
+  % Header: Larger Logo & Vertically Centered University Name
+  \begin{beamercolorbox}[wd=\textwidth]{titleheader}
+    \parbox[c]{1.35cm}{%
+      \IfFileExists{\univlogo}{%
+        \includegraphics[height=1.25cm, keepaspectratio]{\univlogo}%
+      }{}%
+    }%
+    \hspace{0.25cm}%
+    \parbox[c]{\textwidth - 1.8cm}{%
+      {\fontsize{13pt}{16pt}\selectfont\bfseries\color{uetblue}\univname}%
+    }%
+  \end{beamercolorbox}
+
+  \vspace{0.45cm}
+  
+  % Main Title & Subtitle Card (Centered & Larger Font)
+  \begin{tcolorbox}[
+    colback=uetaccentbg,
+    colframe=uetblue,
+    boxrule=0.8pt,
+    arc=3.5pt,
+    halign=center,
+    left=14pt, right=14pt, top=13pt, bottom=13pt,
+    shadow={1pt}{-1pt}{0pt}{black!5}
+  ]
+    {\fontsize{15pt}{24pt}\selectfont\bfseries\color{uetblue}\inserttitle}\par
+    \ifx\insertsubtitle\@empty\else
+      \vspace{0.15cm}%
+      {\fontsize{11pt}{14pt}\selectfont\color{uetgreen}\textbf{\insertsubtitle}}\par
+    \fi
+  \end{tcolorbox}
+  
+  \vspace{0.25cm}
+  
+  % Presenter & Details Info
+  \begin{beamercolorbox}[wd=\textwidth]{titlebody}
+    \begin{columns}[T]
+      \begin{column}{0.55\textwidth}
+        {\footnotesize
+          \textbf{\color{uetblue}Presenter:}\\[1.5pt]
+          \hspace*{0.25cm}\insertauthor%
+          \ifx\@studentid\@empty\else
+            \ ({\color{uetgray}\@studentid})
+          \fi
+        }
+      \end{column}
+      \begin{column}{0.45\textwidth}
+        {\footnotesize
+          \ifx\@supervisor\@empty\else
+            \textbf{\color{uetblue}Advisor / Supervisor:}\\[1.5pt]
+            \hspace*{0.25cm}\@supervisor\\[1.5pt]
+          \fi
+          \textbf{\color{uetblue}Date:}\\[1.5pt]
+          \hspace*{0.25cm}\insertdate
+        }
+      \end{column}
+    \end{columns}
+  \end{beamercolorbox}
+}
+
+% -----------------------------------------------------------------------------
+% Helper Card Environments & Metric Callouts
+% -----------------------------------------------------------------------------
+\newenvironment{uetcard}[1][]{%
+  \begin{tcolorbox}[
+    colback=white,
+    colframe=uetborder,
+    boxrule=0.7pt,
+    arc=3pt,
+    left=6pt, right=6pt, top=6pt, bottom=6pt,
+    shadow={0.8pt}{-0.8pt}{0pt}{black!4},
+    #1
+  ]%
+}{%
+  \end{tcolorbox}%
+}
+
+\newenvironment{accentcard}[2][uetblue]{%
+  \begin{tcolorbox}[
+    colback=white,
+    colframe=#1,
+    boxrule=0.6pt,
+    leftrule=2.8pt,
+    arc=2pt,
+    title={\textbf{#2}},
+    coltitle=#1,
+    fonttitle=\footnotesize\bfseries,
+    colbacktitle=white,
+    titlerule=0pt,
+    left=6pt, right=6pt, top=5pt, bottom=5pt,
+    shadow={0.8pt}{-0.8pt}{0pt}{black!4}
+  ]%
+}{%
+  \end{tcolorbox}%
+}
+
+% Stat / Big Metric Card Command
+\newcommand{\statcard}[3][uetblue]{%
+  \begin{tcolorbox}[
+    colback=white,
+    colframe=#1,
+    arc=3pt,
+    boxrule=0.8pt,
+    halign=center,
+    left=4pt, right=4pt, top=6pt, bottom=6pt,
+    shadow={0.6pt}{-0.6pt}{0pt}{black!4}
+  ]
+    {\huge\bfseries\color{#1}#2}\\[2pt]
+    {\scriptsize\color{uetdark}\textbf{#3}}
+  \end{tcolorbox}%
+}
+
+% Checkmark & Crossmark shortcuts
+\newcommand{\cmark}{\textcolor{uetgreen}{\ding{51}}}
+\newcommand{\xmark}{\textcolor{uetred}{\ding{55}}}
+
+% -----------------------------------------------------------------------------
+% Automatic Section Divider Slide Template
+% -----------------------------------------------------------------------------
+\newcommand{\enableSectionSlides}{%
+  \AtBeginSection[]{
+    \begin{frame}[plain]
+      \begin{tikzpicture}[remember picture, overlay]
+        \fill[uetblue!8] (current page.north east) -- ++(-5.5, 0) -- ++(5.5, -5.5) -- cycle;
+        \fill[uetgreen!12] (current page.south west) -- ++(4.5, 0) -- ++(-4.5, 4.5) -- cycle;
+      \end{tikzpicture}
+      \centering\vfill
+      \begin{tcolorbox}[
+        colback=uetblue,
+        colframe=uetblue,
+        arc=4pt,
+        halign=center,
+        width=0.82\textwidth,
+        boxrule=0pt,
+        left=14pt, right=14pt, top=14pt, bottom=14pt,
+        shadow={1.5pt}{-1.5pt}{0pt}{black!15}
+      ]
+        {\small\color{uetgreen}\textbf{PART \Roman{section}}}\\[0.25cm]
+        {\huge\bfseries\color{white}\insertsectionhead}
+      \end{tcolorbox}
+      \vfill
+    \end{frame}
+  }
+}
