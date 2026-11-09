@@ -32,10 +32,12 @@ A modern, elegant, and standardized **LaTeX Beamer** template for academic prese
 ```text
 TemplateSlideUET/
 ├── assets/
-│   └── uet_logo.png         # High-resolution transparent UET-VNU logo
+│   ├── uet_logo.png         # High-resolution transparent UET-VNU logo
+│   └── fit_logo.png         # Faculty / Department logo
 ├── beamerthemeUET.sty       # Core custom Beamer theme package
 ├── main.tex                 # Presentation source file
 ├── main.pdf                 # Compiled output PDF presentation
+├── previews/                # Exported slide preview images
 ├── .vscode/
 │   └── settings.json        # LaTeX Workshop configuration & auto-build
 ├── .gitignore               # Ignored LaTeX auxiliary build files

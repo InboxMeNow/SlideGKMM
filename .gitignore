@@ -18,6 +18,11 @@
 # Temporary Preview Files
 preview_*.png
 preview_*.jpg
+slide_page*.png
+previews/
+
+# Agent Skills & Cache
+.agents/
 
 # OS & Editor
 .DS_Store

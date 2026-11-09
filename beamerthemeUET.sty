@@ -4,6 +4,7 @@
 % Required Packages
 % -----------------------------------------------------------------------------
 \RequirePackage{tikz}
+\usetikzlibrary{calc}
 \RequirePackage{xcolor}
 \RequirePackage{graphicx}
 \RequirePackage{etoolbox}
@@ -86,11 +87,28 @@
 \newcommand{\univlogo}{assets/uet_logo.png}
 \newcommand{\setunivlogo}[1]{\renewcommand{\univlogo}{#1}}
 
-\newcommand{\univname}{VNU University of Engineering and Technology}
+\newcommand{\facultylogo}{assets/fit_logo.png}
+\newcommand{\setfacultylogo}[1]{\renewcommand{\facultylogo}{#1}}
+
+\newcommand{\univname}{Trường Đại học Công nghệ -- Đại học Quốc gia Hà Nội}
 \newcommand{\setunivname}[1]{\renewcommand{\univname}{#1}}
 
-\newcommand{\univsubname}{Vietnam National University, Hanoi}
+\newcommand{\univsubname}{Đại học Quốc gia Hà Nội}
 \newcommand{\setunivsubname}[1]{\renewcommand{\univsubname}{#1}}
+
+\newcommand{\authorlabel}{Sinh viên thực hiện:}
+\newcommand{\setauthorlabel}[1]{\renewcommand{\authorlabel}{#1}}
+
+\newcommand{\supervisorlabel}{Giảng viên:}
+\newcommand{\setsupervisorlabel}[1]{\renewcommand{\supervisorlabel}{#1}}
+
+\newcommand{\datelabel}{Ngày:}
+\newcommand{\setdatelabel}[1]{\renewcommand{\datelabel}{#1}}
+
+% Vietnamese date format default for \today
+\AtBeginDocument{%
+  \renewcommand{\today}{\ifnum\day<10 0\fi\number\day\ tháng \ifnum\month<10 0\fi\number\month\ năm \number\year}%
+}
 
 % -----------------------------------------------------------------------------
 % Custom Frametitle Template (With Section Breadcrumb & Accent Bar)
@@ -109,7 +127,7 @@
     \begin{minipage}[t]{0.28\textwidth}
       \raggedleft
       \ifx\insertsectionhead\@empty\else%
-        {\fontsize{5.5pt}{6.5pt}\selectfont\color{uetgray}\textbf{\uppercase\expandafter{\insertsectionhead}}}%
+        {\fontsize{5.5pt}{6.5pt}\selectfont\color{uetgray}\textbf{\insertsectionhead}}%
       \fi
     \end{minipage}
   \end{beamercolorbox}%
@@ -153,10 +171,10 @@
     \begin{minipage}[c]{0.30\paperwidth}
       \raggedleft
       \ifx\insertshorttitle\@empty\else
-        {\fontsize{6pt}{7pt}\selectfont\color{uetgray}\insertshorttitle}\hspace{0.25cm}%
+        {\fontsize{6.5pt}{7.5pt}\selectfont\color{uetgray}\insertshorttitle}\hspace{0.25cm}%
       \fi
       \tikz[baseline=-0.6ex]{
-        \node[fill=uetlightgray, draw=uetborder, rounded corners=2.5pt, inner sep=2pt, text=uetblue, font=\fontsize{5.8pt}{6.8pt}\selectfont\bfseries] {
+        \node[fill=uetlightgray, draw=uetborder, inner sep=2.5pt, text=uetblue, font=\fontsize{6.2pt}{7.2pt}\selectfont\bfseries] {
           \insertframenumber{}\,/\,\inserttotalframenumber
         };
       }%
@@ -169,24 +187,24 @@
 % Itemize & Enumerate Styling (Green & Blue Badges)
 % -----------------------------------------------------------------------------
 \setbeamertemplate{itemize item}{%
-  \tikz[baseline=-0.5ex]\node[fill=uetgreen, rounded corners=0.8pt, inner sep=1.8pt]{};%
+  \tikz[baseline=-0.5ex]\node[fill=uetgreen, inner sep=2.0pt]{};%
 }
 \setbeamertemplate{itemize subitem}{%
-  \tikz[baseline=-0.5ex]\node[fill=uetblue, rounded corners=0.5pt, inner sep=1.3pt]{};%
+  \tikz[baseline=-0.5ex]\node[fill=uetblue, inner sep=1.5pt]{};%
 }
 \setbeamertemplate{itemize subsubitem}{%
-  \tikz[baseline=-0.5ex]\node[draw=uetgreen, line width=0.6pt, fill=white, inner sep=1.1pt]{};%
+  \tikz[baseline=-0.5ex]\node[draw=uetgreen, line width=0.6pt, fill=white, inner sep=1.2pt]{};%
 }
 
 \setbeamertemplate{enumerate item}{%
-  \tikz[baseline=-0.5ex]\node[fill=uetblue, circle, inner sep=1.3pt, text=white, font=\fontsize{5.5pt}{5.5pt}\selectfont\bfseries]{\insertenumlabel};%
+  \tikz[baseline=-0.5ex]\node[fill=uetblue, inner sep=1.6pt, text=white, font=\fontsize{6.0pt}{6.0pt}\selectfont\bfseries]{\insertenumlabel};%
 }
 \setbeamertemplate{enumerate subitem}{%
-  \tikz[baseline=-0.5ex]\node[fill=uetgreen, circle, inner sep=1.1pt, text=white, font=\fontsize{4.8pt}{4.8pt}\selectfont\bfseries]{\insertenumlabel.\insertsubenumlabel};%
+  \tikz[baseline=-0.5ex]\node[fill=uetgreen, inner sep=1.3pt, text=white, font=\fontsize{5.2pt}{5.2pt}\selectfont\bfseries]{\insertenumlabel.\insertsubenumlabel};%
 }
 
 % -----------------------------------------------------------------------------
-% Custom Block Styling
+% Custom Block Styling (Square corners)
 % -----------------------------------------------------------------------------
 \setbeamertemplate{block begin}{%
   \vspace{0.15cm}%
@@ -195,10 +213,11 @@
     colframe=uetblue,
     coltitle=white,
     title={\textbf{\insertblocktitle}},
-    fonttitle=\footnotesize\bfseries,
-    fontupper=\footnotesize,
+    fonttitle=\small\bfseries,
+    fontupper=\small,
     boxrule=0.7pt,
-    arc=2.5pt,
+    sharp corners,
+    arc=0pt,
     left=6pt, right=6pt, top=4pt, bottom=4pt,
     boxsep=1pt,
     shadow={0.8pt}{-0.8pt}{0pt}{black!6}
@@ -215,10 +234,11 @@
     colframe=uetred,
     coltitle=white,
     title={\textbf{\insertblocktitle}},
-    fonttitle=\footnotesize\bfseries,
-    fontupper=\footnotesize,
+    fonttitle=\small\bfseries,
+    fontupper=\small,
     boxrule=0.7pt,
-    arc=2.5pt,
+    sharp corners,
+    arc=0pt,
     left=6pt, right=6pt, top=4pt, bottom=4pt,
     boxsep=1pt,
     shadow={0.8pt}{-0.8pt}{0pt}{black!6}
@@ -235,10 +255,11 @@
     colframe=uetgreen,
     coltitle=white,
     title={\textbf{\insertblocktitle}},
-    fonttitle=\footnotesize\bfseries,
-    fontupper=\footnotesize,
+    fonttitle=\small\bfseries,
+    fontupper=\small,
     boxrule=0.7pt,
-    arc=2.5pt,
+    sharp corners,
+    arc=0pt,
     left=6pt, right=6pt, top=4pt, bottom=4pt,
     boxsep=1pt,
     shadow={0.8pt}{-0.8pt}{0pt}{black!6}
@@ -252,14 +273,14 @@
 % Table of Contents Styling
 % -----------------------------------------------------------------------------
 \setbeamertemplate{section in toc}{%
-  \tikz[baseline=-0.5ex]\node[fill=uetblue, circle, inner sep=1.6pt, text=white, font=\fontsize{6.5pt}{6.5pt}\selectfont\bfseries]{\inserttocsectionnumber};%
+  \tikz[baseline=-0.5ex]\node[fill=uetblue, inner sep=2.0pt, text=white, font=\fontsize{7.0pt}{7.0pt}\selectfont\bfseries]{\inserttocsectionnumber};%
   \hspace{0.2cm}%
   \textbf{\color{uetblue}\inserttocsection}%
 }
 
 \setbeamertemplate{subsection in toc}{%
   \hspace{0.55cm}%
-  \tikz[baseline=-0.5ex]\node[fill=uetgreen, rounded corners=0.5pt, inner sep=1.1pt]{};%
+  \tikz[baseline=-0.5ex]\node[fill=uetgreen, inner sep=1.4pt]{};%
   \hspace{0.15cm}%
   {\color{uetdark}\inserttocsubsection}%
 }
@@ -286,16 +307,36 @@
   \end{tikzpicture}%
   
   \vspace{-0.1cm}
-  % Header: Larger Logo & Vertically Centered University Name
+  % Header: Larger Logo(s) & Vertically Centered University Name
   \begin{beamercolorbox}[wd=\textwidth]{titleheader}
-    \parbox[c]{1.35cm}{%
-      \IfFileExists{\univlogo}{%
-        \includegraphics[height=1.25cm, keepaspectratio]{\univlogo}%
-      }{}%
-    }%
-    \hspace{0.25cm}%
-    \parbox[c]{\textwidth - 1.8cm}{%
-      {\fontsize{13pt}{16pt}\selectfont\bfseries\color{uetblue}\univname}%
+    \IfFileExists{\facultylogo}{%
+      \parbox[c]{2.85cm}{%
+        \IfFileExists{\univlogo}{%
+          \includegraphics[height=1.25cm, keepaspectratio]{\univlogo}%
+        }{}%
+        \hspace{0.2cm}%
+        \includegraphics[height=1.25cm, keepaspectratio]{\facultylogo}%
+      }%
+      \hspace{0.25cm}%
+      \parbox[c]{\textwidth - 3.4cm}{%
+        {\fontsize{12pt}{15pt}\selectfont\bfseries\color{uetblue}\univname}%
+        \ifx\@department\@empty\else%
+          \\[2pt]{\fontsize{9.5pt}{12pt}\selectfont\color{uetgreen}\textbf{\@department}}%
+        \fi
+      }%
+    }{%
+      \parbox[c]{1.35cm}{%
+        \IfFileExists{\univlogo}{%
+          \includegraphics[height=1.25cm, keepaspectratio]{\univlogo}%
+        }{}%
+      }%
+      \hspace{0.25cm}%
+      \parbox[c]{\textwidth - 1.8cm}{%
+        {\fontsize{13pt}{16pt}\selectfont\bfseries\color{uetblue}\univname}%
+        \ifx\@department\@empty\else%
+          \\[2pt]{\fontsize{10pt}{12pt}\selectfont\color{uetgreen}\textbf{\@department}}%
+        \fi
+      }%
     }%
   \end{beamercolorbox}
 
@@ -306,7 +347,8 @@
     colback=uetaccentbg,
     colframe=uetblue,
     boxrule=0.8pt,
-    arc=3.5pt,
+    sharp corners,
+    arc=0pt,
     halign=center,
     left=14pt, right=14pt, top=13pt, bottom=13pt,
     shadow={1pt}{-1pt}{0pt}{black!5}
@@ -325,20 +367,21 @@
     \begin{columns}[T]
       \begin{column}{0.55\textwidth}
         {\footnotesize
-          \textbf{\color{uetblue}Presenter:}\\[1.5pt]
-          \hspace*{0.25cm}\insertauthor%
-          \ifx\@studentid\@empty\else
-            \ ({\color{uetgray}\@studentid})
-          \fi
+          \textbf{\color{uetblue}\authorlabel}\\[2pt]
+          \hspace*{0.25cm}\parbox[t]{0.88\textwidth}{\insertauthor%
+            \ifx\@studentid\@empty\else
+              \ ({\color{uetgray}\@studentid})%
+            \fi
+          }
         }
       \end{column}
       \begin{column}{0.45\textwidth}
         {\footnotesize
           \ifx\@supervisor\@empty\else
-            \textbf{\color{uetblue}Advisor / Supervisor:}\\[1.5pt]
-            \hspace*{0.25cm}\@supervisor\\[1.5pt]
+            \textbf{\color{uetblue}\supervisorlabel}\\[2pt]
+            \hspace*{0.25cm}\@supervisor\\[4pt]
           \fi
-          \textbf{\color{uetblue}Date:}\\[1.5pt]
+          \textbf{\color{uetblue}\datelabel}\\[2pt]
           \hspace*{0.25cm}\insertdate
         }
       \end{column}
@@ -347,15 +390,17 @@
 }
 
 % -----------------------------------------------------------------------------
-% Helper Card Environments & Metric Callouts
+% Helper Card Environments & Metric Callouts (Square Corners)
 % -----------------------------------------------------------------------------
-\newenvironment{uetcard}[1][]{%
+\NewDocumentEnvironment{uetcard}{ O{} }{%
   \begin{tcolorbox}[
     colback=white,
     colframe=uetborder,
     boxrule=0.7pt,
-    arc=3pt,
-    left=6pt, right=6pt, top=6pt, bottom=6pt,
+    sharp corners,
+    arc=0pt,
+    left=6pt, right=6pt, top=3.5pt, bottom=3.5pt,
+    boxsep=1pt,
     shadow={0.8pt}{-0.8pt}{0pt}{black!4},
     #1
   ]%
@@ -363,20 +408,23 @@
   \end{tcolorbox}%
 }
 
-\newenvironment{accentcard}[2][uetblue]{%
+\NewDocumentEnvironment{accentcard}{ O{uetblue} m O{} }{%
   \begin{tcolorbox}[
     colback=white,
     colframe=#1,
     boxrule=0.6pt,
     leftrule=2.8pt,
-    arc=2pt,
+    sharp corners,
+    arc=0pt,
     title={\textbf{#2}},
     coltitle=#1,
-    fonttitle=\footnotesize\bfseries,
+    fonttitle=\fontsize{8.2pt}{9.8pt}\bfseries\raggedright,
     colbacktitle=white,
     titlerule=0pt,
-    left=6pt, right=6pt, top=5pt, bottom=5pt,
-    shadow={0.8pt}{-0.8pt}{0pt}{black!4}
+    left=5pt, right=5pt, top=2.8pt, bottom=2.8pt,
+    boxsep=0.8pt,
+    shadow={0.8pt}{-0.8pt}{0pt}{black!4},
+    #3
   ]%
 }{%
   \end{tcolorbox}%
@@ -387,7 +435,8 @@
   \begin{tcolorbox}[
     colback=white,
     colframe=#1,
-    arc=3pt,
+    sharp corners,
+    arc=0pt,
     boxrule=0.8pt,
     halign=center,
     left=4pt, right=4pt, top=6pt, bottom=6pt,
@@ -416,7 +465,8 @@
       \begin{tcolorbox}[
         colback=uetblue,
         colframe=uetblue,
-        arc=4pt,
+        sharp corners,
+        arc=0pt,
         halign=center,
         width=0.82\textwidth,
         boxrule=0pt,
