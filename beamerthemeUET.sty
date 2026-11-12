@@ -15,27 +15,27 @@
 \tcbuselibrary{skins,fitting}
 
 % -----------------------------------------------------------------------------
-% Color Palette Definition: Primary Blue & Green Scheme
+% Color Palette Definition: Restrained Navy & Neutral Academic Scheme
 % -----------------------------------------------------------------------------
-\definecolor{uetblue}{RGB}{0, 58, 105}        % #003A69 (UET Primary Navy Blue)
-\definecolor{uetdarkblue}{RGB}{0, 34, 68}     % #002244 (Deep Midnight Blue)
-\definecolor{uetcyan}{RGB}{14, 165, 233}      % #0EA5E9 (Accent Cyan / Light Blue)
+\definecolor{uetblue}{RGB}{18, 55, 92}        % #12375C (Restrained Deep UET Navy)
+\definecolor{uetdarkblue}{RGB}{12, 38, 66}    % #0C2642 (Deep Midnight Navy)
+\definecolor{uetcyan}{RGB}{74, 107, 138}      % #4A6B8A (Muted Slate Steel)
 
-% Green Colors (Primary Accent)
-\definecolor{uetgreen}{RGB}{16, 149, 74}      % #10954A (Vibrant Academic Emerald Green)
-\definecolor{uetdarkgreen}{RGB}{21, 128, 61}  % #15803D (Forest Green)
-\definecolor{uetlightgreen}{RGB}{34, 197, 94} % #22C55E (Bright Green)
-\definecolor{uetgreenbg}{RGB}{240, 253, 244}  % #F0FDF4 (Soft Green Card Background)
+% Secondary Accent (Muted Sage-Teal — used sparingly for role contrast)
+\definecolor{uetgreen}{RGB}{46, 108, 97}      % #2E6C61 (Desaturated Academic Sage-Teal)
+\definecolor{uetdarkgreen}{RGB}{34, 84, 75}   % #22544B (Deep Sage-Teal)
+\definecolor{uetlightgreen}{RGB}{72, 134, 122}% #48867A (Soft Sage)
+\definecolor{uetgreenbg}{RGB}{241, 246, 245}  % #F1F6F5 (Subtle Pale Sage Surface)
 
 % Neutral & Background Colors (Clean White Theme)
-\definecolor{uetdark}{RGB}{30, 41, 59}        % #1E293B (Slate Dark Text)
-\definecolor{uetgray}{RGB}{100, 116, 139}     % #64748B (Muted Slate Gray)
-\definecolor{uetlightgray}{RGB}{246, 248, 251}% #F6F8FB (Soft Card Background)
-\definecolor{uetborder}{RGB}{226, 232, 240}   % #E2E8F0 (Subtle Border Gray)
-\definecolor{uetaccentbg}{RGB}{239, 246, 255} % #EFF6FF (Light Blue Card Background)
+\definecolor{uetdark}{RGB}{38, 46, 56}        % #262E38 (Charcoal Body Text)
+\definecolor{uetgray}{RGB}{100, 112, 125}     % #64707D (Muted Slate Gray)
+\definecolor{uetlightgray}{RGB}{246, 247, 249}% #F6F7F9 (Subtle Neutral Panel)
+\definecolor{uetborder}{RGB}{212, 220, 228}   % #D4DCE4 (Subtle Hairline Border)
+\definecolor{uetaccentbg}{RGB}{240, 244, 248} % #F0F4F8 (Pale Navy-Slate Surface)
 
-% Functional Colors
-\definecolor{uetred}{RGB}{225, 29, 72}        % #E11D48 (Alert/Warning)
+% Semantic Warning/Deprecation Color (Muted Burgundy)
+\definecolor{uetred}{RGB}{158, 52, 62}        % #9E343E (Muted Brick Burgundy)
 
 % -----------------------------------------------------------------------------
 % Beamer Color Mappings
@@ -45,7 +45,7 @@
 \setbeamercolor{structure}{fg=uetblue}
 
 \setbeamercolor{title}{fg=uetblue, bg=white}
-\setbeamercolor{subtitle}{fg=uetgreen, bg=white}
+\setbeamercolor{subtitle}{fg=uetgray, bg=white}
 \setbeamercolor{author}{fg=uetdark, bg=white}
 \setbeamercolor{institute}{fg=uetgray, bg=white}
 \setbeamercolor{date}{fg=uetgray, bg=white}
@@ -54,9 +54,9 @@
 \setbeamercolor{framesubtitle}{fg=uetgray, bg=white}
 
 \setbeamercolor{footline}{fg=uetgray, bg=white}
-\setbeamercolor{item}{fg=uetgreen}
-\setbeamercolor{subitem}{fg=uetblue}
-\setbeamercolor{subsubitem}{fg=uetdarkgreen}
+\setbeamercolor{item}{fg=uetblue}
+\setbeamercolor{subitem}{fg=uetgray}
+\setbeamercolor{subsubitem}{fg=uetblue}
 
 \setbeamercolor{section in toc}{fg=uetblue}
 \setbeamercolor{subsection in toc}{fg=uetdark}
@@ -132,13 +132,12 @@
     \end{minipage}
   \end{beamercolorbox}%
   \vspace{0.10cm}%
-  % Accent bar: Green + Blue
+  % Accent bar: Single-tone UET Navy rule
   \begin{tikzpicture}[remember picture, overlay]
     \node[anchor=north west, inner sep=0pt, xshift=0.8cm] at (0,0) {
       \begin{tikzpicture}
         \draw[uetborder, line width=0.8pt] (0,0) -- (\paperwidth-1.6cm, 0);
-        \draw[uetgreen, line width=1.8pt] (0,0) -- (1.5cm, 0);
-        \draw[uetblue, line width=1.8pt] (1.5cm,0) -- (3.2cm, 0);
+        \draw[uetblue, line width=1.8pt] (0,0) -- (2.6cm, 0);
       \end{tikzpicture}
     };
   \end{tikzpicture}%
@@ -184,23 +183,23 @@
 }
 
 % -----------------------------------------------------------------------------
-% Itemize & Enumerate Styling (Green & Blue Badges)
+% Itemize & Enumerate Styling (Monochrome Navy & Slate Badges)
 % -----------------------------------------------------------------------------
 \setbeamertemplate{itemize item}{%
-  \tikz[baseline=-0.5ex]\node[fill=uetgreen, inner sep=2.0pt]{};%
+  \tikz[baseline=-0.5ex]\node[fill=uetblue!85, inner sep=2.0pt]{};%
 }
 \setbeamertemplate{itemize subitem}{%
-  \tikz[baseline=-0.5ex]\node[fill=uetblue, inner sep=1.5pt]{};%
+  \tikz[baseline=-0.5ex]\node[fill=uetgray, inner sep=1.5pt]{};%
 }
 \setbeamertemplate{itemize subsubitem}{%
-  \tikz[baseline=-0.5ex]\node[draw=uetgreen, line width=0.6pt, fill=white, inner sep=1.2pt]{};%
+  \tikz[baseline=-0.5ex]\node[draw=uetblue!85, line width=0.6pt, fill=white, inner sep=1.2pt]{};%
 }
 
 \setbeamertemplate{enumerate item}{%
   \tikz[baseline=-0.5ex]\node[fill=uetblue, inner sep=1.6pt, text=white, font=\fontsize{6.0pt}{6.0pt}\selectfont\bfseries]{\insertenumlabel};%
 }
 \setbeamertemplate{enumerate subitem}{%
-  \tikz[baseline=-0.5ex]\node[fill=uetgreen, inner sep=1.3pt, text=white, font=\fontsize{5.2pt}{5.2pt}\selectfont\bfseries]{\insertenumlabel.\insertsubenumlabel};%
+  \tikz[baseline=-0.5ex]\node[fill=uetblue!75, inner sep=1.3pt, text=white, font=\fontsize{5.2pt}{5.2pt}\selectfont\bfseries]{\insertenumlabel.\insertsubenumlabel};%
 }
 
 % -----------------------------------------------------------------------------
@@ -280,7 +279,7 @@
 
 \setbeamertemplate{subsection in toc}{%
   \hspace{0.55cm}%
-  \tikz[baseline=-0.5ex]\node[fill=uetgreen, inner sep=1.4pt]{};%
+  \tikz[baseline=-0.5ex]\node[fill=uetblue!65, inner sep=1.4pt]{};%
   \hspace{0.15cm}%
   {\color{uetdark}\inserttocsubsection}%
 }
@@ -297,13 +296,13 @@
 
 \setbeamertemplate{title page}{%
   \begin{tikzpicture}[remember picture, overlay]
-    % Decorative geometric accents in Blue & Green
-    \fill[uetblue!8] (current page.north east) -- ++(-4.5, 0) -- ++(4.5, -4.5) -- cycle;
-    \fill[uetgreen!12] (current page.north east) -- ++(-2.5, 0) -- ++(2.5, -2.5) -- cycle;
-    \draw[uetgreen!35, line width=1.2pt] ($(current page.north east)+(-5, 0)$) -- ($(current page.north east)+(0, -5)$);
+    % Restrained geometric accents in Pale Navy
+    \fill[uetblue!4] (current page.north east) -- ++(-4.5, 0) -- ++(4.5, -4.5) -- cycle;
+    \fill[uetblue!8] (current page.north east) -- ++(-2.5, 0) -- ++(2.5, -2.5) -- cycle;
+    \draw[uetblue!20, line width=1.0pt] ($(current page.north east)+(-5, 0)$) -- ($(current page.north east)+(0, -5)$);
     
     \draw[uetborder, line width=0.8pt] ($(current page.south west)+(0.8, 0.9)$) -- ($(current page.south east)+(-0.8, 0.9)$);
-    \draw[uetgreen, line width=2pt] ($(current page.south west)+(0.8, 0.9)$) -- ($(current page.south west)+(2.8, 0.9)$);
+    \draw[uetblue, line width=2pt] ($(current page.south west)+(0.8, 0.9)$) -- ($(current page.south west)+(2.8, 0.9)$);
   \end{tikzpicture}%
   
   \vspace{-0.1cm}
@@ -321,7 +320,7 @@
       \parbox[c]{\textwidth - 3.4cm}{%
         {\fontsize{12pt}{15pt}\selectfont\bfseries\color{uetblue}\univname}%
         \ifx\@department\@empty\else%
-          \\[2pt]{\fontsize{9.5pt}{12pt}\selectfont\color{uetgreen}\textbf{\@department}}%
+          \\[2pt]{\fontsize{9.5pt}{12pt}\selectfont\color{uetgray}\textbf{\@department}}%
         \fi
       }%
     }{%
@@ -334,7 +333,7 @@
       \parbox[c]{\textwidth - 1.8cm}{%
         {\fontsize{13pt}{16pt}\selectfont\bfseries\color{uetblue}\univname}%
         \ifx\@department\@empty\else%
-          \\[2pt]{\fontsize{10pt}{12pt}\selectfont\color{uetgreen}\textbf{\@department}}%
+          \\[2pt]{\fontsize{10pt}{12pt}\selectfont\color{uetgray}\textbf{\@department}}%
         \fi
       }%
     }%
@@ -345,18 +344,18 @@
   % Main Title & Subtitle Card (Centered & Larger Font)
   \begin{tcolorbox}[
     colback=uetaccentbg,
-    colframe=uetblue,
+    colframe=uetblue!75,
     boxrule=0.8pt,
     sharp corners,
     arc=0pt,
     halign=center,
     left=14pt, right=14pt, top=13pt, bottom=13pt,
-    shadow={1pt}{-1pt}{0pt}{black!5}
+    shadow={1pt}{-1pt}{0pt}{black!4}
   ]
     {\fontsize{15pt}{24pt}\selectfont\bfseries\color{uetblue}\inserttitle}\par
     \ifx\insertsubtitle\@empty\else
       \vspace{0.15cm}%
-      {\fontsize{11pt}{14pt}\selectfont\color{uetgreen}\textbf{\insertsubtitle}}\par
+      {\fontsize{11pt}{14pt}\selectfont\color{uetgray}\textbf{\insertsubtitle}}\par
     \fi
   \end{tcolorbox}
   
@@ -410,20 +409,22 @@
 
 \NewDocumentEnvironment{accentcard}{ O{uetblue} m O{} }{%
   \begin{tcolorbox}[
+    enhanced,
     colback=white,
-    colframe=#1,
+    colframe=uetborder,
     boxrule=0.6pt,
     leftrule=2.8pt,
+    borderline west={2.8pt}{0pt}{#1},
     sharp corners,
     arc=0pt,
-    title={\textbf{#2}},
+    title={\textbf{#2}\vphantom{gỐẬể}},
     coltitle=#1,
     fonttitle=\fontsize{8.2pt}{9.8pt}\bfseries\raggedright,
     colbacktitle=white,
     titlerule=0pt,
     left=5pt, right=5pt, top=2.8pt, bottom=2.8pt,
     boxsep=0.8pt,
-    shadow={0.8pt}{-0.8pt}{0pt}{black!4},
+    shadow={0.8pt}{-0.8pt}{0pt}{black!3},
     #3
   ]%
 }{%
@@ -440,7 +441,7 @@
     boxrule=0.8pt,
     halign=center,
     left=4pt, right=4pt, top=6pt, bottom=6pt,
-    shadow={0.6pt}{-0.6pt}{0pt}{black!4}
+    shadow={0.6pt}{-0.6pt}{0pt}{black!3}
   ]
     {\huge\bfseries\color{#1}#2}\\[2pt]
     {\scriptsize\color{uetdark}\textbf{#3}}
@@ -458,8 +459,8 @@
   \AtBeginSection[]{
     \begin{frame}[plain]
       \begin{tikzpicture}[remember picture, overlay]
-        \fill[uetblue!8] (current page.north east) -- ++(-5.5, 0) -- ++(5.5, -5.5) -- cycle;
-        \fill[uetgreen!12] (current page.south west) -- ++(4.5, 0) -- ++(-4.5, 4.5) -- cycle;
+        \fill[uetblue!4] (current page.north east) -- ++(-5.5, 0) -- ++(5.5, -5.5) -- cycle;
+        \fill[uetblue!8] (current page.south west) -- ++(4.5, 0) -- ++(-4.5, 4.5) -- cycle;
       \end{tikzpicture}
       \centering\vfill
       \begin{tcolorbox}[
@@ -471,9 +472,9 @@
         width=0.82\textwidth,
         boxrule=0pt,
         left=14pt, right=14pt, top=14pt, bottom=14pt,
-        shadow={1.5pt}{-1.5pt}{0pt}{black!15}
+        shadow={1.5pt}{-1.5pt}{0pt}{black!12}
       ]
-        {\small\color{uetgreen}\textbf{PART \Roman{section}}}\\[0.25cm]
+        {\small\color{uetblue!18!white}\textbf{PART \Roman{section}}}\\[0.25cm]
         {\huge\bfseries\color{white}\insertsectionhead}
       \end{tcolorbox}
       \vfill
