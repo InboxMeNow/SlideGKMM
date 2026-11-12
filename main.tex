@@ -242,7 +242,7 @@
 				\begin{itemize}\setlength{\itemsep}{2.5pt}\setlength{\topsep}{0pt}\fontsize{6.5pt}{8.1pt}\selectfont
 					\item \textbf{Mục tiêu}: Ngăn phát lại gói tin hợp lệ.
 					\item \textbf{Bắt tay}: Cặp nonces ngẫu nhiên độc lập.
-					\item \textbf{Truyền tải}: Đánh số \texttt{sequence\_number} 64-bit.
+					\item \textbf{Truyền tải}: Đánh số \texttt{sequence\_number} 64-bit; \texttt{0-RTT early\_data} vẫn có số thứ tự nhưng phát lại được giữa các kết nối.
 				\end{itemize}
 			\end{accentcard}
 		\end{column}
@@ -374,7 +374,7 @@
 					\item \textbf{TLS 1.0 (1999, RFC 2246)}: Chuẩn hóa HMAC, PRF (\texttt{MD5+SHA-1}); yếu do IV ngầm định CBC (BEAST).
 					\item \textbf{TLS 1.1 (2006, RFC 4346)}: Explicit IV cho bản ghi CBC; ẩn lỗi đệm chống tấn công định thời.
 					\item \textbf{TLS 1.2 (2008, RFC 5246)}: PRF SHA-2, AEAD (\texttt{AES-GCM}); RFC 10015 (2026) loại RSA tĩnh/DHE.
-					\item \textbf{TLS 1.3 (2018/2026, RFC 8446 $\rightarrow$ 9846)}: Bắt buộc AEAD, \texttt{(EC)DHE} và HKDF; bỏ CBC, SHA-1, RSA tĩnh.
+					\item \textbf{TLS 1.3 (2018/2026, RFC 8446 $\rightarrow$ 9846)}: Bắt buộc AEAD, HKDF; PFS phụ thuộc khóa tạm; bỏ CBC, SHA-1, RSA tĩnh.
 				\end{itemize}
 			\end{accentcard}
 		\end{column}
@@ -391,37 +391,6 @@
 	\end{columns}
 \end{frame}
 
-% -----------------------------------------------------------------------------
-% SLIDE 7: MA TRẬN TỔNG HỢP CÁC PHIÊN BẢN
-% -----------------------------------------------------------------------------
-\begin{frame}{Bảng Tổng Hợp Đối Chiếu 7 Phiên Bản SSL/TLS}
-	\centering
-	\fontsize{6.3pt}{8.5pt}\selectfont
-	\renewcommand{\arraystretch}{1.06}
-	\begin{tabularx}{\textwidth}{l c c l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X}
-		\toprule
-		\rowcolor{uetaccentbg}
-		\textbf{\color{uetblue}Phiên bản} & \textbf{\color{uetblue}Năm} & \textbf{\color{uetblue}Mã Byte} & \textbf{\color{uetblue}Trạng thái} & \textbf{\color{uetblue}Dấu Ấn Kiến Trúc} & \textbf{\color{uetblue}Quy Định Đào Thải / Chuẩn Hiện Hành} \\
-		\midrule
-		\textbf{SSL 1.0} & 1994 & N/A & Chưa phát hành & Nguyên mẫu nội bộ Netscape & Lỗi bảo mật cấu trúc ngay từ thiết kế. \\
-		\textbf{SSL 2.0} & 1995 & \texttt{\{00,02\}} & \xmark\ Cấm (RFC 6176) & Mã hóa kênh truyền Web đầu tiên & Chung khóa Enc/MAC, MD5 yếu, bắt tay hở. \\
-		\textbf{SSL 3.0} & 1996 & \texttt{\{03,00\}} & \xmark\ Khai tử (RFC 7568) & 2 tầng Record/Handshake, tách khóa & Lỗ hổng POODLE trên CBC, RC4 lệch, thiếu Ext. \\
-		\textbf{TLS 1.0} & 1999 & \texttt{\{03,01\}} & \xmark\ Khai tử (RFC 8996) & Chuẩn hóa IETF, HMAC, Extensions & IV ngầm định (BEAST), phụ thuộc MD5+SHA-1. \\
-		\textbf{TLS 1.1} & 2006 & \texttt{\{03,02\}} & \xmark\ Khai tử (RFC 8996) & Explicit IV, ẩn lỗi đệm CBC & Gắn cứng PRF/chữ ký MD5+SHA-1, thiếu AEAD. \\
-		\rowcolor{uetlightgray}
-		\textbf{TLS 1.2} & 2008 & \texttt{\{03,03\}} & \cmark\ Đang dùng & Tách PRF SHA-2, hỗ trợ AEAD & Cấm MD5/SHA-1; RFC 10015 loại RSA tĩnh/DHE. \\
-		\rowcolor{uetaccentbg}
-		\textbf{TLS 1.3} & 2018 & \texttt{\{03,03\}}+Ext & \cmark\ Hiện hành & \texttt{supported\_versions}, bắt buộc AEAD/PFS & RFC 9846 (2026); loại bỏ hoàn toàn CBC, RC4, RSA tĩnh. \\
-		\bottomrule
-	\end{tabularx}
-
-	\vspace{0.06cm}
-	\begin{uetcard}[colback=uetlightgray, top=3pt, bottom=3pt, left=6pt, right=6pt, sharp corners, arc=0pt]
-		\fontsize{7.2pt}{9.6pt}\selectfont
-		{\color{uetblue}\textbf{Kết luận then chốt:}} Bốn thế hệ SSL 2.0--TLS 1.1 bị IETF cấm đàm phán tuyệt đối (\textit{MUST NOT}). Record header của TLS 1.3 vẫn giữ mã byte \texttt{\{03,03\}} để tương thích thiết bị mạng cũ, đàm phán phiên bản thực qua extension \texttt{supported\_versions}.
-	\end{uetcard}
-\end{frame}
-
 % =============================================================================
 % SECTION 3: TẦNG RECORD, GIAO THỨC QUẢN LÝ & QUẢN LÝ TRẠNG THÁI
 % =============================================================================
@@ -430,29 +399,60 @@
 % -----------------------------------------------------------------------------
 % SLIDE 8: GIAO THỨC BẢN GHI (RECORD PROTOCOL) & 5 BƯỚC ĐÓNG GÓI
 % -----------------------------------------------------------------------------
-\begin{frame}{Giao Thức Record Protocol: 5 Bước Đóng Gói}
+\begin{frame}{Record Protocol: 5 Bước Đóng Gói (TLS 1.2 CBC)}
 	\begin{columns}[T]
-		\begin{column}{0.45\textwidth}
-			\begin{uetcard}[height=5.00cm, colback=white, valign=center, top=3pt, bottom=3pt, left=3pt, right=3pt]
+		\begin{column}{0.46\textwidth}
+			\begin{uetcard}[height=5.20cm, colback=white, valign=center, top=2.5pt, bottom=2.5pt, left=3pt, right=3pt]
 				\centering
-				{\fontsize{7.3pt}{8.4pt}\selectfont\color{uetblue}\textbf{Quy Trình Xử Lý Tại Tầng Bản Ghi}}\\[3pt]
-				\includegraphics[width=0.95\linewidth, height=4.32cm, keepaspectratio]{assets/slide9_record_op.png}
+				{\fontsize{6.9pt}{8.0pt}\selectfont\color{uetblue}\textbf{Sơ Đồ Đóng Gói TLS 1.2 CBC (RFC 5246, mục 6.2.3.2)}}\\[4pt]
+				\begin{tikzpicture}[
+					scale=0.77, every node/.style={transform shape},
+					rbox/.style={draw=uetblue!80, fill=uetaccentbg, sharp corners, minimum height=0.44cm, align=center, font=\fontsize{5.7pt}{6.6pt}\selectfont, inner sep=2.2pt},
+					encbox/.style={draw=uetdarkblue, fill=uetblue!15, sharp corners, minimum height=0.52cm, align=center, font=\fontsize{5.4pt}{6.2pt}\selectfont, inner sep=2.0pt},
+					ivbox/.style={draw=uetgreen, fill=uetgreenbg, sharp corners, minimum height=0.52cm, align=center, font=\fontsize{5.4pt}{6.2pt}\selectfont, inner sep=2.0pt},
+					arr/.style={-{Stealth[scale=0.64]}, thick, color=uetblue}
+				]
+					\node[rbox, fill=uetlightgray, draw=uetgray!80, minimum width=6.10cm] (s1) at (0, 3.60) {\textbf{Dữ liệu ứng dụng} (\textit{Application Data})};
+					\node[rbox, fill=white, minimum width=6.10cm] (s2) at (0, 2.86) {\textbf{1. Phân mảnh}: Cắt $\le 16\,384\text{ B}$ (\texttt{TLSPlaintext})};
+					\node[rbox, minimum width=6.10cm] (s3) at (0, 2.12) {\textbf{2. Nén}: Mặc định \texttt{null} (\texttt{TLSCompressed})};
+
+					% Step 3: Data + MAC
+					\node[rbox, fill=white, minimum width=4.30cm] (s4a) at (-0.90, 1.38) {\textbf{3. Dữ liệu [nén]}};
+					\node[rbox, draw=uetgreen, fill=uetgreenbg, text=uetdarkgreen, minimum width=1.80cm] (s4b) at (2.15, 1.38) {\textbf{+ MAC}};
+
+					% Step 4: Explicit IV + CBC(Data + MAC + Padding + Padding Length)
+					\node[ivbox, minimum width=1.55cm] (s5iv) at (-2.275, 0.56) {\textbf{IV tường}\\\textbf{minh}};
+					\node[encbox, minimum width=4.55cm] (s5enc) at (0.775, 0.56) {\textbf{4. Mã hóa CBC}\\\fontsize{5.0pt}{5.8pt}\selectfont(dữ liệu [nén] + MAC + đệm + độ dài đệm)};
+
+					% Wire Record format bar (Step 5: Header 5 B)
+					\draw[dashed, color=uetgray!70] (-3.05, 0.05) -- (3.05, 0.05);
+					\node[font=\fontsize{5.4pt}{6.2pt}\selectfont\bfseries\color{uetblue}] at (0, -0.17) {Cấu trúc bản ghi trên đường truyền (Record Wire Format)};
+					\node[rbox, fill=uetblue!12, minimum width=1.45cm, minimum height=0.56cm] (w1) at (-2.325, -0.68) {\textbf{5. Header 5 B}\\\tiny Type, Ver, Len};
+					\node[ivbox, minimum width=1.35cm, minimum height=0.56cm] (w2) at (-0.925, -0.68) {\textbf{IV tường}\\\textbf{minh}};
+					\node[encbox, minimum width=3.30cm, minimum height=0.56cm] (w3) at (1.40, -0.68) {\textbf{CBC}\\\fontsize{4.9pt}{5.6pt}\selectfont dữ liệu + MAC + đệm + độ dài đệm};
+
+					\draw[arr] (s1.south) -- (s2.north);
+					\draw[arr] (s2.south) -- (s3.north);
+					\draw[arr] (s3.south) -- (0, 1.60);
+					\draw[arr] (0, 1.16) -- (0, 0.82);
+				\end{tikzpicture}\\[3pt]
+				{\fontsize{5.0pt}{6.0pt}\selectfont\color{uetgray}\texttt{Header 5 B | IV tường minh | CBC(dữ liệu + MAC + đệm + độ dài đệm)}.\par}
 			\end{uetcard}
 		\end{column}
 
-		\begin{column}{0.51\textwidth}
-			\begin{accentcard}[uetblue]{Chi Tiết 5 Công Đoạn Tuần Tự}[height=5.00cm, top=2.5pt, bottom=2.5pt]
-				\begin{enumerate}\setlength{\itemsep}{1.0pt}\setlength{\topsep}{1pt}\fontsize{6.9pt}{8.6pt}\selectfont
+		\begin{column}{0.50\textwidth}
+			\begin{accentcard}[uetblue]{5 Công Đoạn Tuần Tự (TLS 1.2 Dùng CBC)}[height=5.20cm, top=2.0pt, bottom=2.0pt]
+				\begin{enumerate}\setlength{\itemsep}{0.5pt}\setlength{\topsep}{0.5pt}\fontsize{6.4pt}{7.75pt}\selectfont
 					\item \textbf{Phân mảnh}: Cắt dữ liệu thành từng mảnh $\le 2^{14}\text{ B}$ ($16\,384\text{ B}$) dạng \texttt{TLSPlaintext}.
 					\item \textbf{Nén}: Mặc định \texttt{null}, loại rò rỉ độ dài (chống \textbf{CRIME}).
 					\item \textbf{Gắn MAC}: Tính \texttt{HMAC} bằng \texttt{write\_mac\_secret} kèm \texttt{sequence\_number} 64-bit ngầm định.
-					\item \textbf{Mã hóa \& Đệm}: Mã hóa đối xứng payload + MAC; tổng độ dài khối $\le 18\,432\text{ B}$.
+					\item \textbf{IV \& Mã hóa CBC}: Gắn \textbf{IV tường minh} (dạng rõ) và mã hóa \texttt{CBC(dữ liệu [nén] + MAC + đệm + độ dài đệm)}; tổng $\le 18\,432\text{ B}$.
 					\item \textbf{Record Header (5B)}: Content Type (1B: \texttt{CCS}, \texttt{Alert}, \texttt{Handshake}, \texttt{App}), Version (2B), Length (2B).
 				\end{enumerate}
-				\vspace{2.0pt}
-				\begin{uetcard}[colback=uetaccentbg, top=2.0pt, bottom=2.0pt, left=4.5pt, right=4.5pt, sharp corners, arc=0pt]
-					\fontsize{6.1pt}{7.6pt}\selectfont
-					{\color{uetblue}\textbf{Xu hướng AEAD (TLS 1.3):}} Gộp bước 3--4 thành thao tác nguyên tử (\texttt{AES-GCM}, \texttt{ChaCha20-Poly1305}), bỏ nén/CBC; header ngoài cố định \texttt{Type = 23} để che loại bản tin thật bên trong.
+				\vspace{1.0pt}
+				\begin{uetcard}[colback=uetaccentbg, top=1.8pt, bottom=1.8pt, left=4.5pt, right=4.5pt, sharp corners, arc=0pt]
+					\fontsize{5.65pt}{6.85pt}\selectfont
+					{\color{uetblue}\textbf{AEAD (TLS 1.2 \& TLS 1.3):}} TLS 1.2 cũng hỗ trợ AEAD (không MAC rời/CBC). Ở TLS 1.3 (bắt buộc AEAD, bỏ nén), bản ghi đã mã hóa (\texttt{TLSCiphertext}) đặt \texttt{Type = 23} để che loại bản tin thật [RFC 9846, mục 5].
 				\end{uetcard}
 			\end{accentcard}
 		\end{column}
@@ -532,7 +532,7 @@
 	% Top: Sơ đồ chuyển trạng thái nguyên tử Pending -> Current
 	\begin{uetcard}[height=1.42cm, valign=center, top=2.0pt, bottom=2.0pt, sharp corners, arc=0pt]
 		\centering
-		{\fontsize{6.6pt}{7.6pt}\selectfont\color{uetblue}\textbf{Cơ Chế Chuyển Trạng Thái Nguyên Tử (Pending State $\rightarrow$ Current State)}}\\[1.5pt]
+		{\fontsize{6.5pt}{7.5pt}\selectfont\color{uetblue}\textbf{TLS 1.2: Chuyển Trạng Thái Nguyên Tử (Pending State $\rightarrow$ Current State qua CCS)}}\\[1.5pt]
 		\begin{tikzpicture}[
 			scale=0.88, every node/.style={transform shape},
 			stbox/.style={draw=uetblue, fill=white, sharp corners, minimum height=0.52cm, align=center, font=\fontsize{6.2pt}{7.2pt}\selectfont, inner sep=3.5pt},
@@ -616,13 +616,13 @@
 					\item \textbf{Trường chuẩn}: \texttt{Version v3}, \texttt{Serial}, \texttt{Issuer/Subject (DN)}, \texttt{Validity (Not Before/After)}, \texttt{Public Key}.
 				\end{itemize}
 			\end{accentcard}\par\nointerlineskip\vspace{0.08cm}\noindent
-			\begin{accentcard}[uetblue]{2. Toàn Vẹn Chữ Ký CA, Mở Rộng SAN \& Thu Hồi}[height=2.04cm, before skip=0pt, after skip=0pt, top=1.5pt, bottom=1.5pt, left=4.5pt, right=4.5pt]
+			\begin{accentcard}[uetblue]{2. Toàn Vẹn Chữ Ký CA, Kiểm Tra SAN \& Thu Hồi}[height=2.04cm, before skip=0pt, after skip=0pt, top=1.5pt, bottom=1.5pt, left=4.5pt, right=4.5pt]
 				\raggedright
 				\setlength{\leftmargini}{8pt}
-				\begin{itemize}\setlength{\itemsep}{0.9pt}\setlength{\topsep}{0pt}\fontsize{6.2pt}{7.5pt}\selectfont
+				\begin{itemize}\setlength{\itemsep}{0.6pt}\setlength{\topsep}{0pt}\fontsize{5.95pt}{7.2pt}\selectfont
 					\item \textbf{Chữ ký số CA}: Bảo vệ toàn vẹn nội dung và chuỗi xác thực tới Root CA.
-					\item \textbf{Mở rộng SAN}: Bảo vệ nhiều tên miền, sub-domain trên cùng 1 chứng thư.
-					\item \textbf{Thu hồi \& Bắt tay}: Tra cứu hủy hiệu lực qua \texttt{CRL}/\texttt{OCSP} (hoặc OCSP Stapling) khi xác thực TLS.
+					\item \textbf{Kiểm tra SAN (RFC 9525)}: Trình duyệt xác minh chuỗi tin cậy, thời hạn và đối chiếu tên miền đang truy cập với trường \textbf{SAN} (thay \texttt{CN}).
+					\item \textbf{Thu hồi \& Bắt tay}: Tra cứu hủy hiệu lực qua \texttt{CRL}/\texttt{OCSP} (hoặc OCSP Stapling).
 				\end{itemize}
 			\end{accentcard}
 		\end{column}
@@ -651,9 +651,9 @@
 		TLS 1.2 Full & Kết nối mới đầy đủ (VD: dùng RSA tĩnh) & \textbf{\color{uetgray}2 RTT} & RSA tĩnh không có PFS; lộ khóa riêng RSA về sau làm lộ toàn bộ bản ghi cũ. \\
 		\rowcolor{uetlightgray}
 		TLS 1.2 Resumption & Tiếp nối phiên rút gọn (\textit{abbreviated handshake}) & \textbf{\color{uetblue}1 RTT} & Tái sử dụng \texttt{master\_secret} qua Session ID/Ticket; 2 RTT chỉ là luồng đầy đủ điển hình. \\
-		TLS 1.3 (1-RTT) & Bắt tay mới hiện đại (chứng chỉ RSA ký + DH tạm) & \textbf{\color{uetblue}1 RTT} & Mặc định chuẩn \textbf{RFC 9846}; luôn có PFS nhờ khóa tạm \texttt{(EC)DHE} (cần 2 RTT nếu có \texttt{HRR}). \\
+		TLS 1.3 (1-RTT) & Bắt tay mới với khóa tạm \texttt{(EC)DHE} (chuẩn hiện đại) & \textbf{\color{uetblue}1 RTT} & Chuẩn \textbf{RFC 9846}; luồng dùng \texttt{(EC)DHE} có PFS (2 RTT nếu có \texttt{HRR}; \texttt{PSK-only} thiếu PFS). \\
 		\rowcolor{uetlightgray}
-		TLS 1.3 (0-RTT) & Tiếp nối phiên bằng PSK / ticket khi được bật & \textbf{\color{uetdarkgreen}0 RTT} & Gửi \texttt{early\_data} ngay chuyến đầu; dễ bị \textbf{replay} giữa kết nối và thiếu PFS đầy đủ. \\
+		TLS 1.3 (0-RTT) & Tiếp nối phiên bằng PSK / ticket khi được bật & \textbf{\color{uetdarkgreen}0 RTT} & Gửi \texttt{early\_data} ngay lượt đầu; \texttt{early\_data} thiếu PFS và phát lại được ngay cả khi dùng \texttt{PSK + ECDHE}. \\
 		\bottomrule
 	\end{tabularx}
 	\vspace{0.08cm}
@@ -699,7 +699,7 @@
 
 					\node[anchor=east, font=\fontsize{5.4pt}{6.4pt}\selectfont\bfseries] at (0, 0.0) {1.3 0-RTT};
 					\draw[bar0] (0.1, -0.35) rectangle (0.35, 0.35);
-					\node[anchor=west, font=\fontsize{5.3pt}{6.3pt}\selectfont\color{uetdarkgreen}\bfseries] at (0.45, 0.0) {0 ms (Chuyến 1)};
+					\node[anchor=west, font=\fontsize{5.0pt}{6.0pt}\selectfont\color{uetdarkgreen}\bfseries] at (0.45, 0.0) {Gửi ngay ở lượt đầu};
 				\end{tikzpicture}
 			\end{accentcard}
 		\end{column}
@@ -716,49 +716,51 @@
 				\centering
 				{\fontsize{7.5pt}{8.8pt}\selectfont\color{uetblue}\textbf{Luồng Bản Tin Bắt Tay (TLS 1.2 Full)}}\\[2pt]
 				\begin{tikzpicture}[
-					x=0.96cm, y=0.66cm,
+					x=0.96cm, y=0.58cm,
 					lifeline/.style={thick, dashed, color=uetgray!65},
-					msg/.style={-{Stealth[scale=0.72]}, thick, color=uetblue},
-					retmsg/.style={-{Stealth[scale=0.72]}, thick, color=uetgreen},
-					msglabel/.style={fill=white, inner sep=1.2pt, sharp corners, font=\fontsize{5.8pt}{6.8pt}\selectfont}
+					msg/.style={-{Stealth[scale=0.68]}, thick, color=uetblue},
+					retmsg/.style={-{Stealth[scale=0.68]}, thick, color=uetgreen},
+					msglabel/.style={fill=white, inner sep=1.0pt, sharp corners, font=\fontsize{5.4pt}{6.2pt}\selectfont}
 				]
 					% Background phase bands (sharp corners)
-					\fill[uetaccentbg, sharp corners] (-0.42, -0.35) rectangle (4.45, -1.35);
-					\fill[uetlightgray, sharp corners] (-0.42, -1.40) rectangle (4.45, -2.85);
-					\fill[uetaccentbg, sharp corners] (-0.42, -2.90) rectangle (4.45, -3.85);
-					\fill[uetlightgray, sharp corners] (-0.42, -3.90) rectangle (4.45, -4.85);
+					\fill[uetaccentbg, sharp corners] (-0.42, -0.32) rectangle (4.45, -1.32);
+					\fill[uetlightgray, sharp corners] (-0.42, -1.36) rectangle (4.45, -3.14);
+					\fill[uetaccentbg, sharp corners] (-0.42, -3.18) rectangle (4.45, -4.52);
+					\fill[uetlightgray, sharp corners] (-0.42, -4.56) rectangle (4.45, -5.52);
 
 					% Lifelines
-					\node[draw=uetblue, fill=uetaccentbg, sharp corners, inner sep=2.5pt, font=\fontsize{7.0pt}{8.0pt}\selectfont\bfseries] (cli) at (0.55, 0) {Client};
-					\node[draw=uetgreen, fill=uetgreenbg, sharp corners, inner sep=2.5pt, font=\fontsize{7.0pt}{8.0pt}\selectfont\bfseries] (srv) at (4.05, 0) {Server};
-					\draw[lifeline] (cli) -- (0.55, -5.35);
-					\draw[lifeline] (srv) -- (4.05, -5.35);
+					\node[draw=uetblue, fill=uetaccentbg, sharp corners, inner sep=2.2pt, font=\fontsize{6.6pt}{7.6pt}\selectfont\bfseries] (cli) at (0.55, 0) {Client};
+					\node[draw=uetgreen, fill=uetgreenbg, sharp corners, inner sep=2.2pt, font=\fontsize{6.6pt}{7.6pt}\selectfont\bfseries] (srv) at (4.05, 0) {Server};
+					\draw[lifeline] (cli) -- (0.55, -6.05);
+					\draw[lifeline] (srv) -- (4.05, -6.05);
 
 					% Phase 1
-					\node[anchor=west, font=\fontsize{5.6pt}{6.6pt}\selectfont\bfseries\color{uetblue}] at (-0.38, -0.85) {Pha 1};
-					\draw[msg] (0.55, -0.55) -- (4.05, -0.65) node[midway, msglabel] {\texttt{ClientHello}};
-					\draw[retmsg] (4.05, -1.05) -- (0.55, -1.15) node[midway, msglabel] {\texttt{ServerHello}};
+					\node[anchor=west, font=\fontsize{5.4pt}{6.2pt}\selectfont\bfseries\color{uetblue}] at (-0.38, -0.82) {Pha 1};
+					\draw[msg] (0.55, -0.52) -- (4.05, -0.62) node[midway, msglabel] {\texttt{ClientHello}};
+					\draw[retmsg] (4.05, -1.02) -- (0.55, -1.12) node[midway, msglabel] {\texttt{ServerHello}};
 
 					% Phase 2
-					\node[anchor=west, font=\fontsize{5.6pt}{6.6pt}\selectfont\bfseries\color{uetblue}] at (-0.38, -2.12) {Pha 2};
-					\draw[retmsg] (4.05, -1.55) -- (0.55, -1.65) node[midway, msglabel] {\texttt{Certificate}};
-					\draw[retmsg] (4.05, -2.05) -- (0.55, -2.15) node[midway, msglabel] {\texttt{ServerKeyExchange*}};
-					\draw[retmsg] (4.05, -2.55) -- (0.55, -2.65) node[midway, msglabel] {\texttt{ServerHelloDone}};
+					\node[anchor=west, font=\fontsize{5.4pt}{6.2pt}\selectfont\bfseries\color{uetblue}] at (-0.38, -2.25) {Pha 2};
+					\draw[retmsg] (4.05, -1.52) -- (0.55, -1.62) node[midway, msglabel] {\texttt{Certificate}};
+					\draw[retmsg] (4.05, -1.94) -- (0.55, -2.04) node[midway, msglabel] {\texttt{ServerKeyExchange*}};
+					\draw[retmsg] (4.05, -2.36) -- (0.55, -2.46) node[midway, msglabel] {\texttt{CertificateRequest*}};
+					\draw[retmsg] (4.05, -2.78) -- (0.55, -2.88) node[midway, msglabel] {\texttt{ServerHelloDone}};
 
 					% Phase 3
-					\node[anchor=west, font=\fontsize{5.6pt}{6.6pt}\selectfont\bfseries\color{uetblue}] at (-0.38, -3.37) {Pha 3};
-					\draw[msg] (0.55, -3.05) -- (4.05, -3.15) node[midway, msglabel] {\texttt{ClientKeyExchange}};
-					\draw[msg] (0.55, -3.55) -- (4.05, -3.65) node[midway, msglabel] {\texttt{CertificateVerify*}};
+					\node[anchor=west, font=\fontsize{5.4pt}{6.2pt}\selectfont\bfseries\color{uetblue}] at (-0.38, -3.85) {Pha 3};
+					\draw[msg] (0.55, -3.34) -- (4.05, -3.44) node[midway, msglabel] {\texttt{Certificate*}};
+					\draw[msg] (0.55, -3.76) -- (4.05, -3.86) node[midway, msglabel] {\texttt{ClientKeyExchange}};
+					\draw[msg] (0.55, -4.18) -- (4.05, -4.28) node[midway, msglabel] {\texttt{CertificateVerify*}};
 
 					% Phase 4
-					\node[anchor=west, font=\fontsize{5.6pt}{6.6pt}\selectfont\bfseries\color{uetblue}] at (-0.38, -4.37) {Pha 4};
-					\draw[msg] (0.55, -4.05) -- (4.05, -4.15) node[midway, msglabel] {\texttt{[CCS] + Finished}};
-					\draw[retmsg] (4.05, -4.55) -- (0.55, -4.65) node[midway, msglabel] {\texttt{[CCS] + Finished}};
+					\node[anchor=west, font=\fontsize{5.4pt}{6.2pt}\selectfont\bfseries\color{uetblue}] at (-0.38, -5.04) {Pha 4};
+					\draw[msg] (0.55, -4.74) -- (4.05, -4.84) node[midway, msglabel] {\texttt{[CCS] + Finished}};
+					\draw[retmsg] (4.05, -5.18) -- (0.55, -5.28) node[midway, msglabel] {\texttt{[CCS] + Finished}};
 
 					% App Data
-					\draw[{Stealth[scale=0.72]}-{Stealth[scale=0.72]}, thick, color=uetblue] (0.55, -5.15) -- (4.05, -5.15) node[midway, msglabel, text=uetblue] {\textbf{Application Data (Mã hóa)}};
+					\draw[{Stealth[scale=0.68]}-{Stealth[scale=0.68]}, thick, color=uetblue] (0.55, -5.82) -- (4.05, -5.82) node[midway, msglabel, text=uetblue] {\textbf{Application Data (Mã hóa)}};
 				\end{tikzpicture}\\[1pt]
-				{\fontsize{5.5pt}{6.5pt}\selectfont\color{uetgray}Pha 1--2 gộp vào lượt 1 (1 RTT); Pha 3--4 tạo lượt 2 (2 RTT).\par}
+				{\fontsize{5.2pt}{6.1pt}\selectfont\color{uetgray}Pha 1--2: lượt 1 (1 RTT); Pha 3--4: lượt 2 (2 RTT). Dấu \texttt{*}: tùy chọn (\texttt{mTLS} / \texttt{KEX}).\par}
 			\end{uetcard}
 		\end{column}
 
@@ -914,10 +916,10 @@
 		\begin{column}{0.46\textwidth}
 			\begin{accentcard}[uetblue]{Chứng Chỉ RSA $\neq$ RSA Key Transport}[height=3.48cm, top=2.0pt, bottom=2.0pt]
 				\setlength{\leftmargini}{10pt}
-				\begin{itemize}\setlength{\itemsep}{2.2pt}\setlength{\topsep}{0pt}\fontsize{6.3pt}{7.9pt}\selectfont
+				\begin{itemize}\setlength{\itemsep}{1.2pt}\setlength{\topsep}{0pt}\fontsize{5.95pt}{7.2pt}\selectfont
 					\item \textbf{RFC 9846 (07/2026, thay RFC 8446)}: Loại bỏ hoàn toàn RSA key transport; không thể thay \texttt{key\_share} bằng \texttt{pre-master secret} mã hóa RSA.
-					\item \textbf{Tách xác thực \& trao đổi khóa}: Server dùng khóa riêng RSA ký xác thực bản tin \texttt{CertificateVerify} bằng \textbf{\texttt{RSA-PSS}} ràng buộc toàn bộ transcript bắt tay.
-					\item \textbf{Bảo đảm PFS mặc định}: Bí mật phiên luôn có đóng góp từ khóa tạm \texttt{(EC)DHE} (hoặc kết hợp \texttt{PSK + (EC)DHE}).
+					\item \textbf{Tách xác thực \& trao đổi khóa}: Server dùng khóa riêng RSA; \texttt{CertificateVerify} (RFC 9846, mục 4.5.2) dùng \textbf{\texttt{RSA-PSS}} ký dữ liệu chứa hash transcript đến hết \texttt{Certificate}.
+					\item \textbf{PFS trong luồng \texttt{(EC)DHE}}: Bí mật phiên có đóng góp từ khóa tạm \texttt{(EC)DHE} (cũng như \texttt{PSK + ECDHE}); tiếp nối \texttt{PSK-only} (\texttt{psk\_ke}, mục 4.3.9) thiếu khóa tạm.
 				\end{itemize}
 			\end{accentcard}
 		\end{column}
@@ -927,7 +929,7 @@
 	% Bottom: Luồng ngang toàn khung giải thích ngoại lệ HelloRetryRequest (2-RTT)
 	\begin{uetcard}[colback=uetlightgray, height=1.48cm, valign=center, top=2.0pt, bottom=2.0pt, left=6pt, right=6pt, sharp corners, arc=0pt]
 		\centering
-		{\fontsize{6.1pt}{7.2pt}\selectfont\color{uetblue}\textbf{Khi Nào TLS 1.3 Cần 2 RTT? Luồng \texttt{HelloRetryRequest} (RFC 9846, mục 4.1.4)} --- Khi chưa khớp nhóm \texttt{key\_share} hoặc cần \texttt{cookie}}\\[2.5pt]
+		{\fontsize{6.1pt}{7.2pt}\selectfont\color{uetblue}\textbf{Khi Nào TLS 1.3 Cần 2 RTT? Luồng \texttt{HelloRetryRequest} (RFC 9846, mục 4.2.4)} --- Khi chưa khớp nhóm \texttt{key\_share} hoặc cần \texttt{cookie}}\\[2.5pt]
 		\begin{tikzpicture}[
 			scale=0.77, every node/.style={transform shape},
 			hbox/.style={draw=uetblue!80, fill=white, sharp corners, minimum height=0.48cm, align=center, font=\fontsize{5.8pt}{6.8pt}\selectfont, inner sep=2.2pt},
@@ -997,7 +999,7 @@
 					\node[font=\fontsize{4.7pt}{5.4pt}\selectfont\color{uetgray}] at (2.62, -4.54) {Dữ liệu sau bắt tay hưởng DH mới; \texttt{early\_data} thiếu PFS};
 					\draw[retmsg, color=uetblue] (4.95, -4.72) -- (0.30, -4.72);
 				\end{tikzpicture}\\[2pt]
-				{\fontsize{5.3pt}{6.2pt}\selectfont\color{uetgray}Không cần chứng chỉ RSA mới khi xác thực bằng PSK. \texttt{PSK-only} bỏ \texttt{key\_share}. [RFC 9846, mục 2.3]\par}
+				{\fontsize{5.1pt}{6.0pt}\selectfont\color{uetgray}Xác thực bằng PSK (không cần chứng chỉ mới). \texttt{PSK-only} (\texttt{psk\_ke}) bỏ \texttt{key\_share} nên thiếu PFS [RFC 9846, mục 2.3 \& 4.3.9].\par}
 			\end{uetcard}
 		\end{column}
 
@@ -1007,14 +1009,14 @@
 				\begin{itemize}\setlength{\itemsep}{0.4pt}\setlength{\topsep}{0pt}\setlength{\parsep}{0pt}\fontsize{6.1pt}{7.3pt}\selectfont
 					\item \textbf{Dẫn xuất PSK}: Server gửi \texttt{NewSessionTicket}; client tạo PSK từ bí mật phiên cũ + ticket (ticket là danh tính, không phải PSK gửi lộ).
 					\item \textbf{Điều kiện \texttt{early\_data}}: Chỉ có ticket chưa đủ; server còn phải cho phép và đặt giới hạn kích thước.
-					\item \textbf{Hai lớp khóa}: \texttt{early\_data} mã hóa trước khi có DH mới nên \textbf{thiếu PFS}. Dữ liệu 1-RTT (\texttt{PSK + DHE}) có PFS nhờ DH mới.
+					\item \textbf{Hai lớp khóa}: \texttt{early\_data} chỉ suy từ PSK cũ nên \textbf{thiếu PFS} (còn \texttt{PSK-only} thiếu đóng góp khóa tạm cho cả phiên). Dữ liệu 1-RTT (\texttt{PSK + ECDHE}) có PFS nhờ DH mới.
 				\end{itemize}
 			\end{accentcard}
 			\vspace{0.08cm}
 			\begin{accentcard}[uetblue]{Rủi Ro Phát Lại (Replay) \& Quy Tắc 0-RTT}[height=2.48cm, top=1.5pt, bottom=1.5pt]
 				\setlength{\leftmargini}{10pt}
-				\begin{itemize}\setlength{\itemsep}{0.4pt}\setlength{\topsep}{0pt}\setlength{\parsep}{0pt}\fontsize{6.1pt}{7.3pt}\selectfont
-					\item \textbf{Tấn công Replay}: Kẻ tấn công phát lại \texttt{ClientHello + early\_data} tới nhiều server; thư viện TLS không tự gửi lại mù quáng.
+				\begin{itemize}\setlength{\itemsep}{0.4pt}\setlength{\topsep}{0pt}\setlength{\parsep}{0pt}\fontsize{6.0pt}{7.1pt}\selectfont
+					\item \textbf{Tấn công Replay}: Kẻ tấn công có thể phát lại \texttt{ClientHello + early\_data} giữa các kết nối ngay cả khi phần bắt tay sau dùng \texttt{PSK + ECDHE}; thư viện không tự gửi lại mù quáng.
 					\item \textbf{Giới hạn thao tác}: Chỉ gửi thao tác không tác dụng phụ (\textit{idempotent} chưa đủ nếu \texttt{GET} đổi trạng thái; cấm thanh toán/đổi mật khẩu).
 					\item \textbf{Tầng HTTP (RFC 8470)}: Server trả mã \textbf{\texttt{425 Too Early}} để yêu cầu client thử lại ngoài \texttt{early\_data}.
 				\end{itemize}
@@ -1235,37 +1237,38 @@
 	% Top: Sơ đồ TLS 1.2 PRF & 6 ô key_block
 	\begin{uetcard}[height=2.54cm, valign=center, top=2.0pt, bottom=2.0pt, left=4pt, right=4pt, sharp corners, arc=0pt]
 		\centering
-		{\fontsize{6.2pt}{7.1pt}\selectfont\color{uetblue}\textbf{TLS 1.2 (RFC 5246): Dẫn Xuất Đơn Pha Qua \texttt{PRF} Từ \texttt{pre\_master\_secret} \& Nonces}}\\[2pt]
+		{\fontsize{6.0pt}{6.9pt}\selectfont\color{uetblue}\textbf{TLS 1.2 (RFC 5246): Công Thức \texttt{PRF} Gốc (Trước \texttt{EMS}) \& \texttt{write\_MAC} Với Bộ Mã Cần MAC Rời}}\\[1.5pt]
 		\begin{tikzpicture}[
-			scale=0.71, every node/.style={transform shape},
-			inbox/.style={draw=uetblue!80, fill=white, sharp corners, minimum height=0.50cm, align=center, font=\fontsize{5.8pt}{6.8pt}\selectfont, inner sep=2.2pt},
-			prfbox/.style={draw=uetblue, fill=uetaccentbg, rounded corners=2pt, minimum height=0.54cm, align=center, font=\fontsize{5.8pt}{6.8pt}\selectfont, inner sep=2.2pt},
-			msbox/.style={draw=uetdarkblue, fill=uetblue!12, sharp corners, minimum height=0.54cm, align=center, font=\fontsize{5.8pt}{6.8pt}\selectfont, inner sep=2.2pt},
-			kcell/.style={draw=uetblue, fill=uetaccentbg, font=\fontsize{5.7pt}{6.6pt}\selectfont\ttfamily\bfseries\color{uetblue}, minimum width=2.10cm, minimum height=0.42cm, align=center, inner sep=1.2pt, sharp corners},
-			scell/.style={draw=uetgreen, fill=uetgreenbg, font=\fontsize{5.7pt}{6.6pt}\selectfont\ttfamily\bfseries\color{uetdarkgreen}, minimum width=2.10cm, minimum height=0.42cm, align=center, inner sep=1.2pt, sharp corners},
+			scale=0.69, every node/.style={transform shape},
+			inbox/.style={draw=uetblue!80, fill=white, sharp corners, minimum height=0.48cm, align=center, font=\fontsize{5.7pt}{6.6pt}\selectfont, inner sep=2.2pt},
+			prfbox/.style={draw=uetblue, fill=uetaccentbg, rounded corners=2pt, minimum height=0.52cm, align=center, font=\fontsize{5.7pt}{6.6pt}\selectfont, inner sep=2.2pt},
+			msbox/.style={draw=uetdarkblue, fill=uetblue!12, sharp corners, minimum height=0.52cm, align=center, font=\fontsize{5.7pt}{6.6pt}\selectfont, inner sep=2.2pt},
+			kcell/.style={draw=uetblue, fill=uetaccentbg, font=\fontsize{5.6pt}{6.5pt}\selectfont\ttfamily\bfseries\color{uetblue}, minimum width=2.10cm, minimum height=0.40cm, align=center, inner sep=1.2pt, sharp corners},
+			scell/.style={draw=uetgreen, fill=uetgreenbg, font=\fontsize{5.6pt}{6.5pt}\selectfont\ttfamily\bfseries\color{uetdarkgreen}, minimum width=2.10cm, minimum height=0.40cm, align=center, inner sep=1.2pt, sharp corners},
 			arr/.style={-{Stealth[scale=0.68]}, thick, color=uetblue}
 		]
 			% Upper pipeline
-			\node[inbox, minimum width=3.15cm] (pm) at (1.58, 1.98) {\textbf{\texttt{pre\_master\_secret}}\\{\color{uetgray}RSA tĩnh (48B) / (EC)DHE chung}};
-			\node[inbox, minimum width=3.15cm] (rnd) at (1.58, 1.24) {\textbf{Nonces (\texttt{C\_Rand + S\_Rand})}\\{\color{uetgray}Đảm bảo khóa duy nhất mỗi phiên}};
-			\node[prfbox, minimum width=2.85cm] (prf1) at (5.25, 1.61) {\textbf{\texttt{PRF("master secret")}}\\{\color{uetgray}Kết hợp bí mật + Nonces}};
-			\node[msbox, minimum width=2.35cm] (ms) at (8.55, 1.61) {\textbf{\texttt{master\_secret}}\\{\color{uetdarkblue}(48 Byte cố định)}};
-			\node[prfbox, minimum width=3.20cm] (prf2) at (12.05, 1.61) {\textbf{\texttt{PRF("key expansion")}}\\{\color{uetgray}Tạo \texttt{key\_block} cho 2 chiều}};
+			\node[inbox, minimum width=3.15cm] (pm) at (1.58, 2.02) {\textbf{\texttt{pre\_master\_secret}}\\{\color{uetgray}RSA tĩnh (48B) / (EC)DHE chung}};
+			\node[inbox, minimum width=3.15cm] (rnd) at (1.58, 1.30) {\textbf{Nonces (\texttt{C\_Rand + S\_Rand})}\\{\color{uetgray}Hoặc \texttt{session\_hash} khi bật EMS}};
+			\node[prfbox, minimum width=2.85cm] (prf1) at (5.25, 1.66) {\textbf{\texttt{PRF("master secret")}}\\{\color{uetgray}(hoặc \texttt{"extended master secret"})}};
+			\node[msbox, minimum width=2.35cm] (ms) at (8.55, 1.66) {\textbf{\texttt{master\_secret}}\\{\color{uetdarkblue}(48B dùng chung 2 chiều)}};
+			\node[prfbox, minimum width=3.20cm] (prf2) at (12.05, 1.66) {\textbf{\texttt{PRF("key expansion")}}\\{\color{uetgray}Tạo \texttt{key\_block} cho 2 chiều}};
 
 			% Group frames
-			\draw[draw=uetblue!55, dashed, fill=white, rounded corners=2pt] (-0.02, -0.44) rectangle (6.82, 0.50);
-			\draw[draw=uetgreen!65, dashed, fill=white, rounded corners=2pt] (7.18, -0.44) rectangle (14.02, 0.50);
+			\draw[draw=uetblue!55, dashed, fill=white, rounded corners=2pt] (-0.02, -0.36) rectangle (6.82, 0.50);
+			\draw[draw=uetgreen!65, dashed, fill=white, rounded corners=2pt] (7.18, -0.36) rectangle (14.02, 0.50);
 
 			% 6 cells
-			\node[kcell] (k1) at (1.12, 0.18) {client\_write\_MAC};
-			\node[kcell] (k2) at (3.40, 0.18) {client\_write\_key};
-			\node[kcell] (k3) at (5.68, 0.18) {client\_write\_IV};
-			\node[scell] (k4) at (8.32, 0.18) {server\_write\_MAC};
-			\node[scell] (k5) at (10.60, 0.18) {server\_write\_key};
-			\node[scell] (k6) at (12.88, 0.18) {server\_write\_IV};
+			\node[kcell] (k1) at (1.12, 0.20) {client\_write\_MAC};
+			\node[kcell] (k2) at (3.40, 0.20) {client\_write\_key};
+			\node[kcell] (k3) at (5.68, 0.20) {client\_write\_IV};
+			\node[scell] (k4) at (8.32, 0.20) {server\_write\_MAC};
+			\node[scell] (k5) at (10.60, 0.20) {server\_write\_key};
+			\node[scell] (k6) at (12.88, 0.20) {server\_write\_IV};
 
-			\node[font=\fontsize{5.4pt}{6.2pt}\selectfont\bfseries\color{uetblue}, inner sep=0.5pt] at (3.40, -0.22) {Chiều gửi Client $\rightarrow$ Server (Tách chiều chống phản xạ)};
-			\node[font=\fontsize{5.4pt}{6.2pt}\selectfont\bfseries\color{uetdarkgreen}, inner sep=0.5pt] at (10.60, -0.22) {Chiều gửi Server $\rightarrow$ Client (Tách chiều chống phản xạ)};
+			\node[font=\fontsize{5.2pt}{6.0pt}\selectfont\bfseries\color{uetblue}, inner sep=0.5pt] at (3.40, -0.17) {Chiều gửi Client $\rightarrow$ Server (Tách chiều chống phản xạ)};
+			\node[font=\fontsize{5.2pt}{6.0pt}\selectfont\bfseries\color{uetdarkgreen}, inner sep=0.5pt] at (10.60, -0.17) {Chiều gửi Server $\rightarrow$ Client (Tách chiều chống phản xạ)};
+			\node[font=\fontsize{5.0pt}{5.8pt}\selectfont\color{uetgray}, inner sep=0.5pt] at (7.00, -0.58) {Hai chiều cùng sinh từ \texttt{master\_secret} (RFC 7627, mục 4); bộ mã AEAD (RFC 5246, mục 6.3) bỏ \texttt{write\_MAC} cho cả hai chiều.};
 
 			% Connectors
 			\draw[arr] (pm.east) -- ++(0.32, 0) |- ([yshift=4.0pt]prf1.west);
@@ -1355,7 +1358,7 @@
 		\midrule
 		Cipher Suite & Gộp KEX + Auth + Enc + PRF vào 1 tên. & Chỉ chọn \textbf{\texttt{AEAD + HKDF}}; KEX \& chữ ký đàm phán riêng. \\
 		\rowcolor{uetlightgray}
-		Trao đổi khóa & Còn RSA tĩnh \& DHE (bị loại ở \textbf{RFC 10015 (2026)}). & Bắt tay mới dùng \textbf{\texttt{(EC)DHE}}; tiếp nối \texttt{PSK} / \texttt{PSK+(EC)DHE}. \\
+		Trao đổi khóa & Còn RSA tĩnh \& DHE (bị loại ở \textbf{RFC 10015 (2026)}). & Bắt tay mới dùng khóa tạm như \textbf{\texttt{(EC)DHE}} hoặc \textbf{nhóm lai}; tiếp nối \texttt{PSK} / \texttt{PSK+DHE}. \\
 		Mã hóa Record & Còn \texttt{CBC}, MAC rời; AEAD là tùy chọn. & Chỉ giữ \textbf{AEAD} (\texttt{AES-GCM}, \texttt{ChaCha20-Poly1305}, \texttt{AES-CCM}). \\
 		\rowcolor{uetlightgray}
 		Dẫn xuất khóa & \texttt{PRF} + 1 \texttt{master\_secret} (48B) chung. & \textbf{HKDF} tách khóa handshake, app, exporter, PSK. \\
@@ -1403,7 +1406,7 @@
 					\draw[uetblue, line width=0.9pt, -{Stealth[scale=0.45]}] (0.24,-0.16) arc[start angle=-50, end angle=-220, radius=0.25];
 				\end{tikzpicture}\\[2pt]
 				{\raggedright\fontsize{5.8pt}{7.1pt}\selectfont
-				Kích hoạt \texttt{KeyUpdate} định kỳ trên kết nối dài để giới hạn dữ liệu AEAD; lưu ý không thay thế DH mới nếu lộ \texttt{traffic secret}.\par}
+				Kích hoạt \texttt{KeyUpdate} định kỳ trên kết nối dài để giới hạn dữ liệu AEAD; lưu ý không thay thế khóa tạm mới (\texttt{(EC)DHE}/nhóm lai) nếu lộ \texttt{traffic secret}.\par}
 			\end{accentcard}
 		\end{column}
 
@@ -1418,7 +1421,7 @@
 					\draw[uetred, line width=0.95pt] (0.15,0.11) -- (0.33,0.29) (0.15,0.29) -- (0.33,0.11);
 				\end{tikzpicture}\\[2pt]
 				{\raggedright\fontsize{5.8pt}{7.1pt}\selectfont
-				Thẩm tra cert/tên miền/hạn. Nếu cần PFS cho \textit{mọi} dữ liệu hoặc chống replay tuyệt đối, tắt 0-RTT và dùng \textbf{1-RTT} (\texttt{PSK-DHE}).\par}
+				Thẩm tra cert/tên miền/hạn. Nếu cần PFS cho \textit{mọi} dữ liệu hoặc tránh rủi ro phát lại \texttt{0-RTT}, tắt 0-RTT và dùng \textbf{1-RTT} (\texttt{(EC)DHE}/nhóm lai).\par}
 			\end{accentcard}
 		\end{column}
 	\end{columns}
@@ -1599,7 +1602,7 @@
 				\begin{itemize}\setlength{\itemsep}{0.65pt}\setlength{\topsep}{0pt}\fontsize{5.8pt}{7.0pt}\selectfont
 					\item \cmark\ \textbf{Lợi ích}: Giảm độ trễ thời gian thực; bảo mật datagram; tái dùng hạ tầng TLS; chống DoS \& hỗ trợ mạng không dây.
 					\item \xmark\ \textbf{Overhead trên từng gói}: Mỗi datagram phải gánh riêng Record Header (\texttt{Epoch}/\texttt{SeqNum}), Nonce và AEAD Tag.
-					\item \xmark\ \textbf{Phức tạp giao vận}: Ứng dụng phải tự quản lý timer truyền lại, ghép mảnh \& \mbox{PMTU}.
+					\item \xmark\ \textbf{Phân tách tin cậy}: Tầng DTLS xử lý timer truyền lại \& ghép mảnh cho \textbf{handshake} (RFC 9147, mục 5); ứng dụng tự lo độ tin cậy cho dữ liệu ứng dụng nếu cần.
 					\item \textbf{Tham chiếu}: \textbf{RFC 6347} (DTLS 1.2) \& \textbf{RFC 9147} (DTLS 1.3).
 				\end{itemize}
 			\end{accentcard}
@@ -1737,12 +1740,12 @@
 				\end{tikzpicture}
 			\end{uetcard}\par\nointerlineskip\vspace{0.08cm}\noindent
 			% Bottom-left: Thách thức bảo mật
-			\begin{accentcard}[uetblue]{3 Thách Thức Còn Tồn Tại (RFC 9849)}[height=2.54cm, before skip=0pt, after skip=0pt, top=2.0pt, bottom=2.0pt]
+			\begin{accentcard}[uetblue]{Thách Thức \& Cơ Chế Bảo Vệ (RFC 9849)}[height=2.54cm, before skip=0pt, after skip=0pt, top=1.5pt, bottom=1.5pt]
 				\raggedright
 				\setlength{\leftmargini}{9pt}
-				\begin{enumerate}\setlength{\itemsep}{1.2pt}\setlength{\topsep}{0pt}\fontsize{6.0pt}{7.4pt}\selectfont
-					\item \textbf{Khai thác PSK (\textit{Pre-Shared Key})}: Khi mở rộng dữ liệu liên kết, kẻ tấn công chèn \texttt{PSK binder} riêng để dò tên server mục tiêu qua phản hồi lỗi.
-					\item \textbf{Rò rỉ qua DNS plaintext}: Nếu không dùng \textbf{DoH/DoT}, truy vấn DNS phân giải tên miền vẫn bị quan sát trước khi TLS bắt đầu.
+				\begin{enumerate}\setlength{\itemsep}{0.9pt}\setlength{\topsep}{0pt}\fontsize{5.85pt}{7.0pt}\selectfont
+					\item \textbf{Rò rỉ DNS rõ \& IP đích}: Truy vấn DNS không mã hóa (thiếu DoH/DoT) hoặc IP đích vẫn lộ danh tính server.
+					\item \textbf{Chèn tham số \texttt{ClientHello}}: RFC 9849 (mục 10.12.3) ràng buộc \texttt{ClientHelloOuter} qua \texttt{AAD} để chặn sửa đổi.
 					\item \textbf{Theo dõi client (\textit{tracking})}: Server độc hại có thể phát \texttt{ECHConfig} riêng cho từng client.
 				\end{enumerate}
 			\end{accentcard}
@@ -1753,7 +1756,7 @@
 				\raggedright
 				\setlength{\leftmargini}{11pt}
 				\begin{enumerate}\setlength{\itemsep}{1.4pt}\setlength{\topsep}{0pt}\fontsize{6.0pt}{7.4pt}\selectfont
-					\item \textbf{Công bố cấu hình ECH qua DNS}: Máy chủ phát hành \texttt{ECHConfig} trong bản ghi \textbf{DNS \texttt{HTTPS}/\texttt{SVCB} (RFC 9460)} gồm khóa công khai HPKE, thuật toán \texttt{KEM/KDF/AEAD}, \texttt{config\_id} và \texttt{public\_name}.
+					\item \textbf{Công bố cấu hình ECH qua DNS}: Máy chủ phát hành \texttt{ECHConfig} trong bản ghi \textbf{DNS \texttt{HTTPS}/\texttt{SVCB} (RFC 9848, RFC 9460)} gồm khóa công khai HPKE, thuật toán \texttt{KEM/KDF/AEAD}, \texttt{config\_id} và \texttt{public\_name}.
 					\item \textbf{Client tạo \texttt{ClientHelloInner}}: Thông điệp thật chứa SNI thật cần được bảo vệ.
 					\item \textbf{Client mã hóa \texttt{ClientHelloInner}}: Dùng khóa công khai HPKE nhận từ DNS để mã hóa.
 					\item \textbf{Client tạo \texttt{ClientHelloOuter}}: Đóng gói thông tin công khai kèm bản mã của \texttt{ClientHelloInner}.
@@ -1850,27 +1853,29 @@
 					\item \textbf{2 vị trí dùng chữ ký số trong TLS}: (1) Chữ ký của CA trên chứng chỉ; (2) Chữ ký \texttt{CertificateVerify} trong Handshake.
 					\item \textbf{Thách thức}: Cân bằng an toàn và hiệu năng, đặc biệt là kích thước khóa và chữ ký.
 				\end{itemize}
-				\vspace{3pt}
+				\vspace{2pt}
 				\centering
-				\fontsize{5.65pt}{7.0pt}\selectfont
-				\renewcommand{\arraystretch}{1.14}
+				\fontsize{5.65pt}{6.9pt}\selectfont
+				\renewcommand{\arraystretch}{1.10}
 				\setlength{\tabcolsep}{2.5pt}
 				\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}X c c c}
 					\toprule
 					\rowcolor{uetaccentbg}
-					\textbf{\color{uetblue}Thuật toán} & \textbf{\color{uetblue}PK (B)} & \textbf{\color{uetblue}Chữ ký (B)} & \textbf{\color{uetblue}Hệ số trễ} \\
+					\textbf{\color{uetblue}Thuật toán} & \textbf{\color{uetblue}PK (B)} & \textbf{\color{uetblue}Chữ ký (B)} & \textbf{\color{uetblue}Chậm tương đối*} \\
 					\midrule
 					\textbf{Falcon (L1)} & 897 & 666 & 0,98$\times$ \\
 					\rowcolor{uetlightgray}
-					\textbf{Dilithium (L2 / ML-DSA)} & 1 312 & 2 420 & 1,02$\times$ \\
-					\textbf{SPHINCS+ (SLH-DSA)} & 32 & 7 856 & 1,58$\times$ \\
+					\textbf{Dilithium (L2)} & 1 312 & 2 420 & 1,02$\times$ \\
+					\textbf{SPHINCS+ (L1)} & 32 & 7 856 & 1,58$\times$ \\
 					\bottomrule
 				\end{tabularx}
-				\vspace{3.5pt}
+				\vspace{2.0pt}
 				\raggedright
-				\begin{itemize}\setlength{\itemsep}{1.0pt}\setlength{\topsep}{0pt}\fontsize{5.95pt}{7.3pt}\selectfont
-					\item \textbf{Nhận xét}: \texttt{Dilithium} (\textbf{FIPS 204}) và \texttt{Falcon} cân bằng tốt nhất cho cả handshake lẫn chứng chỉ; \texttt{SPHINCS+} (\textbf{FIPS 205}) có chữ ký lớn.
-					\item \textbf{Hybrid authentication}: Ghép chữ ký cổ điển + hậu lượng tử thành một chữ ký duy nhất; chậm hơn pure khoảng 1,2--2$\times$.
+				{\fontsize{4.9pt}{5.9pt}\selectfont\color{uetgray}*Nguồn [14] (Phụ lục A, bảng 4--6): Hệ số = kết nối/giây(\texttt{Ed25519}) $\div$ kết nối/giây(thuật toán ký); lớn hơn 1 là chậm hơn \texttt{Ed25519} (OQS-OpenSSL).\par}
+				\vspace{1.5pt}
+				\begin{itemize}\setlength{\itemsep}{0.6pt}\setlength{\topsep}{0pt}\fontsize{5.75pt}{6.95pt}\selectfont
+					\item \textbf{Nhận xét}: \texttt{Dilithium} (\textbf{ML-DSA / FIPS 204}) và \texttt{Falcon} cân bằng tốt nhất; \texttt{SPHINCS+} (\textbf{SLH-DSA / FIPS 205}) có chữ ký lớn.
+					\item \textbf{Hybrid authentication}: Ghép chữ ký cổ điển + hậu lượng tử; mức chậm thay đổi tùy cặp thuật toán kết hợp [14].
 				\end{itemize}
 			\end{accentcard}
 		\end{column}
@@ -1879,22 +1884,22 @@
 			\begin{accentcard}[uetblue]{Hướng 2: Post-Quantum Key Exchange (KEM)}[height=5.32cm, top=2.0pt, bottom=2.0pt]
 				\raggedright
 				\setlength{\leftmargini}{9pt}
-				\begin{itemize}\setlength{\itemsep}{0.6pt}\setlength{\topsep}{0pt}\fontsize{5.9pt}{7.2pt}\selectfont
+				\begin{itemize}\setlength{\itemsep}{0.35pt}\setlength{\topsep}{0pt}\fontsize{5.6pt}{6.65pt}\selectfont
 					\item \textbf{Luồng KEM thay thế DH}: Client gửi PK tạm thời $\rightarrow$ Server \texttt{Encaps} tạo (\texttt{ciphertext}, bí mật chung) $\rightarrow$ Client \texttt{Decaps} lấy bí mật chung.
 					\item \textbf{Tương thích luồng}: Không đổi luồng tổng thể nhưng cần sửa giao thức để mang các giá trị kích thước lớn.
 				\end{itemize}
-				\vspace{1.5pt}
+				\vspace{0.5pt}
 				\centering
-				\fontsize{5.65pt}{6.9pt}\selectfont
-				\renewcommand{\arraystretch}{1.02}
+				\fontsize{5.4pt}{6.45pt}\selectfont
+				\renewcommand{\arraystretch}{0.95}
 				\setlength{\tabcolsep}{2.5pt}
 				\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}X c c c}
 					\toprule
 					\rowcolor{uetaccentbg}
-					\textbf{\color{uetblue}KEM (mức 1)} & \textbf{\color{uetblue}PK (B)} & \textbf{\color{uetblue}Ciphertext (B)} & \textbf{\color{uetblue}Hệ số trễ} \\
+					\textbf{\color{uetblue}KEM (mức 1)} & \textbf{\color{uetblue}PK (B)} & \textbf{\color{uetblue}Ciphertext (B)} & \textbf{\color{uetblue}Chậm tương đối*} \\
 					\midrule
 					\rowcolor{uetgreenbg}
-					\textbf{Kyber (ML-KEM)} & 800 & 768 & \textbf{1,06$\times$} \\
+					\textbf{Kyber (L1)} & 800 & 768 & \textbf{1,06$\times$} \\
 					\textbf{Saber} & 672 & 736 & 1,07$\times$ \\
 					\rowcolor{uetlightgray}
 					\textbf{NTRU} & 930 & 930 & 1,13$\times$ \\
@@ -1904,11 +1909,13 @@
 					\textbf{BIKE} & 1 540 & 1 572 & 2,55$\times$ \\
 					\bottomrule
 				\end{tabularx}
-				\vspace{2.0pt}
+				\vspace{0.8pt}
 				\raggedright
-				\begin{itemize}\setlength{\itemsep}{0.6pt}\setlength{\topsep}{0pt}\fontsize{5.85pt}{7.15pt}\selectfont
+				{\fontsize{4.7pt}{5.5pt}\selectfont\color{uetgray}*Nguồn [14] (Phụ lục A, bảng 4--6): Hệ số = kết nối/giây(\texttt{X25519}) $\div$ kết nối/giây(KEM); VD \texttt{Kyber (L1)}: $829{,}57 \div 782{,}80 \approx 1{,}06\times$ (OQS-OpenSSL).\par}
+				\vspace{0.8pt}
+				\begin{itemize}\setlength{\itemsep}{0.35pt}\setlength{\topsep}{0pt}\fontsize{5.65pt}{6.8pt}\selectfont
 					\item \textbf{Chuẩn hóa NIST}: \textbf{\texttt{Kyber}} (\textbf{ML-KEM / FIPS 203}) nhanh nhất và được chuẩn hóa ưu tiên.
-					\item \textbf{Hybrid key exchange}: Ghép DH cổ điển + KEM hậu lượng tử; khóa bí mật chung tạo bằng cách kết hợp hai khóa thành phần.
+					\item \textbf{Hybrid key exchange}: Ghép DH cổ điển + KEM hậu lượng tử; khóa chung kết hợp từ hai khóa thành phần.
 				\end{itemize}
 			\end{accentcard}
 		\end{column}
@@ -1981,21 +1988,21 @@
 	% Bottom: 3 Vấn đề còn mở
 	\begin{columns}[T]
 		\begin{column}{0.315\textwidth}
-			\begin{accentcard}[uetblue]{1. Phân Tích Hình Thức}[height=1.86cm, top=2.0pt, bottom=2.0pt, left=4.5pt, right=4.5pt]
+			\begin{accentcard}[uetblue]{1. Phân Tích Hình Thức}[height=1.98cm, top=2.0pt, bottom=2.0pt, left=4.5pt, right=4.5pt]
 				{\raggedright\fontsize{6.0pt}{7.5pt}\selectfont
 				Chưa có phân tích đầy đủ cho TLS với KEM làm trao đổi khóa (đặc biệt \textit{hybrid}) và TLS với nhiều chữ ký (\textit{hybrid authentication}).\par}
 			\end{accentcard}
 		\end{column}
 		\begin{column}{0.315\textwidth}
-			\begin{accentcard}[uetblue]{2. Đa Dạng Hóa Giải Pháp}[height=1.86cm, top=2.0pt, bottom=2.0pt, left=4.5pt, right=4.5pt]
+			\begin{accentcard}[uetblue]{2. Đa Dạng Hóa Giải Pháp}[height=1.98cm, top=2.0pt, bottom=2.0pt, left=4.5pt, right=4.5pt]
 				{\raggedright\fontsize{6.0pt}{7.5pt}\selectfont
 				Cần bổ sung các giải pháp mật mã hậu lượng tử có chi phí truyền thông thấp cho những môi trường mạng kém.\par}
 			\end{accentcard}
 		\end{column}
 		\begin{column}{0.315\textwidth}
-			\begin{accentcard}[uetblue]{3. Chuẩn Hóa Giao Thức}[height=1.86cm, top=2.0pt, bottom=2.0pt, left=4.5pt, right=4.5pt]
-				{\raggedright\fontsize{6.0pt}{7.5pt}\selectfont
-				Phiên bản TLS tương lai cần hỗ trợ KEM cho trao đổi khóa và nhiều chữ ký / nhiều trao đổi khóa song song để chạy lai.\par}
+			\begin{accentcard}[uetblue]{3. Trạng Thái Chuẩn Hóa}[height=1.98cm, top=1.8pt, bottom=1.8pt, left=4.5pt, right=4.5pt]
+				{\raggedright\fontsize{5.2pt}{6.25pt}\selectfont
+				\textbf{Trao đổi khóa lai} đã chuẩn hóa trong TLS 1.3: \textbf{RFC 10024} đặc tả các nhóm lai cụ thể (\texttt{X25519MLKEM768}), còn \textbf{RFC 9954} (trạng thái \textit{Informational}) mô tả cấu trúc chung; \textbf{KEMTLS} là bản nháp IETF (\href{https://datatracker.ietf.org/doc/draft-celi-wiggers-tls-authkem/}{\texttt{draft-celi-wiggers-tls-authkem}}) [12].\par}
 			\end{accentcard}
 		\end{column}
 	\end{columns}
@@ -2011,27 +2018,27 @@
 				\centering
 				{\fontsize{6.1pt}{6.9pt}\selectfont\color{uetblue}\textbf{Tỷ Lệ Website Hỗ Trợ Trao Đổi Khóa Lai \texttt{X25519MLKEM768}}}\par\vspace{2pt}
 				\includegraphics[width=0.98\linewidth, height=3.10cm, keepaspectratio]{assets/slide29_pq_adoption_2026.png}\par\vspace{1.5pt}
-				{\fontsize{4.9pt}{5.7pt}\selectfont\color{uetgray}Khảo sát CrawlCheck ngày 03/11/2026 (Wikimedia Commons, CC BY 4.0).\par}
+				{\fontsize{4.75pt}{5.55pt}\selectfont\color{uetgray}Khảo sát CrawlCheck 03/11/2026 (\href{https://commons.wikimedia.org/wiki/File:Websites_supporting_post-quantum_key_exchange,_November_2026.svg}{Wikimedia}, CC BY 4.0; \href{https://crawlcheck.io/blog/post-quantum-key-exchange-six-in-ten-websites-november-2026\#how-this-was-measured}{phương pháp đo}).\par}
 			\end{uetcard}\par\nointerlineskip\vspace{0.08cm}\noindent
-			\begin{accentcard}[uetblue]{Thực Trạng Chuyển Dịch PQ-TLS (RFC 10024)}[height=1.56cm, before skip=0pt, after skip=0pt, top=2.0pt, bottom=2.0pt]
-				\raggedright\fontsize{6.0pt}{7.3pt}\selectfont
-				\textbf{59,6\%} website kiểm thử (và \textbf{99,7\%} phía sau Cloudflare) đã hoàn tất bắt tay TLS 1.3 chỉ với \texttt{X25519MLKEM768}, chống tấn công \textit{Store now, decrypt later} ngay từ hôm nay.
+			\begin{accentcard}[uetblue]{Thực Trạng Chuyển Dịch PQ-TLS (RFC 10024)}[height=1.56cm, before skip=0pt, after skip=0pt, top=1.5pt, bottom=1.5pt]
+				\raggedright\fontsize{5.65pt}{6.85pt}\selectfont
+				\textbf{59,6\%} (\textbf{772/1.295} website truy cập được trong mẫu 1.303 site; \textbf{99,7\%} sau Cloudflare) hoàn tất bắt tay TLS 1.3 khi client \textbf{chỉ đề xuất} \texttt{X25519MLKEM768} (\href{https://crawlcheck.io/blog/post-quantum-key-exchange-six-in-ten-websites-november-2026\#how-this-was-measured}{CrawlCheck [16]}).
 			\end{accentcard}
 		\end{column}
 
 		\begin{column}{0.485\textwidth}
 			\begin{uetcard}[height=3.82cm, before skip=0pt, after skip=0pt, colback=white, valign=center, top=2.0pt, bottom=2.0pt, left=2.5pt, right=2.5pt]
 				\centering
-				{\fontsize{6.1pt}{6.9pt}\selectfont\color{uetblue}\textbf{Kiểm Chứng TLS 1.3 Trên Trình Duyệt Thực Tế}}\par\vspace{2pt}
+				{\fontsize{6.1pt}{6.9pt}\selectfont\color{uetblue}\textbf{Ảnh Minh Họa Giao Diện TLS 1.3 Trên Firefox}}\par\vspace{2pt}
 				\includegraphics[width=0.98\linewidth, height=3.10cm, keepaspectratio]{assets/slide29_firefox_tls13.png}\par\vspace{1.5pt}
-				{\fontsize{4.9pt}{5.7pt}\selectfont\color{uetgray}Firefox Page Info -- Security (Web Site Identity \& Technical Details, MPL 2).\par}
+				{\fontsize{4.7pt}{5.5pt}\selectfont\color{uetgray}Minh họa Firefox Page Info (Wikimedia, 2021; chỉ hiện phiên bản TLS \& bộ mã).\par}
 			\end{uetcard}\par\nointerlineskip\vspace{0.08cm}\noindent
 			\begin{accentcard}[uetblue]{Gắn Kết Chuỗi Kiến Trúc Với Thực Tiễn}[height=1.56cm, before skip=0pt, after skip=0pt, top=1.5pt, bottom=1.5pt]
 				\raggedright
 				\setlength{\leftmargini}{9pt}
-				\begin{itemize}\setlength{\itemsep}{0.6pt}\setlength{\topsep}{0pt}\fontsize{5.95pt}{7.15pt}\selectfont
-					\item \textbf{Trên trình duyệt}: Xác thực bởi \texttt{Let's Encrypt}, đàm phán \textbf{TLS 1.3} với bộ mã \texttt{TLS\_AES\_256\_GCM\_SHA384} (khớp cấu trúc Slide 19).
-					\item \textbf{Phòng thủ kết hợp}: Bật mặc định \texttt{X25519MLKEM768} (\textbf{RFC 10024}) cùng xác thực X.509 chặt chẽ.
+				\begin{itemize}\setlength{\itemsep}{0.5pt}\setlength{\topsep}{0pt}\fontsize{5.85pt}{7.0pt}\selectfont
+					\item \textbf{Trên trình duyệt}: Ảnh minh họa hiển thị \textbf{TLS 1.3} với bộ mã \texttt{TLS\_AES\_256\_GCM\_SHA384} (khớp cấu trúc Slide 18).
+					\item \textbf{Phòng thủ kết hợp}: Đàm phán nhóm lai \texttt{X25519MLKEM768} (\textbf{RFC 10024}) khi cả hai phía hỗ trợ, cùng xác thực X.509 chặt chẽ.
 				\end{itemize}
 			\end{accentcard}
 		\end{column}
@@ -2065,10 +2072,10 @@
 					\item[\color{uetblue}\textbf{[2]}] T. Dierks and E. Rescorla, ``The Transport Layer Security (TLS) Protocol Version 1.2,'' IETF RFC 5246, Aug. 2008; J. Salowey \textit{et al.}, RFC 5288.
 					\item[\color{uetblue}\textbf{[3]}] K. Moriarty and S. Farrell, ``Deprecating TLS 1.0 and TLS 1.1,'' IETF BCP 195 / RFC 8996, Mar. 2021; R. Barnes \textit{et al.}, RFC 7568; RFC 6176.
 					\item[\color{uetblue}\textbf{[4]}] Y. Sheffer, P. Saint-Andre, and T. Fossati, ``Recommendations for Secure Use of TLS and DTLS,'' IETF RFC 9325, Nov. 2022; N. Aviram, RFC 10015, Jul. 2026.
-					\item[\color{uetblue}\textbf{[5]}] K. Kwiatkowski \textit{et al.}, ``Post-Quantum Traditional (PQ/T) Hybrid Key Agreement Mechanisms for TLS 1.3,'' IETF RFC 10024, Aug. 2026.
+					\item[\color{uetblue}\textbf{[5]}] K. Kwiatkowski \textit{et al.}, ``Post-Quantum Traditional (PQ/T) Hybrid Key Agreement Mechanisms for TLS 1.3,'' IETF RFC 10024, Aug. 2026; RFC 9954, Jul. 2026.
 					\item[\color{uetblue}\textbf{[6]}] E. Rescorla \textit{et al.}, ``The Datagram Transport Layer Security (DTLS) Protocol Version 1.3,'' IETF RFC 9147, Apr. 2022; RFC 6347, Jan. 2012.
-					\item[\color{uetblue}\textbf{[7]}] E. Rescorla \textit{et al.}, ``TLS Encrypted Client Hello (ECH),'' IETF RFC 9849, Mar. 2026; R. Barnes \textit{et al.}, RFC 9180; B. Schwartz \textit{et al.}, RFC 9460.
-					\item[\color{uetblue}\textbf{[8]}] D. Cooper \textit{et al.}, ``Internet X.509 PKI Certificate and CRL Profile,'' IETF RFC 5280, May 2008; K. Bhargavan \textit{et al.}, RFC 7627; RFC 8470.
+					\item[\color{uetblue}\textbf{[7]}] E. Rescorla \textit{et al.}, ``TLS Encrypted Client Hello (ECH),'' IETF RFC 9849, Mar. 2026; RFC 9848 (DNS ECH), Mar. 2026; RFC 9180; RFC 9460.
+					\item[\color{uetblue}\textbf{[8]}] D. Cooper \textit{et al.}, ``Internet X.509 PKI Certificate and CRL Profile,'' IETF RFC 5280, May 2008; RFC 9525 (Service Identity); RFC 7627; RFC 8470.
 				\end{list}
 			\end{accentcard}
 		\end{column}
@@ -2089,11 +2096,11 @@
 					\item[\color{uetblue}\textbf{[9]}] NIST, ``Module-Lattice-Based Key-Encapsulation Mechanism Standard,'' FIPS PUB 203 (with FIPS 204 ML-DSA, FIPS 205 SLH-DSA), Aug. 2024.
 					\item[\color{uetblue}\textbf{[10]}] NIST, ``Guidelines for the Selection, Configuration, and Use of Transport Layer Security (TLS) Implementations,'' NIST SP 800-52 Rev. 2, Aug. 2019.
 					\item[\color{uetblue}\textbf{[11]}] N. Modadugu and E. Rescorla, ``The Design and Implementation of Datagram TLS,'' in \textit{Proc. 11th Netw. Distrib. Syst. Secur. Symp. (NDSS)}, 2004.
-					\item[\color{uetblue}\textbf{[12]}] P. Schwabe, D. Stebila, and T. Wiggers, ``Post-Quantum TLS Without Handshake Signatures,'' in \textit{Proc. ACM CCS}, 2020, pp. 1461--1480.
+					\item[\color{uetblue}\textbf{[12]}] P. Schwabe, D. Stebila, and T. Wiggers, ``Post-Quantum TLS Without Handshake Signatures,'' \textit{ACM CCS}, 2020; IETF \href{https://datatracker.ietf.org/doc/draft-celi-wiggers-tls-authkem/}{\texttt{draft-celi-wiggers-tls-authkem}}.
 					\item[\color{uetblue}\textbf{[13]}] K. Bhargavan, V. Cheval, and C. Wood, ``A Symbolic Analysis of Privacy for TLS 1.3 with Encrypted Client Hello,'' in \textit{Proc. ACM CCS}, 2022, pp. 365--379.
-					\item[\color{uetblue}\textbf{[14]}] N. Alnahawi \textit{et al.}, ``A Comprehensive Survey on Post-Quantum TLS,'' \textit{IACR Commun. Cryptol.}, vol. 1, no. 2, art. 6, 2024.
+					\item[\color{uetblue}\textbf{[14]}] N. Alnahawi \textit{et al.}, ``A Comprehensive Survey on Post-Quantum TLS,'' \textit{IACR Commun. Cryptol.}, vol. 1, no. 2, art. 6, 2024 (\href{https://cic.iacr.org/p/1/2/6/pdf}{PDF}).
 					\item[\color{uetblue}\textbf{[15]}] W. Stallings, \textit{Network Security Essentials: Applications and Standards}, 6th ed. Pearson, 2017, ch. 5.
-					\item[\color{uetblue}\textbf{[16]}] Mozilla Firefox (MPL 2.0) and Wikimedia Commons, ``Certificate Viewer \& Page Info TLS 1.3; Diffie--Hellman Paint (PD); IBM Quantum \& PQ-TLS Probe 2026 \mbox{(CC BY 4.0)}.''
+					\item[\color{uetblue}\textbf{[16]}] Mozilla Firefox (MPL 2.0) \& Wikimedia Commons; CrawlCheck PQ-TLS Probe 2026 (CC BY 4.0): \href{https://crawlcheck.io/blog/post-quantum-key-exchange-six-in-ten-websites-november-2026\#how-this-was-measured}{crawlcheck.io/blog/...\#how-this-was-measured}.
 				\end{list}
 			\end{accentcard}
 		\end{column}
