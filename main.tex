@@ -2037,32 +2037,37 @@
 \begin{frame}{Thực Chứng Triển Khai: TLS 1.3 \& PQ-TLS (11/2026)}
 	\begin{columns}[T]
 		\begin{column}{0.485\textwidth}
-			\begin{uetcard}[height=3.62cm, before skip=0pt, after skip=0pt, colback=white, valign=center, top=1.5pt, bottom=1.5pt, left=2.5pt, right=2.5pt]
+			\begin{uetcard}[height=3.05cm, before skip=0pt, after skip=0pt, colback=white, valign=center, top=2.0pt, bottom=2.0pt, left=2.5pt, right=2.5pt]
 				\centering
 				{\fontsize{6.1pt}{6.9pt}\selectfont\color{uetblue}\textbf{Tỷ Lệ Website Hỗ Trợ Trao Đổi Khóa Lai \texttt{X25519MLKEM768}}}\par\vspace{1.5pt}
-				\includegraphics[width=0.98\linewidth, height=2.92cm, keepaspectratio]{assets/slide29_pq_adoption_2026.png}\par\vspace{1.0pt}
+				\includegraphics[width=0.98\linewidth, height=2.40cm, keepaspectratio]{assets/slide29_pq_adoption_2026.png}\par\vspace{1.0pt}
 				{\fontsize{4.65pt}{5.4pt}\selectfont\color{uetgray}Khảo sát CrawlCheck 03/11/2026 (\href{https://commons.wikimedia.org/wiki/File:Websites_supporting_post-quantum_key_exchange,_November_2026.svg}{Wikimedia}, CC BY 4.0; \href{https://crawlcheck.io/blog/post-quantum-key-exchange-six-in-ten-websites-november-2026\#how-this-was-measured}{phương pháp đo}).\par}
 			\end{uetcard}\par\nointerlineskip\vspace{0.08cm}\noindent
-			\begin{accentcard}[uetblue]{Thực Trạng Chuyển Dịch PQ-TLS (RFC 10024)}[height=1.76cm, before skip=0pt, after skip=0pt, top=1.5pt, bottom=1.5pt]
-				\raggedright\fontsize{5.65pt}{6.85pt}\selectfont
-				\textbf{59,6\%} (\textbf{772/1.295} website truy cập được trong mẫu 1.303 site; \textbf{99,7\%} sau Cloudflare) hoàn tất bắt tay TLS 1.3 khi client \textbf{chỉ đề xuất} \texttt{X25519MLKEM768} (\href{https://crawlcheck.io/blog/post-quantum-key-exchange-six-in-ten-websites-november-2026\#how-this-was-measured}{CrawlCheck [16]}).
+			\begin{accentcard}[uetblue]{Thực Trạng Chuyển Dịch PQ-TLS (RFC 10024)}[height=2.36cm, before skip=0pt, after skip=0pt, top=1.8pt, bottom=1.8pt, fonttitle=\fontsize{7.4pt}{8.8pt}\bfseries\raggedright]
+				\raggedright
+				\setlength{\leftmargini}{9pt}
+				\begin{itemize}\setlength{\itemsep}{1.6pt}\setlength{\topsep}{0pt}\fontsize{5.55pt}{6.7pt}\selectfont
+					\item \textbf{Tỷ lệ triển khai}: \textbf{59,6\%} (\textbf{772/1.295} website mẫu) hoàn tất bắt tay TLS 1.3 khi client \textbf{chỉ đề xuất} \texttt{X25519MLKEM768} [CrawlCheck, 11/2026].
+					\item \textbf{Vai trò Cloudflare}: Đạt \textbf{99,7\%} (149/150 site) do CDN kích hoạt sẵn; nhóm website tự quản trị đạt \textbf{44,8\%} (423/945) và đang tăng.
+					\item \textbf{Khả năng tương thích}: Không gặp trở ngại phân mảnh gói tin hay đứt gãy kết nối, khẳng định nhóm lai PQ đã sẵn sàng môi trường thực tế.
+				\end{itemize}
 			\end{accentcard}
 		\end{column}
 
 		\begin{column}{0.485\textwidth}
-			\begin{uetcard}[height=3.62cm, before skip=0pt, after skip=0pt, colback=white, valign=center, top=1.5pt, bottom=1.5pt, left=2.5pt, right=2.5pt]
+			\begin{uetcard}[height=3.05cm, before skip=0pt, after skip=0pt, colback=white, valign=center, top=2.0pt, bottom=2.0pt, left=2.5pt, right=2.5pt]
 				\centering
 				{\fontsize{6.1pt}{6.9pt}\selectfont\color{uetblue}\textbf{Bắt Tay Wireshark Thật: ServerHello Chọn X25519MLKEM768}}\par\vspace{1.5pt}
-				\includegraphics[width=0.98\linewidth, height=2.92cm, keepaspectratio]{assets/slide28_wireshark_serverhello.png}\par\vspace{1.0pt}
+				\includegraphics[width=0.98\linewidth, height=2.40cm, keepaspectratio]{assets/slide28_wireshark_serverhello.png}\par\vspace{1.0pt}
 				{\fontsize{4.45pt}{5.1pt}\selectfont\color{uetgray}Gói \texttt{ServerHello} (bắt gói \texttt{127.0.0.1:8081} $\leftrightarrow$ \texttt{48266}): Nhóm KEX nằm riêng ở \texttt{key\_share}.\par}
 			\end{uetcard}\par\nointerlineskip\vspace{0.08cm}\noindent
-			\begin{accentcard}[uetblue]{Ba Trường Trong ServerHello}[height=1.76cm, before skip=0pt, after skip=0pt, top=1.5pt, bottom=1.5pt]
+			\begin{accentcard}[uetblue]{Ba Trường Trong ServerHello}[height=2.36cm, before skip=0pt, after skip=0pt, top=1.8pt, bottom=1.8pt, fonttitle=\fontsize{7.4pt}{8.8pt}\bfseries\raggedright]
 				\raggedright
 				\setlength{\leftmargini}{9pt}
-				\begin{itemize}\setlength{\itemsep}{0.35pt}\setlength{\topsep}{0pt}\fontsize{5.55pt}{6.7pt}\selectfont
-					\item \textbf{1. Phiên bản TLS 1.3}: \texttt{0x0303} ở header là trường tương thích (\textit{legacy\_version}); phiên bản thực đàm phán là \texttt{0x0304} trong \texttt{supported\_versions} [RFC 9846, mục 4.2.3].
-					\item \textbf{2. Bộ mã}: \texttt{TLS\_AES\_128\_GCM\_SHA256} chỉ chọn AEAD + băm; đã tách rời KEX.
-					\item \textbf{3. Nhóm lai PQ}: \texttt{X25519MLKEM768 (0x11EC)} dài 1.120 B trong \texttt{key\_share} [RFC 10024].
+				\begin{itemize}\setlength{\itemsep}{1.6pt}\setlength{\topsep}{0pt}\fontsize{5.55pt}{6.7pt}\selectfont
+					\item \textbf{1. Phiên bản TLS 1.3}: Header mang \texttt{0x0303} tương thích (\textit{legacy\_version}); bản chốt là \texttt{0x0304} ở \texttt{supported\_versions} [RFC 9846, 4.2.3].
+					\item \textbf{2. Bộ mã}: \texttt{TLS\_AES\_128\_GCM\_SHA256} gồm AEAD + băm (đã tách riêng nhóm KEX sang \texttt{key\_share}).
+					\item \textbf{3. Nhóm lai PQ}: \texttt{X25519MLKEM768 (0x11EC)} mang 1.120 B bản mã KEX [RFC 10024].
 				\end{itemize}
 			\end{accentcard}
 		\end{column}
