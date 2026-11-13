@@ -29,3 +29,10 @@ previews/
 Thumbs.db
 *.bak
 *~
+
+# Slide draft markdown files
+trang_21.md
+trang_22.md
+trang_23.md
+trang_24.md
+

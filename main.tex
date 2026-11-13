@@ -1455,181 +1455,191 @@
 \section{8. Biến Thể DTLS Trên UDP}
 
 % -----------------------------------------------------------------------------
-% SLIDE 21: ĐỘNG LỰC RA ĐỜI DTLS & CẢI TIẾN TẦNG RECORD (BITMAP REPLAY WINDOW)
+% SLIDE 21: GIAO THỨC DTLS: ĐỘNG LỰC & GIẢI PHÁP (trang_21.md)
 % -----------------------------------------------------------------------------
-\begin{frame}{Giao Thức DTLS: Động Lực \& Cải Tiến Tầng Record}
-	% Top: 2 cột lý do ra đời vs. giải pháp Record
+\begin{frame}{Giao Thức DTLS: Động Lực \& Giải pháp}
 	\begin{columns}[T]
-		\begin{column}{0.48\textwidth}
-			\begin{accentcard}[uetblue]{Lý Do Ra Đời \& Rào Cản Trên UDP}[height=2.84cm, top=2.0pt, bottom=2.0pt]
+		\begin{column}{0.485\textwidth}
+			\begin{accentcard}[uetblue]{Lý Do Ra Đời \& Rào Cản Trên UDP}[height=5.35cm, top=2.8pt, bottom=2.8pt]
 				\raggedright
 				\setlength{\leftmargini}{9pt}
-				\begin{itemize}\setlength{\itemsep}{1.0pt}\setlength{\topsep}{0pt}\fontsize{6.1pt}{7.5pt}\selectfont
-					\item \textbf{Ứng dụng thời gian thực}: Hội nghị truyền hình, VoIP, game trực tuyến cần độ trễ thấp $\rightarrow$ dùng \textbf{UDP}, tái sử dụng hạ tầng TLS.
-					\item \textbf{Record ngầm định}: TLS đếm thứ tự ngầm định; mất 1 record làm giải mã các record sau bị sai.
-					\item \textbf{Thứ tự bắt tay}: Handshake TLS phải đúng thứ tự trên kênh~tin~cậy.
-					\item \textbf{Rủi ro UDP}: Dễ bị DoS và khuếch đại (giả mạo IP nguồn).
+				\begin{itemize}\setlength{\itemsep}{3.8pt}\setlength{\topsep}{0pt}\fontsize{6.2pt}{7.8pt}\selectfont
+					\item \textbf{Ứng dụng thời gian thực:} Hội nghị truyền hình, VoIP, game trực tuyến cần độ trễ thấp $\rightarrow$ dùng \textbf{UDP}, tái sử dụng hạ tầng TLS.
+					\item \textbf{Record ngầm định:} TLS đếm thứ tự ngầm định $\rightarrow$ mất 1 record làm giải mã các record sau bị sai.
+					\item \textbf{Thứ tự bắt tay:} Handshake TLS yêu cầu đúng thứ tự cố định.
+					\item \textbf{Quá kích thước:} Thông điệp handshake có thể lớn hơn một datagram ($\sim 1500\text{ byte}$).
+					\item \textbf{Rủi ro UDP:} Dễ bị DoS và khuếch đại lưu lượng (giả mạo IP nguồn).
 				\end{itemize}
 			\end{accentcard}
 		\end{column}
 
-		\begin{column}{0.48\textwidth}
-			\begin{accentcard}[uetblue]{Giải Pháp Tại Tầng Record (DTLS 1.2 $\rightarrow$ 1.3)}[height=2.84cm, top=2.0pt, bottom=2.0pt]
+		\begin{column}{0.485\textwidth}
+			\begin{accentcard}[uetgreen]{Giải Pháp DTLS}[height=5.35cm, top=2.8pt, bottom=2.8pt]
 				\raggedright
 				\setlength{\leftmargini}{9pt}
-				\begin{itemize}\setlength{\itemsep}{0.9pt}\setlength{\topsep}{0pt}\fontsize{6.0pt}{7.4pt}\selectfont
-					\item \textbf{Số thứ tự tường minh}: Gắn trực tiếp \texttt{sequence\_number} và \texttt{epoch} (thế hệ khóa) vào mỗi record để giải mã khi lệch thứ tự.
-					\item \textbf{Chống phát lại (\textit{Replay Detection})}: Theo dõi bản ghi hợp lệ đã nhận bằng cửa sổ trượt bitmap (\textit{bitmap window}).
-					\item \textbf{Nâng cấp DTLS 1.3 (RFC 9147)}: Dùng \textit{Unified Header} nén trường tiêu đề và thêm \texttt{Connection ID} giữ phiên khi đổi IP/NAT.
+				\begin{itemize}\setlength{\itemsep}{4.5pt}\setlength{\topsep}{0pt}\fontsize{6.2pt}{7.8pt}\selectfont
+					\item \textbf{Số thứ tự tường minh:} Gắn trực tiếp \texttt{sequence\_number} và \texttt{epoch} (thế hệ khóa) vào mỗi record để giải mã khi lệch thứ tự.
+					\item \textbf{Số thứ tự thông điệp:} Thêm số thứ tự cho thông điệp handshake.
+					\item \textbf{Phân mảnh và ráp lại:} Mỗi thông điệp có fragment offset và fragment length.
+					\item \textbf{Xác minh địa chỉ IP nguồn:} Kiểm tra bằng cookie.
 				\end{itemize}
 			\end{accentcard}
 		\end{column}
 	\end{columns}
-	\vspace{0.07cm}
-
-	% Bottom: Sơ đồ Record Header & Bitmap Window toàn khung
-	\begin{uetcard}[height=2.50cm, valign=center, top=2.0pt, bottom=2.0pt, left=4pt, right=4pt, sharp corners, arc=0pt]
-		\centering
-		{\fontsize{6.4pt}{7.4pt}\selectfont\color{uetblue}\textbf{Tiêu Đề Record Tường Minh (DTLS 1.2) \& Cơ Chế Cửa Sổ Trượt Bitmap (\textit{Bitmap Window})}}\\[3pt]
-		\begin{tikzpicture}[
-			scale=0.80, every node/.style={transform shape},
-			hdrbox/.style={draw=uetblue!80, fill=white, sharp corners, minimum height=0.50cm, align=center, font=\fontsize{5.6pt}{6.5pt}\selectfont, inner sep=2.0pt},
-			dbox/.style={draw=uetblue, fill=uetaccentbg, sharp corners, minimum height=0.50cm, align=center, font=\fontsize{5.6pt}{6.5pt}\selectfont\bfseries\color{uetblue}, inner sep=2.0pt},
-			bitcell/.style={draw=uetblue!75, fill=white, sharp corners, minimum width=0.50cm, minimum height=0.42cm, align=center, font=\fontsize{5.8pt}{6.8pt}\selectfont\ttfamily\bfseries},
-			arr/.style={-{Stealth[scale=0.64]}, thick}
-		]
-			% Left Group: DTLS Record Header
-			\draw[draw=uetborder, fill=uetlightgray, rounded corners=2pt] (-0.20, -0.98) rectangle (5.72, 1.22);
-			\node[font=\fontsize{5.7pt}{6.5pt}\selectfont\bfseries\color{uetblue}, anchor=north west] at (-0.06, 1.14) {1. Gắn Tường Minh vào DTLS Record Header};
-
-			\node[hdrbox, minimum width=0.82cm] (t) at (0.36, 0.24) {\textbf{Type}\\\color{uetgray}1B};
-			\node[hdrbox, minimum width=0.82cm] (v) at (1.18, 0.24) {\textbf{Ver}\\\color{uetgray}2B};
-			\node[dbox, minimum width=1.08cm] (ep) at (2.13, 0.24) {\textbf{Epoch}\\\color{uetblue}2B};
-			\node[dbox, minimum width=1.34cm] (sq) at (3.34, 0.24) {\textbf{Seq Num}\\\color{uetblue}6B};
-			\node[hdrbox, minimum width=0.78cm] (ln) at (4.40, 0.24) {\textbf{Len}\\\color{uetgray}2B};
-			\node[hdrbox, minimum width=0.72cm, fill=uetgreenbg, draw=uetgreen] (pl) at (5.15, 0.24) {\textbf{Data}\\\color{uetdarkgreen}Enc};
-
-			\node[font=\fontsize{5.3pt}{6.4pt}\selectfont\color{uetdark}, align=center] at (2.76, -0.52) {Thay thế bộ đếm ngầm định của TLS $\rightarrow$\\xác định đúng thế hệ khóa \& thứ tự bản ghi};
-
-			% Right Group: Replay Detection Bitmap Window (generous top title band y=0.82..1.18)
-			\draw[draw=uetborder, fill=uetlightgray, rounded corners=2pt] (5.96, -0.98) rectangle (14.88, 1.22);
-			\node[font=\fontsize{5.7pt}{6.5pt}\selectfont\bfseries\color{uetblue}, anchor=north west] at (6.10, 1.14) {2. Cơ Chế Chống Phát Lại Dựa Trên Cửa Sổ Bitmap};
-
-			% Old records outside window
-			\node[draw=uetred!75, fill=uetred!10, sharp corners, minimum width=2.08cm, minimum height=0.44cm, font=\fontsize{5.4pt}{6.2pt}\selectfont\bfseries\color{uetred}] (old) at (7.18, 0.08) {Ngoài cửa sổ (Cũ)};
-			\node[font=\fontsize{5.2pt}{6.1pt}\selectfont\color{uetred}, align=center] (oldtxt) at (7.18, -0.70) {\xmark\ Loại bỏ};
-			\draw[arr, color=uetred] (old.south) -- (7.18, -0.50);
-
-			% Bitmap Window container (strictly below group title band)
-			\draw[dashed, draw=uetblue!70, fill=white, rounded corners=1.5pt] (8.44, -0.22) rectangle (11.96, 0.64);
-			\node[font=\fontsize{5.0pt}{5.8pt}\selectfont\bfseries\color{uetblue}] at (10.20, 0.48) {Bitmap Window};
-			\node[bitcell, fill=uetred!10, text=uetred] (b0) at (8.95, 0.06) {1};
-			\node[bitcell, fill=uetgreenbg, text=uetdarkgreen] (b1) at (9.45, 0.06) {0};
-			\node[bitcell, fill=uetred!10, text=uetred] (b2) at (9.95, 0.06) {1};
-			\node[bitcell, fill=uetred!10, text=uetred] (b3) at (10.45, 0.06) {1};
-			\node[bitcell, fill=uetgreenbg, text=uetdarkgreen] (b4) at (10.95, 0.06) {0};
-			\node[bitcell, fill=uetred!10, text=uetred] (b5) at (11.45, 0.06) {1};
-
-			\node[font=\fontsize{5.0pt}{5.9pt}\selectfont\color{uetred}] (dup) at (9.02, -0.70) {\xmark\ Đã nhận (1): Loại bỏ};
-			\node[font=\fontsize{5.0pt}{5.9pt}\selectfont\color{uetdarkgreen}] (okw) at (11.12, -0.70) {\cmark\ Chưa nhận (0): Xử lý};
-			\draw[arr, color=uetred] (b0.south) -- (8.95, -0.50);
-			\draw[arr, color=uetgreen] (b4.south) -- (10.95, -0.50);
-
-			% New valid records to the right
-			\node[draw=uetgreen, fill=uetgreenbg, sharp corners, minimum width=2.30cm, minimum height=0.44cm, font=\fontsize{5.4pt}{6.2pt}\selectfont\bfseries\color{uetdarkgreen}] (new) at (13.46, 0.08) {Bản ghi mới ($>$ biên)};
-			\node[font=\fontsize{5.2pt}{6.1pt}\selectfont\color{uetdarkgreen}, align=center] (newtxt) at (13.46, -0.70) {\cmark\ Xử lý \& trượt cửa sổ};
-			\draw[arr, color=uetgreen] (new.south) -- (13.46, -0.50);
-		\end{tikzpicture}
-	\end{uetcard}
 \end{frame}
 
 % -----------------------------------------------------------------------------
-% SLIDE 22: BẮT TAY DTLS (COOKIE CHỐNG DOS), PHÂN MẢNH & ĐÁNH GIÁ
+% SLIDE 22: CẢI TIẾN TẦNG RECORD DTLS (trang_22.md)
 % -----------------------------------------------------------------------------
-\begin{frame}{Bắt Tay DTLS: Cookie, Phân Mảnh \& Đánh Giá}
+\begin{frame}{Cải tiến tầng record DTLS}
+	% Gắn tường minh vào DTLS Record Header
+	\begin{accentcard}[uetblue]{Gắn tường minh vào DTLS Record Header}[height=2.05cm, before skip=0pt, after skip=0pt, top=2.0pt, bottom=2.0pt]
+		\centering
+		\begin{tikzpicture}[
+			scale=0.88, every node/.style={transform shape},
+			hdrbox/.style={draw=uetblue!80, fill=white, sharp corners, minimum height=0.48cm, align=center, font=\fontsize{5.8pt}{6.8pt}\selectfont, inner sep=2.5pt},
+			dbox/.style={draw=uetblue, fill=uetaccentbg, sharp corners, minimum height=0.48cm, align=center, font=\fontsize{5.8pt}{6.8pt}\selectfont\bfseries\color{uetblue}, inner sep=2.5pt}
+		]
+			\node[hdrbox, minimum width=1.10cm] (t) at (0.60, 0) {\textbf{Type}\\\color{uetgray}1B};
+			\node[hdrbox, minimum width=1.10cm] (v) at (1.80, 0) {\textbf{Ver}\\\color{uetgray}2B};
+			\node[dbox, minimum width=1.50cm] (ep) at (3.20, 0) {\textbf{Epoch}\\\color{uetblue}2B};
+			\node[dbox, minimum width=2.00cm] (sq) at (5.05, 0) {\textbf{Seq Num}\\\color{uetblue}6B};
+			\node[hdrbox, minimum width=1.10cm] (ln) at (6.70, 0) {\textbf{Len}\\\color{uetgray}2B};
+			\node[hdrbox, minimum width=2.00cm, fill=uetgreenbg, draw=uetgreen] (pl) at (8.35, 0) {\textbf{Data}\\\color{uetdarkgreen}Enc};
+		\end{tikzpicture}\\[3pt]
+		{\fontsize{5.8pt}{7.0pt}\selectfont\color{uetdark}\textit{Thay thế bộ đếm ngầm định của TLS $\rightarrow$ xác định đúng thế hệ khóa \& thứ tự bản ghi}\par}
+	\end{accentcard}\par\nointerlineskip\vspace{0.08cm}\noindent
+	% Cơ Chế Chống Phát Lại Dựa Trên Cửa Sổ Bitmap
+	\begin{accentcard}[uetgreen]{Cơ Chế Chống Phát Lại Dựa Trên Cửa Sổ Bitmap}[height=3.21cm, before skip=0pt, after skip=0pt, top=2.0pt, bottom=2.0pt]
+		\centering
+		\begin{tikzpicture}[
+			scale=0.85, every node/.style={transform shape},
+			bitcell/.style={draw=uetblue!75, fill=white, sharp corners, minimum width=0.55cm, minimum height=0.45cm, align=center, font=\fontsize{6.0pt}{7.0pt}\selectfont\ttfamily\bfseries},
+			arr/.style={-{Stealth[scale=0.68]}, thick}
+		]
+			% Ngoài cửa sổ (Cũ)
+			\node[draw=uetred!75, fill=uetred!10, sharp corners, minimum width=2.40cm, minimum height=0.52cm, font=\fontsize{5.8pt}{6.8pt}\selectfont\bfseries\color{uetred}] (old) at (1.40, 0.15) {Ngoài cửa sổ (Cũ)};
+			\node[font=\fontsize{5.8pt}{6.8pt}\selectfont\bfseries\color{uetred}, align=center] (oldtxt) at (1.40, -0.60) {\xmark\ Loại bỏ};
+			\draw[arr, color=uetred] (old.south) -- (1.40, -0.38);
+
+			% Bitmap Window
+			\draw[draw=uetblue!80, fill=uetaccentbg!30, sharp corners] (2.95, -0.25) rectangle (8.45, 0.82);
+			\node[font=\fontsize{5.8pt}{6.8pt}\selectfont\bfseries\color{uetblue}] at (5.70, 0.62) {Bitmap Window};
+			\node[bitcell, fill=uetred!12, text=uetred] (b0) at (3.45, 0.15) {1};
+			\node[bitcell, fill=uetgreenbg, text=uetdarkgreen] (b1) at (4.15, 0.15) {0};
+			\node[bitcell, fill=uetred!12, text=uetred] (b2) at (4.85, 0.15) {1};
+			\node[bitcell, fill=uetred!12, text=uetred] (b3) at (5.55, 0.15) {1};
+			\node[bitcell, fill=uetgreenbg, text=uetdarkgreen] (b4) at (6.25, 0.15) {0};
+			\node[bitcell, fill=uetred!12, text=uetred] (b5) at (6.95, 0.15) {1};
+
+			\node[font=\fontsize{5.3pt}{6.3pt}\selectfont\bfseries\color{uetred}] at (4.30, -0.60) {\xmark\ Đã nhận (1): Loại bỏ};
+			\node[font=\fontsize{5.3pt}{6.3pt}\selectfont\bfseries\color{uetdarkgreen}] at (7.10, -0.60) {\cmark\ Chưa nhận (0): Xử lý};
+
+			% Bản ghi mới (> biên)
+			\node[draw=uetgreen, fill=uetgreenbg, sharp corners, minimum width=2.60cm, minimum height=0.52cm, font=\fontsize{5.8pt}{6.8pt}\selectfont\bfseries\color{uetdarkgreen}] (new) at (10.15, 0.15) {Bản ghi mới ($>$ biên)};
+			\node[font=\fontsize{5.8pt}{6.8pt}\selectfont\bfseries\color{uetdarkgreen}, align=center] (newtxt) at (10.15, -0.60) {\cmark\ Xử lý \& trượt cửa sổ};
+			\draw[arr, color=uetgreen] (new.south) -- (10.15, -0.38);
+		\end{tikzpicture}\\[4pt]
+		{\fontsize{5.6pt}{6.6pt}\selectfont\color{uetgray}Các ô bit: \texttt{[ 1 ]} \texttt{[ 0 ]} \texttt{[ 1 ]} \texttt{[ 1 ]} \texttt{[ 0 ]} \texttt{[ 1 ]}\par}
+	\end{accentcard}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+% SLIDE 23: CẢI TIẾN Ở GIAO THỨC BẮT TAY (trang_23.md)
+% -----------------------------------------------------------------------------
+\begin{frame}{Cải tiến ở Giao thức Bắt tay}
 	\begin{columns}[T]
-		\begin{column}{0.46\textwidth}
-			\begin{uetcard}[height=5.32cm, before skip=0pt, after skip=0pt, top=2.5pt, bottom=2.5pt, sharp corners, arc=0pt]
+		\begin{column}{0.485\textwidth}
+			\begin{accentcard}[uetblue]{Chống DoS Bằng Cookie \& Truyền Lại (DTLS 1.3)}[height=5.35cm, before skip=0pt, after skip=0pt, top=2.2pt, bottom=2.2pt]
 				\centering
-				{\fontsize{6.9pt}{8.0pt}\selectfont\color{uetblue}\textbf{Chống DoS Bằng Cookie \& Truyền Lại (DTLS 1.2)}}\\[2pt]
+				{\fontsize{5.5pt}{6.5pt}\selectfont\color{uetgray}Tiến trình trao đổi (CLIENT $\longleftrightarrow$ SERVER)}\\[2pt]
 				\begin{tikzpicture}[
-					x=0.95cm, y=0.65cm,
-					lifeline/.style={thick, dashed, color=uetgray!65},
-					msg/.style={-{Stealth[scale=0.68]}, thick, color=uetblue},
-					retmsg/.style={-{Stealth[scale=0.68]}, thick, color=uetgreen},
-					lostmsg/.style={-{Stealth[scale=0.68]}, thick, dashed, color=uetred}
+					x=0.92cm, y=0.54cm,
+					lifeline/.style={thick, color=uetborder},
+					msg/.style={-{Stealth[scale=0.62]}, thick, color=uetblue},
+					retmsg/.style={-{Stealth[scale=0.62]}, thick, color=uetdarkgreen},
+					lostmsg/.style={-{Stealth[scale=0.62]}, thick, dashed, color=uetred}
 				]
-					% Phase bands
-					\fill[uetaccentbg, sharp corners] (-0.42, -0.34) rectangle (5.02, -2.54);
-					\fill[uetlightgray, sharp corners] (-0.42, -2.64) rectangle (5.02, -4.64);
-
 					% Lifelines
-					\node[draw=uetblue, fill=uetaccentbg, sharp corners, inner sep=2.0pt, font=\fontsize{6.3pt}{7.2pt}\selectfont\bfseries] (cli) at (0.35, 0) {CLIENT};
-					\node[draw=uetgreen, fill=uetgreenbg, sharp corners, inner sep=2.0pt, font=\fontsize{6.3pt}{7.2pt}\selectfont\bfseries] (srv) at (4.65, 0) {SERVER};
-					\draw[lifeline] (cli) -- (0.35, -5.42);
-					\draw[lifeline] (srv) -- (4.65, -5.42);
+					\node[draw=uetblue, fill=uetaccentbg, sharp corners, inner sep=1.8pt, font=\fontsize{5.8pt}{6.8pt}\selectfont\bfseries\color{uetblue}] (cli) at (0.35, 0) {CLIENT};
+					\node[draw=uetgreen, fill=uetgreenbg, sharp corners, inner sep=1.8pt, font=\fontsize{5.8pt}{6.8pt}\selectfont\bfseries\color{uetdarkgreen}] (srv) at (4.65, 0) {SERVER};
+					\draw[lifeline] (cli) -- (0.35, -7.50);
+					\draw[lifeline] (srv) -- (4.65, -7.50);
 
-					% Cookie exchange
-					\node[font=\fontsize{5.1pt}{5.8pt}\selectfont\bfseries\color{uetblue}] at (2.50, -0.56) {1. \texttt{ClientHello} (chưa có Cookie)};
-					\draw[msg] (0.35, -0.78) -- (4.65, -0.78);
+					% Step 1
+					\node[font=\fontsize{4.5pt}{5.3pt}\selectfont\bfseries\color{uetblue}] at (2.50, -0.42) {1. \texttt{ClientHello} (chưa có Cookie, \texttt{epoch = 0}):};
+					\draw[msg] (0.35, -0.65) -- (4.65, -0.65);
 
-					\node[font=\fontsize{5.1pt}{5.8pt}\selectfont\bfseries\color{uetdarkgreen}] at (2.50, -1.20) {2. \texttt{HelloVerifyRequest} + \texttt{Cookie}};
-					\node[font=\fontsize{4.6pt}{5.2pt}\selectfont\color{uetgray}] at (2.50, -1.44) {Server không cấp phát trạng thái khi chưa xác minh IP};
-					\draw[retmsg] (4.65, -1.72) -- (0.35, -1.72);
+					% Step 2
+					\node[font=\fontsize{4.5pt}{5.3pt}\selectfont\bfseries\color{uetdarkgreen}] at (2.50, -1.25) {2. \texttt{HelloRetryRequest} + extension \texttt{cookie} (\texttt{epoch = 0}):};
+					\draw[retmsg] (4.65, -1.48) -- (0.35, -1.48);
 
-					\node[font=\fontsize{5.1pt}{5.8pt}\selectfont\bfseries\color{uetblue}] at (2.50, -2.14) {3. \texttt{ClientHello} + \texttt{Cookie} (chứng minh IP)};
-					\draw[msg] (0.35, -2.36) -- (4.65, -2.36);
+					% Step 3
+					\node[font=\fontsize{4.5pt}{5.3pt}\selectfont\bfseries\color{uetblue}] at (2.50, -2.08) {3. \texttt{ClientHello} + extension \texttt{cookie} (chứng minh IP, \texttt{epoch = 0}):};
+					\draw[msg] (0.35, -2.31) -- (4.65, -2.31);
 
-					% Timeout & Retransmission
-					\node[font=\fontsize{5.1pt}{5.8pt}\selectfont\bfseries\color{uetred}] at (2.50, -2.88) {4. \texttt{ServerHello / Certificate} (Mất gói UDP)};
-					\draw[lostmsg] (4.65, -3.20) -- (2.38, -3.20);
-					\node[font=\fontsize{6.2pt}{7.0pt}\selectfont\color{uetred}\bfseries] at (2.15, -3.20) {\xmark};
+					% Step 4: Lost packet
+					\node[font=\fontsize{4.2pt}{5.0pt}\selectfont\bfseries\color{uetred}] at (2.50, -2.85) {4. \texttt{ServerHello} (\texttt{epoch = 0}) +};
+					\node[font=\fontsize{4.0pt}{4.8pt}\selectfont\bfseries\color{uetred}] at (2.50, -3.15) {\texttt{\{EncryptedExtensions, Certificate, CertificateVerify, Finished\}} (\texttt{epoch = 2}):};
+					\draw[lostmsg] (4.65, -3.42) -- (2.35, -3.42);
+					\node[font=\fontsize{4.3pt}{5.1pt}\selectfont\color{uetred}\itshape] at (2.50, -3.70) {SERVER $--\,\times$ (Mất toàn bộ hoặc một phần gói UDP)};
 
-					\node[draw=uetred!70, fill=white, sharp corners, inner sep=1.5pt, font=\fontsize{4.7pt}{5.4pt}\selectfont\bfseries\color{uetred}] at (2.50, -3.66) {Timeout: Hết thời gian chờ phản hồi};
+					% Step 4b: Timeout / ACK
+					\node[draw=uetred!70, fill=uetred!8, sharp corners, inner sep=1.8pt, align=center, font=\fontsize{4.1pt}{4.9pt}\selectfont\color{uetred}] at (2.50, -4.35) {\textbf{Xử lý mất gói}: Hết thời gian chờ (\textbf{Timeout})\\hoặc \texttt{CLIENT} chủ động gửi bản ghi \textbf{\texttt{ACK}} báo các gói đã nhận / thiếu};
 
-					\node[font=\fontsize{5.1pt}{5.8pt}\selectfont\bfseries\color{uetdarkgreen}] at (2.50, -4.16) {5. Truyền lại các thông điệp cần thiết};
-					\draw[retmsg] (4.65, -4.40) -- (0.35, -4.40);
+					% Step 5: Retransmission
+					\node[font=\fontsize{4.4pt}{5.2pt}\selectfont\bfseries\color{uetdarkgreen}] at (2.50, -5.20) {5. Truyền lại các thông điệp bị mất (Selective / Flight Retransmission):};
+					\draw[retmsg] (4.65, -5.45) -- (0.35, -5.45);
 
-					% Completion
-					\node[font=\fontsize{5.1pt}{5.8pt}\selectfont\bfseries\color{uetblue}] at (2.50, -4.96) {Hoàn tất Handshake \& \texttt{[Application Data]}};
-					\draw[{Stealth[scale=0.68]}-{Stealth[scale=0.68]}, thick, color=uetblue] (0.35, -5.20) -- (4.65, -5.20);
-				\end{tikzpicture}\\[2pt]
-				{\fontsize{5.2pt}{6.1pt}\selectfont\color{uetgray}DTLS 1.2 dùng \texttt{HelloVerifyRequest}; DTLS 1.3 hợp nhất thành \texttt{HelloRetryRequest} + \texttt{cookie}.\par}
-			\end{uetcard}
+					% Step 6: Completion
+					\node[font=\fontsize{4.1pt}{4.9pt}\selectfont\bfseries\color{uetblue}] at (2.50, -6.15) {6. Hoàn tất Handshake (\texttt{\{Finished\}}, \texttt{epoch = 2}) + \texttt{SERVER} xác nhận bằng \texttt{[ACK]}};
+					\node[font=\fontsize{4.1pt}{4.9pt}\selectfont\bfseries\color{uetblue}] at (2.50, -6.42) {(\texttt{epoch = 3}) \& trao đổi \texttt{[Application Data]} (\texttt{epoch = 3}):};
+					\draw[{Stealth[scale=0.62]}-{Stealth[scale=0.62]}, thick, color=uetblue] (0.35, -6.72) -- (4.65, -6.72);
+				\end{tikzpicture}
+			\end{accentcard}
 		\end{column}
 
-		\begin{column}{0.50\textwidth}
-			\begin{accentcard}[uetblue]{Phân Mảnh Thông Điệp Handshake ($\sim 1500\text{ B}$)}[height=2.64cm, before skip=0pt, after skip=0pt, top=2.0pt, bottom=2.0pt]
+		\begin{column}{0.485\textwidth}
+			\begin{accentcard}[uetblue]{Phân Mảnh Thông Điệp Handshake}[height=5.35cm, before skip=0pt, after skip=0pt, top=2.2pt, bottom=2.2pt]
+				\raggedright
+				{\fontsize{6.0pt}{7.0pt}\selectfont\bfseries\color{uetdark}Cấu trúc tiêu đề phân mảnh}\\[3pt]
 				\centering
 				\begin{tikzpicture}[
-					scale=0.79, every node/.style={transform shape},
-					fbox/.style={draw=uetblue, fill=uetaccentbg, sharp corners, minimum height=0.40cm, align=center, font=\fontsize{5.4pt}{6.2pt}\selectfont\ttfamily\bfseries\color{uetblue}, inner sep=2.0pt}
+					scale=0.82, every node/.style={transform shape},
+					fbox/.style={draw=uetblue, fill=uetaccentbg, sharp corners, minimum height=0.42cm, align=center, font=\fontsize{5.2pt}{6.0pt}\selectfont\ttfamily\bfseries\color{uetblue}, inner sep=2.0pt}
 				]
-					\node[fbox, minimum width=1.80cm] (m1) at (0, 0) {message\_seq};
-					\node[fbox, minimum width=1.95cm, fill=white] (m2) at (1.92, 0) {fragment\_offset};
-					\node[fbox, minimum width=1.95cm, fill=white] (m3) at (3.92, 0) {fragment\_length};
-					\node[fbox, minimum width=1.40cm, draw=uetgreen, fill=uetgreenbg, text=uetdarkgreen] (m4) at (5.64, 0) {Payload};
-				\end{tikzpicture}\\[3pt]
+					\node[fbox, minimum width=1.60cm] (m1) at (0, 0) {message\_seq};
+					\node[fbox, minimum width=1.75cm, fill=white] (m2) at (1.75, 0) {fragment\_offset};
+					\node[fbox, minimum width=1.75cm, fill=white] (m3) at (3.55, 0) {fragment\_length};
+					\node[fbox, minimum width=1.30cm, draw=uetgreen, fill=uetgreenbg, text=uetdarkgreen] (m4) at (5.15, 0) {Payload};
+				\end{tikzpicture}\\[8pt]
 				\raggedright
+				{\fontsize{6.0pt}{7.0pt}\selectfont\bfseries\color{uetdark}Nội dung chi tiết}\\[2pt]
 				\setlength{\leftmargini}{9pt}
-				\begin{itemize}\setlength{\itemsep}{0.6pt}\setlength{\topsep}{0pt}\fontsize{5.9pt}{7.2pt}\selectfont
-					\item \textbf{Vượt kích thước UDP datagram}: Thông điệp bắt tay có thể lớn hơn 1 datagram $\rightarrow$ chia thành nhiều mảnh nhỏ.
-					\item \textbf{3 thông tin ghép mảnh}: \texttt{message\_seq} (thứ tự thông điệp), \texttt{fragment\_offset} (vị trí bắt đầu) và \texttt{fragment\_length} (độ~dài~mảnh).
-					\item \textbf{Khôi phục}: Bên nhận ghép các mảnh lại thành thông điệp ban đầu.
-				\end{itemize}
-			\end{accentcard}\par\nointerlineskip\vspace{0.08cm}\noindent
-			\begin{accentcard}[uetblue]{Lợi Ích, Nhược Điểm \& Tổng Kết DTLS}[height=2.60cm, before skip=0pt, after skip=0pt, top=2.0pt, bottom=2.0pt]
-				\raggedright
-				\setlength{\leftmargini}{9pt}
-				\begin{itemize}\setlength{\itemsep}{0.65pt}\setlength{\topsep}{0pt}\fontsize{5.8pt}{7.0pt}\selectfont
-					\item \cmark\ \textbf{Lợi ích}: Giảm độ trễ thời gian thực; bảo mật datagram; tái dùng hạ tầng TLS; chống DoS \& hỗ trợ mạng không dây.
-					\item \xmark\ \textbf{Overhead trên từng gói}: Mỗi datagram phải gánh riêng Record Header (\texttt{Epoch}/\texttt{SeqNum}), Nonce và AEAD Tag.
-					\item \xmark\ \textbf{Phân tách tin cậy}: Tầng DTLS xử lý timer truyền lại \& ghép mảnh cho \textbf{handshake} (RFC 9147, mục 5); ứng dụng tự lo độ tin cậy cho dữ liệu ứng dụng nếu cần.
-					\item \textbf{Tham chiếu}: \textbf{RFC 6347} (DTLS 1.2) \& \textbf{RFC 9147} (DTLS 1.3).
+				\begin{itemize}\setlength{\itemsep}{5.0pt}\setlength{\topsep}{0pt}\fontsize{5.8pt}{7.2pt}\selectfont
+					\item \textbf{Vượt kích thước UDP datagram:} Thông điệp bắt tay có thể lớn hơn 1 datagram $\rightarrow$ chia thành nhiều mảnh nhỏ.
+					\item \textbf{3 thông tin ghép mảnh:} \texttt{message\_seq} (thứ tự thông điệp), \texttt{fragment\_offset} (vị trí bắt đầu) và \texttt{fragment\_length} (độ dài mảnh).
+					\item \textbf{Khôi phục:} Bên nhận ghép các mảnh lại thành thông điệp ban đầu.
 				\end{itemize}
 			\end{accentcard}
 		\end{column}
 	\end{columns}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+% SLIDE 24: CẢI TIẾN Ở GIAO THỨC BẮT TAY (trang_24.md)
+% -----------------------------------------------------------------------------
+\begin{frame}{Cải tiến ở Giao thức Bắt tay}
+	\begin{accentcard}[uetblue]{3. Lợi Ích, Nhược Điểm \& Tổng Kết DTLS}[height=5.35cm, before skip=0pt, after skip=0pt, top=3.5pt, bottom=3.5pt]
+		\raggedright
+		\setlength{\leftmargini}{9pt}
+		\begin{itemize}\setlength{\itemsep}{6.5pt}\setlength{\topsep}{0pt}\fontsize{6.6pt}{8.4pt}\selectfont
+			\item[\cmark] \textbf{Lợi ích:} Giảm độ trễ thời gian thực; bảo mật datagram; tái dùng hạ tầng TLS; chống DoS \& hỗ trợ mạng không dây.
+			\item[\xmark] \textbf{Overhead trên từng gói:} Mỗi datagram phải gánh riêng Record Header (\texttt{Epoch}/\texttt{SeqNum}), Nonce và AEAD Tag.
+			\item[\xmark] \textbf{Phân tách tin cậy:} Tầng DTLS xử lý timer truyền lại \& ghép mảnh cho \textbf{handshake}; ứng dụng tự lo độ tin cậy cho dữ liệu ứng dụng nếu cần.
+			\item[•] \textbf{Tham chiếu:} \textbf{RFC 6347} (DTLS 1.2) \& \textbf{RFC 9147} (DTLS 1.3).
+		\end{itemize}
+	\end{accentcard}
 \end{frame}
 
 % =============================================================================
