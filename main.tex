@@ -582,9 +582,9 @@
 		\begin{column}{0.40\textwidth}
 			\begin{uetcard}[height=5.46cm, before skip=0pt, after skip=0pt, colback=white, valign=center, top=1.5pt, bottom=1.5pt, left=2.5pt, right=2.5pt]
 				\centering
-				{\fontsize{6.2pt}{7.0pt}\selectfont\color{uetblue}\textbf{Chứng Thư X.509 v3 (Firefox 133 Hiện Đại)}}\par\vspace{1.5pt}
-				\includegraphics[width=0.98\linewidth, height=4.74cm, keepaspectratio]{assets/slide11_firefox_cert.png}\par\vspace{1.5pt}
-				{\fontsize{4.55pt}{5.2pt}\selectfont\color{uetgray}\texttt{opensuse.org} $\rightarrow$ \texttt{Let's Encrypt E5} $\rightarrow$ \texttt{ISRG Root X1} (MPL 2).\par}
+				{\fontsize{6.2pt}{7.0pt}\selectfont\color{uetblue}\textbf{Đối Chiếu SAN \& Chuỗi CA (Firefox / RFC 9525)}}\par\vspace{1.5pt}
+				\includegraphics[width=0.98\linewidth, height=4.70cm, keepaspectratio]{assets/slide11_cert_san_annotated.png}\par\vspace{1.5pt}
+				{\fontsize{4.55pt}{5.2pt}\selectfont\color{uetgray}Đối chiếu URI \texttt{opensuse.org} $\rightarrow$ \textbf{SAN}; CA: \texttt{Let's Encrypt E5} (RFC 9525).\par}
 			\end{uetcard}
 		\end{column}
 
@@ -1013,13 +1013,35 @@
 				\end{itemize}
 			\end{accentcard}
 			\vspace{0.08cm}
-			\begin{accentcard}[uetblue]{Rủi Ro Phát Lại (Replay) \& Quy Tắc 0-RTT}[height=2.48cm, top=1.5pt, bottom=1.5pt]
-				\setlength{\leftmargini}{10pt}
-				\begin{itemize}\setlength{\itemsep}{0.4pt}\setlength{\topsep}{0pt}\setlength{\parsep}{0pt}\fontsize{6.0pt}{7.1pt}\selectfont
-					\item \textbf{Tấn công Replay}: Kẻ tấn công có thể phát lại \texttt{ClientHello + early\_data} giữa các kết nối ngay cả khi phần bắt tay sau dùng \texttt{PSK + ECDHE}; thư viện không tự gửi lại mù quáng.
-					\item \textbf{Giới hạn thao tác}: Chỉ gửi thao tác không tác dụng phụ (\textit{idempotent} chưa đủ nếu \texttt{GET} đổi trạng thái; cấm thanh toán/đổi mật khẩu).
-					\item \textbf{Tầng HTTP (RFC 8470)}: Server trả mã \textbf{\texttt{425 Too Early}} để yêu cầu client thử lại ngoài \texttt{early\_data}.
-				\end{itemize}
+			\begin{accentcard}[uetblue]{Sơ Đồ Rủi Ro Phát Lại (Replay Attack) Trong 0-RTT}[height=2.48cm, top=1.5pt, bottom=1.5pt, left=3.5pt, right=3.5pt]
+				\centering
+				\begin{tikzpicture}[
+					scale=0.71, every node/.style={transform shape},
+					box/.style={draw=uetblue, fill=uetaccentbg, sharp corners, inner sep=1.8pt, font=\fontsize{5.2pt}{6.1pt}\selectfont\bfseries, align=center},
+					attbox/.style={draw=uetred, fill=uetred!8, sharp corners, inner sep=1.8pt, font=\fontsize{5.2pt}{6.1pt}\selectfont\bfseries, text=uetred, align=center},
+					arr/.style={-{Stealth[scale=0.65]}, line width=1.1pt, color=uetred!90},
+					lbl/.style={font=\fontsize{4.6pt}{5.4pt}\selectfont, fill=white, inner sep=1.0pt, align=center}
+				]
+					% Nodes
+					\node[box] (cli) at (0, 1.35) {Client};
+					\node[attbox] (eve) at (0, 0.42) {Kẻ tấn công\\(Nghe lén)};
+					\node[box, fill=uetgreenbg, draw=uetgreen, text=uetdarkgreen] (srv) at (6.8, 0.88) {Server\\{\fontsize{4.4pt}{5.0pt}\selectfont(Ứng dụng)}};
+
+					% Connection 1 (Valid)
+					\draw[arr] (cli.east) -- (srv.north west) node[midway, above, sloped, lbl] {\textbf{Kết nối 1}: \texttt{ClientHello + early\_data}};
+
+					% Eavesdrop copy
+					\draw[-{Stealth[scale=0.55]}, dashed, color=uetgray] (1.8, 1.25) -- (eve.north);
+
+					% Connection 2 (Replayed - SAME COLOR ARROW)
+					\draw[arr, dashed] (eve.east) -- (srv.south west) node[midway, below, sloped, lbl] {\textbf{Kết nối 2 (Phát lại)}: Cùng bản sao \texttt{early\_data}};
+
+					% Condition / Risk Callout
+					\node[draw=uetred!70, fill=uetred!5, sharp corners, inner sep=1.8pt, font=\fontsize{4.6pt}{5.5pt}\selectfont, align=center, anchor=north] at (3.4, 0.08) {
+						\textbf{Điều kiện [RFC 9846, mục 8]}: Server có thể \textbf{xử lý lại} nếu cơ chế chống phát lại chưa chặn được.\\
+						\textbf{Phòng vệ}: Vé dùng 1 lần (\textit{single-use ticket}), lưu ClientHello; HTTP trả \texttt{425 Too Early} [RFC 8470].
+					};
+				\end{tikzpicture}
 			\end{accentcard}
 		\end{column}
 	\end{columns}
@@ -1881,41 +1903,42 @@
 		\end{column}
 
 		\begin{column}{0.49\textwidth}
-			\begin{accentcard}[uetblue]{Hướng 2: Post-Quantum Key Exchange (KEM)}[height=5.32cm, top=2.0pt, bottom=2.0pt]
+			\begin{accentcard}[uetblue]{Hướng 2: Trao Đổi Khóa Lai (RFC 10024)}[height=5.32cm, top=2.0pt, bottom=2.0pt]
 				\raggedright
 				\setlength{\leftmargini}{9pt}
-				\begin{itemize}\setlength{\itemsep}{0.35pt}\setlength{\topsep}{0pt}\fontsize{5.6pt}{6.65pt}\selectfont
-					\item \textbf{Luồng KEM thay thế DH}: Client gửi PK tạm thời $\rightarrow$ Server \texttt{Encaps} tạo (\texttt{ciphertext}, bí mật chung) $\rightarrow$ Client \texttt{Decaps} lấy bí mật chung.
-					\item \textbf{Tương thích luồng}: Không đổi luồng tổng thể nhưng cần sửa giao thức để mang các giá trị kích thước lớn.
+				\begin{itemize}\setlength{\itemsep}{0.2pt}\setlength{\topsep}{0pt}\fontsize{5.65pt}{6.75pt}\selectfont
+					\item \textbf{Cơ chế nhóm lai}: Ghép \textbf{ML-KEM-768} (FIPS 203) và \textbf{X25519} (RFC 7748) để đạt \textbf{an toàn kép}: an toàn chừng nào $\ge 1$ thuật toán chưa bị bẻ gãy.
+					\item \textbf{Đóng gói hai chiều}: Kích thước chia tách rõ rệt giữa khóa công khai và bản mã [RFC 10024, mục 4]:
 				\end{itemize}
-				\vspace{0.5pt}
+				\vspace{1.0pt}
 				\centering
-				\fontsize{5.4pt}{6.45pt}\selectfont
-				\renewcommand{\arraystretch}{0.95}
-				\setlength{\tabcolsep}{2.5pt}
-				\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}X c c c}
-					\toprule
-					\rowcolor{uetaccentbg}
-					\textbf{\color{uetblue}KEM (mức 1)} & \textbf{\color{uetblue}PK (B)} & \textbf{\color{uetblue}Ciphertext (B)} & \textbf{\color{uetblue}Chậm tương đối*} \\
-					\midrule
-					\rowcolor{uetgreenbg}
-					\textbf{Kyber (L1)} & 800 & 768 & \textbf{1,06$\times$} \\
-					\textbf{Saber} & 672 & 736 & 1,07$\times$ \\
-					\rowcolor{uetlightgray}
-					\textbf{NTRU} & 930 & 930 & 1,13$\times$ \\
-					\textbf{HQC} & 2 249 & 4 481 & 1,23$\times$ \\
-					\rowcolor{uetlightgray}
-					\textbf{FrodoKEM} & 9 616 & 9 720 & 2,53$\times$ \\
-					\textbf{BIKE} & 1 540 & 1 572 & 2,55$\times$ \\
-					\bottomrule
-				\end{tabularx}
-				\vspace{0.8pt}
+				\begin{tikzpicture}[
+					scale=0.72, every node/.style={transform shape},
+					pqcbar/.style={draw=uetgreen, fill=uetgreenbg, sharp corners, minimum height=0.48cm, align=center, font=\fontsize{5.2pt}{6.0pt}\selectfont\bfseries, text=uetdarkgreen, inner sep=1.8pt},
+					ecbar/.style={draw=uetblue, fill=uetblue!14, sharp corners, minimum height=0.48cm, align=center, font=\fontsize{5.2pt}{6.0pt}\selectfont\bfseries, text=uetdarkblue, inner sep=1.8pt},
+					lbl/.style={font=\fontsize{5.2pt}{6.0pt}\selectfont\bfseries\color{uetblue}, anchor=west}
+				]
+					% Client Share Bar (1216 B)
+					\node[lbl] at (0, 2.30) {Client Share (\texttt{ClientHello}): \textbf{1.216 B}};
+					\node[pqcbar, minimum width=4.75cm] (c_pqc) at (2.375, 1.80) {\textbf{ML-KEM-768 Public Key (1.184 B)}\\{\fontsize{4.6pt}{5.2pt}\selectfont Mạng tinh thể (Lattice) chống máy tính lượng tử}};
+					\node[ecbar, minimum width=1.45cm] (c_ec) at (5.475, 1.80) {\textbf{X25519}\\\fontsize{4.6pt}{5.2pt}\selectfont 32 B};
+
+					% Server Share Bar (1120 B)
+					\node[lbl] at (0, 1.20) {Server Share (\texttt{ServerHello}): \textbf{1.120 B}};
+					\node[pqcbar, minimum width=4.75cm] (s_pqc) at (2.375, 0.70) {\textbf{ML-KEM-768 Ciphertext (1.088 B)}\\{\fontsize{4.6pt}{5.2pt}\selectfont Sinh từ \texttt{Encaps}, chứa bí mật chung KEM}};
+					\node[ecbar, minimum width=1.45cm] (s_ec) at (5.475, 0.70) {\textbf{X25519}\\\fontsize{4.6pt}{5.2pt}\selectfont 32 B};
+
+					% Shared Secret Combination
+					\draw[dashed, color=uetgray!70] (0, 0.22) -- (6.20, 0.22);
+					\node[draw=uetblue!70, fill=uetaccentbg, sharp corners, inner sep=1.8pt, font=\fontsize{4.9pt}{5.8pt}\selectfont, align=center] at (3.10, -0.12) {
+						\textbf{Dẫn xuất bí mật chung}: $ss = ss_{\text{classical}} \,\|\, ss_{\text{KEM}}$ $\rightarrow$ đưa vào \texttt{HKDF-Extract} TLS 1.3.
+					};
+				\end{tikzpicture}\\[1.5pt]
 				\raggedright
-				{\fontsize{4.7pt}{5.5pt}\selectfont\color{uetgray}*Nguồn [14] (Phụ lục A, bảng 4--6): Hệ số = kết nối/giây(\texttt{X25519}) $\div$ kết nối/giây(KEM); VD \texttt{Kyber (L1)}: $829{,}57 \div 782{,}80 \approx 1{,}06\times$ (OQS-OpenSSL).\par}
-				\vspace{0.8pt}
-				\begin{itemize}\setlength{\itemsep}{0.35pt}\setlength{\topsep}{0pt}\fontsize{5.65pt}{6.8pt}\selectfont
-					\item \textbf{Chuẩn hóa NIST}: \textbf{\texttt{Kyber}} (\textbf{ML-KEM / FIPS 203}) nhanh nhất và được chuẩn hóa ưu tiên.
-					\item \textbf{Hybrid key exchange}: Ghép DH cổ điển + KEM hậu lượng tử; khóa chung kết hợp từ hai khóa thành phần.
+				\setlength{\leftmargini}{9pt}
+				\begin{itemize}\setlength{\itemsep}{0.2pt}\setlength{\topsep}{0pt}\fontsize{5.65pt}{6.75pt}\selectfont
+					\item \textbf{Khớp thực chứng}: Server share \textbf{1.120 B} kết nối trực tiếp với trường \texttt{key\_share} trong gói tin Wireshark ở \textbf{Slide 28}.
+					\item \textbf{Hiệu năng}: Hệ số chậm tương đối của Kyber L1 chỉ \textbf{1,06$\times$} so với X25519 (xem \textbf{Phụ lục} cho benchmark đầy đủ).
 				\end{itemize}
 			\end{accentcard}
 		\end{column}
@@ -2014,31 +2037,80 @@
 \begin{frame}{Thực Chứng Triển Khai: TLS 1.3 \& PQ-TLS (11/2026)}
 	\begin{columns}[T]
 		\begin{column}{0.485\textwidth}
-			\begin{uetcard}[height=3.82cm, before skip=0pt, after skip=0pt, colback=white, valign=center, top=2.0pt, bottom=2.0pt, left=2.5pt, right=2.5pt]
+			\begin{uetcard}[height=3.62cm, before skip=0pt, after skip=0pt, colback=white, valign=center, top=1.5pt, bottom=1.5pt, left=2.5pt, right=2.5pt]
 				\centering
-				{\fontsize{6.1pt}{6.9pt}\selectfont\color{uetblue}\textbf{Tỷ Lệ Website Hỗ Trợ Trao Đổi Khóa Lai \texttt{X25519MLKEM768}}}\par\vspace{2pt}
-				\includegraphics[width=0.98\linewidth, height=3.10cm, keepaspectratio]{assets/slide29_pq_adoption_2026.png}\par\vspace{1.5pt}
-				{\fontsize{4.75pt}{5.55pt}\selectfont\color{uetgray}Khảo sát CrawlCheck 03/11/2026 (\href{https://commons.wikimedia.org/wiki/File:Websites_supporting_post-quantum_key_exchange,_November_2026.svg}{Wikimedia}, CC BY 4.0; \href{https://crawlcheck.io/blog/post-quantum-key-exchange-six-in-ten-websites-november-2026\#how-this-was-measured}{phương pháp đo}).\par}
+				{\fontsize{6.1pt}{6.9pt}\selectfont\color{uetblue}\textbf{Tỷ Lệ Website Hỗ Trợ Trao Đổi Khóa Lai \texttt{X25519MLKEM768}}}\par\vspace{1.5pt}
+				\includegraphics[width=0.98\linewidth, height=2.92cm, keepaspectratio]{assets/slide29_pq_adoption_2026.png}\par\vspace{1.0pt}
+				{\fontsize{4.65pt}{5.4pt}\selectfont\color{uetgray}Khảo sát CrawlCheck 03/11/2026 (\href{https://commons.wikimedia.org/wiki/File:Websites_supporting_post-quantum_key_exchange,_November_2026.svg}{Wikimedia}, CC BY 4.0; \href{https://crawlcheck.io/blog/post-quantum-key-exchange-six-in-ten-websites-november-2026\#how-this-was-measured}{phương pháp đo}).\par}
 			\end{uetcard}\par\nointerlineskip\vspace{0.08cm}\noindent
-			\begin{accentcard}[uetblue]{Thực Trạng Chuyển Dịch PQ-TLS (RFC 10024)}[height=1.56cm, before skip=0pt, after skip=0pt, top=1.5pt, bottom=1.5pt]
+			\begin{accentcard}[uetblue]{Thực Trạng Chuyển Dịch PQ-TLS (RFC 10024)}[height=1.76cm, before skip=0pt, after skip=0pt, top=1.5pt, bottom=1.5pt]
 				\raggedright\fontsize{5.65pt}{6.85pt}\selectfont
 				\textbf{59,6\%} (\textbf{772/1.295} website truy cập được trong mẫu 1.303 site; \textbf{99,7\%} sau Cloudflare) hoàn tất bắt tay TLS 1.3 khi client \textbf{chỉ đề xuất} \texttt{X25519MLKEM768} (\href{https://crawlcheck.io/blog/post-quantum-key-exchange-six-in-ten-websites-november-2026\#how-this-was-measured}{CrawlCheck [16]}).
 			\end{accentcard}
 		\end{column}
 
 		\begin{column}{0.485\textwidth}
-			\begin{uetcard}[height=3.82cm, before skip=0pt, after skip=0pt, colback=white, valign=center, top=2.0pt, bottom=2.0pt, left=2.5pt, right=2.5pt]
+			\begin{uetcard}[height=3.62cm, before skip=0pt, after skip=0pt, colback=white, valign=center, top=1.5pt, bottom=1.5pt, left=2.5pt, right=2.5pt]
 				\centering
-				{\fontsize{6.1pt}{6.9pt}\selectfont\color{uetblue}\textbf{Ảnh Minh Họa Giao Diện TLS 1.3 Trên Firefox}}\par\vspace{2pt}
-				\includegraphics[width=0.98\linewidth, height=3.10cm, keepaspectratio]{assets/slide29_firefox_tls13.png}\par\vspace{1.5pt}
-				{\fontsize{4.7pt}{5.5pt}\selectfont\color{uetgray}Minh họa Firefox Page Info (Wikimedia, 2021; chỉ hiện phiên bản TLS \& bộ mã).\par}
+				{\fontsize{6.1pt}{6.9pt}\selectfont\color{uetblue}\textbf{Bắt Tay Wireshark Thật: ServerHello Chọn X25519MLKEM768}}\par\vspace{1.5pt}
+				\includegraphics[width=0.98\linewidth, height=2.92cm, keepaspectratio]{assets/slide28_wireshark_serverhello.png}\par\vspace{1.0pt}
+				{\fontsize{4.55pt}{5.3pt}\selectfont\color{uetgray}Gói \texttt{ServerHello}: Nhóm trao đổi khóa nằm ở trường \texttt{key\_share} riêng với bộ mã.\par}
 			\end{uetcard}\par\nointerlineskip\vspace{0.08cm}\noindent
-			\begin{accentcard}[uetblue]{Gắn Kết Chuỗi Kiến Trúc Với Thực Tiễn}[height=1.56cm, before skip=0pt, after skip=0pt, top=1.5pt, bottom=1.5pt]
+			\begin{accentcard}[uetblue]{Phân Tích 3 Trường Trọng Tâm Trong ServerHello}[height=1.76cm, before skip=0pt, after skip=0pt, top=1.5pt, bottom=1.5pt]
 				\raggedright
 				\setlength{\leftmargini}{9pt}
-				\begin{itemize}\setlength{\itemsep}{0.5pt}\setlength{\topsep}{0pt}\fontsize{5.85pt}{7.0pt}\selectfont
-					\item \textbf{Trên trình duyệt}: Ảnh minh họa hiển thị \textbf{TLS 1.3} với bộ mã \texttt{TLS\_AES\_256\_GCM\_SHA384} (khớp cấu trúc Slide 18).
-					\item \textbf{Phòng thủ kết hợp}: Đàm phán nhóm lai \texttt{X25519MLKEM768} (\textbf{RFC 10024}) khi cả hai phía hỗ trợ, cùng xác thực X.509 chặt chẽ.
+				\begin{itemize}\setlength{\itemsep}{0.6pt}\setlength{\topsep}{0pt}\fontsize{5.65pt}{6.85pt}\selectfont
+					\item \textbf{1. Phiên bản TLS 1.3}: Đàm phán qua extension \texttt{supported\_versions} (\texttt{0x0304}) [RFC 9846].
+					\item \textbf{2. Bộ mã}: \texttt{TLS\_AES\_128\_GCM\_SHA256} chỉ chọn AEAD + băm; đã tách rời KEX.
+					\item \textbf{3. Nhóm lai PQ}: \texttt{X25519MLKEM768 (0x11EC)} dài 1.120 B trong \texttt{key\_share} [RFC 10024].
+				\end{itemize}
+			\end{accentcard}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+% SLIDE 30: PHỤ LỤC: BENCHMARK CHI TIẾT CÁC THUẬT TOÁN KEM (NIST LEVEL 1)
+% -----------------------------------------------------------------------------
+\begin{frame}{Phụ Lục: Benchmark Hiệu Năng KEM Hậu Lượng Tử (NIST L1)}
+	\begin{columns}[T]
+		\begin{column}{0.57\textwidth}
+			\begin{accentcard}[uetblue]{Hiệu Năng Các Cơ Chế KEM Mức An Toàn 1 (NIST Level 1)}[height=5.46cm, top=2.0pt, bottom=2.0pt]
+				\centering
+				\fontsize{5.85pt}{7.1pt}\selectfont
+				\renewcommand{\arraystretch}{1.08}
+				\setlength{\tabcolsep}{3.0pt}
+				\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}X c c c}
+					\toprule
+					\rowcolor{uetaccentbg}
+					\textbf{\color{uetblue}Thuật toán KEM (Mức 1)} & \textbf{\color{uetblue}PK (B)} & \textbf{\color{uetblue}Ciphertext (B)} & \textbf{\color{uetblue}Chậm tương đối*} \\
+					\midrule
+					\rowcolor{uetgreenbg}
+					\textbf{Kyber (L1) / ML-KEM-768} & \textbf{800} & \textbf{768} & \textbf{1,06$\times$} \\
+					\textbf{Saber} & 672 & 736 & 1,07$\times$ \\
+					\rowcolor{uetlightgray}
+					\textbf{NTRU} & 930 & 930 & 1,13$\times$ \\
+					\textbf{HQC} & 2 249 & 4 481 & 1,23$\times$ \\
+					\rowcolor{uetlightgray}
+					\textbf{FrodoKEM} & 9 616 & 9 720 & 2,53$\times$ \\
+					\textbf{BIKE} & 1 540 & 1 572 & 2,55$\times$ \\
+					\bottomrule
+				\end{tabularx}
+				\vspace{3pt}
+				\raggedright
+				{\fontsize{4.9pt}{5.9pt}\selectfont\color{uetgray}*Nguồn: N. Alnahawi et al. [14] (Phụ lục A, bảng 4--6): Hệ số chậm tương đối = kết nối/giây(\texttt{X25519}) $\div$ kết nối/giây(KEM). Đo kiểm thực nghiệm trên môi trường OQS-OpenSSL.\par}
+			\end{accentcard}
+		\end{column}
+
+		\begin{column}{0.40\textwidth}
+			\begin{accentcard}[uetblue]{Phân Tích Đánh Đổi An Toàn \& Băng Thông}[height=5.46cm, top=2.5pt, bottom=2.5pt]
+				\raggedright
+				\setlength{\leftmargini}{9pt}
+				\begin{itemize}\setlength{\itemsep}{2.2pt}\setlength{\topsep}{0pt}\fontsize{5.95pt}{7.3pt}\selectfont
+					\item \textbf{ML-KEM (Kyber)}: Cân bằng tối ưu giữa kích thước khóa/bản mã ($800\text{ B} + 768\text{ B}$) và tốc độ tính toán ($1{,}06\times$), được NIST chuẩn hóa ưu tiên (\textbf{FIPS 203}).
+					\item \textbf{Cấu trúc mạng tinh thể}: \texttt{Kyber}, \texttt{Saber}, \texttt{NTRU} dựa trên bài toán Module-LWE / NTRU, cho thông lượng cao vượt trội.
+					\item \textbf{Mã hóa dựa trên mã sửa sai}: \texttt{HQC}, \texttt{BIKE} có bản mã lớn ($> 1{,}5\text{ KB}$), làm tăng phân mảnh TCP.
+					\item \textbf{Mạng phi cấu trúc}: \texttt{FrodoKEM} độ an toàn cao nhưng khóa rất lớn ($> 9\text{ KB}$), độ trễ gấp $2{,}5\times$.
 				\end{itemize}
 			\end{accentcard}
 		\end{column}
