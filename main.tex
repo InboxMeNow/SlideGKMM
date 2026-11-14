@@ -1819,91 +1819,87 @@
 \section{10. Mật Mã Hậu Lượng Tử (PQ-TLS)}
 
 % -----------------------------------------------------------------------------
-% SLIDE 26: NGUY CƠ LƯỢNG TỬ & 3 HƯỚNG GIẢI PHÁP POST-QUANTUM TLS (KÈM ẢNH PHẦN CỨNG THỰC TẾ)
+% SLIDE 29: NGUY CƠ LƯỢNG TỬ VỚI TLS (trang_29.md)
 % -----------------------------------------------------------------------------
-\begin{frame}{Nguy Cơ Lượng Tử Với TLS \& Ba Hướng PQC}
-	% Top: Trái 2 thẻ lý thuyết + định nghĩa PQC | Phải ảnh IBM Quantum System One thực tế
-	\begin{columns}[T]
-		\begin{column}{0.695\textwidth}
-			\begin{accentcard}[uetblue]{Giới Hạn PFS Trước Máy Tính Lượng Tử}[height=1.34cm, before skip=0pt, after skip=0pt, top=1.5pt, bottom=1.5pt]
-				\raggedright
-				\setlength{\leftmargini}{9pt}
-				\begin{itemize}\setlength{\itemsep}{0.4pt}\setlength{\topsep}{0pt}\fontsize{5.9pt}{7.05pt}\selectfont
-					\item \textbf{Vượt qua PFS (\textit{Store now, decrypt later})}: Dù \texttt{(EC)DHE} bảo vệ được khóa dài hạn, kẻ địch thu thập bản ghi hôm nay có thể chờ máy tính lượng tử bẻ khóa tạm \texttt{ECDHE} về sau.
-					\item \textbf{Giả mạo xác thực}: Máy tính lượng tử đủ mạnh có thể giả chữ ký \texttt{RSA/ECDSA} và giả danh CA.
-				\end{itemize}
-			\end{accentcard}\par\nointerlineskip\vspace{0.05cm}\noindent
-			\begin{accentcard}[uetblue]{Thuật Toán Shor vs. Grover Trên TLS}[height=1.72cm, before skip=0pt, after skip=0pt, top=1.5pt, bottom=1.5pt]
-				\raggedright
-				\setlength{\leftmargini}{9pt}
-				\begin{itemize}\setlength{\itemsep}{0.6pt}\setlength{\topsep}{0pt}\fontsize{5.9pt}{7.05pt}\selectfont
-					\item \textbf{Thuật toán Shor}: Phá phân tích số nguyên (\texttt{RSA}) và logarit rời rạc (\texttt{DH/ECDHE/ECDSA}).
-					\item \textbf{Thuật toán Grover (Đối xứng \& Băm)}: Ảnh hưởng nhẹ hơn: $\mathcal{O}(2^n) \rightarrow \mathcal{O}(2^{n/2})$ $\rightarrow$ tăng kích thước khóa (\texttt{AES-256}, \texttt{SHA-384}).
-					\item \textbf{Trọng tâm}: Thay đổi phần \textbf{Handshake}; tầng \textbf{Record AEAD} chỉ cần tăng tham số.
-				\end{itemize}
-			\end{accentcard}\par\nointerlineskip\vspace{0.05cm}\noindent
-			\begin{uetcard}[colback=uetaccentbg, height=0.72cm, before skip=0pt, after skip=0pt, valign=center, top=1.5pt, bottom=1.5pt, left=5pt, right=5pt, sharp corners, arc=0pt]
-				\raggedright\fontsize{5.85pt}{6.95pt}\selectfont
-				{\color{uetblue}\textbf{Post-Quantum Cryptography (PQC):}} Mật mã dựa trên bài toán khó với cả máy tính cổ điển lẫn lượng tử; TLS cần ưu tiên thay thế thành phần \textbf{mật mã khóa công khai} ở quá trình bắt tay.
-			\end{uetcard}
-		\end{column}
-
-		\begin{column}{0.275\textwidth}
-			\begin{uetcard}[height=3.88cm, before skip=0pt, after skip=0pt, colback=white, valign=center, top=2.0pt, bottom=2.0pt, left=2.5pt, right=2.5pt]
-				\centering
-				{\fontsize{6.1pt}{6.9pt}\selectfont\color{uetblue}\textbf{Phần Cứng Lượng Tử Thực Tế}}\par\vspace{2pt}
-				\includegraphics[width=0.96\linewidth, height=3.06cm, keepaspectratio]{assets/slide26_ibm_quantum.jpg}\par\vspace{1.5pt}
-				{\fontsize{4.7pt}{5.5pt}\selectfont\color{uetgray}IBM Quantum System One (Wikimedia, CC BY 4.0).\par}
-			\end{uetcard}
-		\end{column}
-	\end{columns}
-	\vspace{0.08cm}
-
-	% Bottom: 3 Nhóm giải pháp ngang hàng
-	\begin{columns}[T]
-		\begin{column}{0.315\textwidth}
-			\begin{accentcard}[uetblue]{Hướng 1: PQ Authentication}[height=1.30cm, top=2.0pt, bottom=2.0pt, left=4.5pt, right=4.5pt]
-				{\raggedright\fontsize{5.9pt}{7.05pt}\selectfont
-				Thay chữ ký cổ điển bằng chữ ký hậu lượng tử (\texttt{ML-DSA}/\texttt{SLH-DSA}) để xác thực.\par}
-			\end{accentcard}
-		\end{column}
-		\begin{column}{0.315\textwidth}
-			\begin{accentcard}[uetblue]{Hướng 2: PQ Key Exchange}[height=1.30cm, top=2.0pt, bottom=2.0pt, left=4.5pt, right=4.5pt]
-				{\raggedright\fontsize{5.9pt}{7.05pt}\selectfont
-				Thay trao đổi khóa truyền thống (\texttt{DH/ECDH}) bằng cơ chế \textbf{KEM} hậu lượng tử (\texttt{ML-KEM}).\par}
-			\end{accentcard}
-		\end{column}
-		\begin{column}{0.315\textwidth}
-			\begin{accentcard}[uetblue]{Hướng 3: PQ-AKE}[height=1.30cm, top=2.0pt, bottom=2.0pt, left=4.5pt, right=4.5pt]
-				{\raggedright\fontsize{5.9pt}{7.05pt}\selectfont
-				Kết hợp trao đổi khóa và xác thực hậu lượng tử trong cùng một thiết kế (\texttt{KEMTLS}).\par}
-			\end{accentcard}
-		\end{column}
-	\end{columns}
+\begin{frame}{Nguy Cơ Lượng Tử Với TLS}
+	\begin{accentcard}[uetblue]{Tác Động Của Thuật Toán Lượng Tử Trên TLS (Shor vs. Grover)}[height=4.18cm, before skip=0pt, after skip=0pt, top=2.0pt, bottom=2.0pt]
+		\centering
+		\fontsize{5.7pt}{6.95pt}\selectfont
+		\renewcommand{\arraystretch}{1.10}
+		\setlength{\tabcolsep}{2.5pt}
+		\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{2.1cm} >{\raggedright\arraybackslash}p{2.2cm} >{\raggedright\arraybackslash}p{2.6cm} >{\raggedright\arraybackslash}X}
+			\toprule
+			\rowcolor{uetaccentbg}
+			\textbf{\color{uetblue}Thành phần mật mã trong TLS} & \textbf{\color{uetblue}Thuật toán cổ điển} & \textbf{\color{uetblue}Thuật toán lượng tử đe dọa} & \textbf{\color{uetblue}Mức độ tác động} \\
+			\midrule
+			\textbf{Trao đổi khóa} & \texttt{(EC)DHE}, \texttt{DH} & \textbf{Thuật toán Shor} (Phá logarit rời rạc) & \textbf{\color{uetred}Bị phá vỡ hoàn toàn} $\rightarrow$ Kẻ tấn công thu thập dữ liệu hôm nay để giải mã tương lai (\textit{Store now, decrypt later}). \\
+			\rowcolor{uetlightgray}
+			\textbf{Chữ ký số} & \texttt{RSA}, \texttt{ECDSA}, \texttt{Ed25519} & \textbf{Thuật toán Shor} (Phá phân tích số nguyên \& ECC) & \textbf{\color{uetred}Bị phá vỡ hoàn toàn} $\rightarrow$ Nguy cơ giả mạo chữ ký và danh tính CA/Server. \\
+			\textbf{Mã hóa đối xứng} & \texttt{AES-128}, \texttt{AES-256}, \texttt{ChaCha20} & \textbf{Thuật toán Grover} (Tìm kiếm lượng tử) & \textbf{Bị suy giảm độ an toàn:} $\mathcal{O}(2^n) \rightarrow \mathcal{O}(2^{n/2})$. Chỉ cần nâng chiều dài khóa lên 256-bit (\texttt{AES-256}). \\
+			\rowcolor{uetlightgray}
+			\textbf{Hàm băm \& MAC} & \texttt{SHA-256}, \texttt{SHA-384}, \texttt{HMAC} & \textbf{Thuật toán Grover} (Tìm nghịch ảnh) & \textbf{Ảnh hưởng nhẹ / Vẫn an toàn thực tế:} Khó bị khai thác do chi phí tính toán cao. Chỉ cần nâng kích thước băm (\texttt{SHA-384}). \\
+			\bottomrule
+		\end{tabularx}
+	\end{accentcard}\par\nointerlineskip\vspace{0.08cm}\noindent
+	\begin{uetcard}[colback=uetaccentbg, height=1.08cm, before skip=0pt, after skip=0pt, valign=center, top=2.0pt, bottom=2.0pt, left=6pt, right=6pt]
+		\raggedright\fontsize{5.9pt}{7.2pt}\selectfont
+		\textbf{\color{uetblue}Kết luận:} Trọng tâm là handshake: trao đổi khóa và chữ ký.\par
+		Record protocol chỉ cần chỉnh tham số.
+	\end{uetcard}
 \end{frame}
 
 % -----------------------------------------------------------------------------
-% SLIDE 26: HƯỚNG 1 (PQ AUTHENTICATION) & HƯỚNG 2 (PQ KEY EXCHANGE VỚI KEM)
+% SLIDE 30: ĐỊNH NGHĨA POST-QUANTUM CRYPTOGRAPHY (PQC) (trang_30.md)
 % -----------------------------------------------------------------------------
-\begin{frame}{PQ Authentication \& PQ Key Exchange (KEM)}
+\begin{frame}{Định Nghĩa Post-Quantum Cryptography (PQC)}
+	\begin{accentcard}[uetblue]{Định Nghĩa Post-Quantum Cryptography (PQC)}[height=2.0cm, before skip=0pt, after skip=0pt, top=4.0pt, bottom=4.0pt]
+		\raggedright
+		\setlength{\leftmargini}{9pt}
+		\begin{itemize}\fontsize{6.3pt}{8.0pt}\selectfont
+			\item \textbf{Post-Quantum Cryptography (PQC):} là nhóm thuật toán mật mã được thiết kế dựa trên các bài toán toán học được tin rằng vẫn khó giải đối với cả máy tính cổ điển và máy tính lượng tử quy mô lớn.
+		\end{itemize}
+	\end{accentcard}\par\nointerlineskip\vspace{0.10cm}\noindent
+	\begin{accentcard}[uetgreen]{Ba Hướng Giải Pháp PQC Cho TLS}[height=2.85cm, before skip=0pt, after skip=0pt, top=4.0pt, bottom=4.0pt]
+		\raggedright
+		\setlength{\leftmargini}{9pt}
+		\begin{itemize}\setlength{\itemsep}{3.0pt}\fontsize{6.2pt}{7.8pt}\selectfont
+			\item \textbf{Hướng 1: PQ Authentication:} Thay chữ ký cổ điển bằng chữ ký hậu lượng tử (\texttt{ML-DSA}/\texttt{SLH-DSA}) để xác thực.
+			\item \textbf{Hướng 2: PQ Key Exchange:} Thay trao đổi khóa truyền thống (\texttt{DH/ECDH}) bằng cơ chế \textbf{KEM} hậu lượng tử (\texttt{ML-KEM}).
+			\item \textbf{Hướng 3: PQ-AKE:} Kết hợp trao đổi khóa và xác thực hậu lượng tử trong cùng một thiết kế (\texttt{KEMTLS}).
+		\end{itemize}
+	\end{accentcard}\par\nointerlineskip\vspace{0.08cm}\noindent
+	\begin{uetcard}[colback=uetaccentbg, height=0.65cm, before skip=0pt, after skip=0pt, valign=center, top=1.0pt, bottom=1.0pt, left=6pt, right=6pt]
+		\centering\fontsize{6.0pt}{7.2pt}\selectfont\textbf{\color{uetblue}Mỗi loại lại chia thuần hậu lượng tử (pure) và lai (hybrid: cổ điển + hậu lượng tử).}
+	\end{uetcard}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+% SLIDE 31: HƯỚNG 1: POST-QUANTUM AUTHENTICATION (trang_31.md)
+% -----------------------------------------------------------------------------
+\begin{frame}{Hướng 1: Post-Quantum Authentication}
 	\begin{columns}[T]
-		\begin{column}{0.48\textwidth}
-			\begin{accentcard}[uetblue]{Hướng 1: Post-Quantum Authentication}[height=5.32cm, top=2.0pt, bottom=2.0pt]
+		\begin{column}{0.505\textwidth}
+			\begin{accentcard}[uetblue]{Các Thuật Toán Thuần PQ}[height=5.35cm, top=3.0pt, bottom=3.0pt]
 				\raggedright
 				\setlength{\leftmargini}{9pt}
-				\begin{itemize}\setlength{\itemsep}{1.0pt}\setlength{\topsep}{0pt}\fontsize{6.1pt}{7.5pt}\selectfont
-					\item \textbf{2 vị trí dùng chữ ký số trong TLS}: (1) Chữ ký của CA trên chứng chỉ; (2) Chữ ký \texttt{CertificateVerify} trong Handshake.
+				\begin{itemize}\setlength{\itemsep}{2.0pt}\setlength{\topsep}{0pt}\fontsize{5.8pt}{7.2pt}\selectfont
+					\item \textbf{Hai vị trí dùng chữ ký số trong TLS}:
+					      \begin{enumerate}\setlength{\itemsep}{1.0pt}\fontsize{5.6pt}{6.8pt}\selectfont
+					          \item Chữ ký của CA trên chứng chỉ.
+					          \item Chữ ký \texttt{CertificateVerify} trong Handshake.
+					      \end{enumerate}
 					\item \textbf{Thách thức}: Cân bằng an toàn và hiệu năng, đặc biệt là kích thước khóa và chữ ký.
 				\end{itemize}
-				\vspace{2pt}
+				\vspace{2.0pt}
+				{\fontsize{5.8pt}{7.0pt}\selectfont\textbf{\color{uetblue}Bảng so sánh các thuật toán chữ ký số hậu lượng tử}}\par\vspace{1.5pt}
 				\centering
-				\fontsize{5.65pt}{6.9pt}\selectfont
+				\fontsize{5.5pt}{6.8pt}\selectfont
 				\renewcommand{\arraystretch}{1.10}
 				\setlength{\tabcolsep}{2.5pt}
 				\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}X c c c}
 					\toprule
 					\rowcolor{uetaccentbg}
-					\textbf{\color{uetblue}Thuật toán} & \textbf{\color{uetblue}PK (B)} & \textbf{\color{uetblue}Chữ ký (B)} & \textbf{\color{uetblue}Chậm tương đối*} \\
+					\textbf{\color{uetblue}Thuật toán} & \textbf{\color{uetblue}PK (Byte)} & \textbf{\color{uetblue}Chữ ký (Byte)} & \textbf{\color{uetblue}Hệ số chậm} \\
 					\midrule
 					\textbf{Falcon (L1)} & 897 & 666 & 0,98$\times$ \\
 					\rowcolor{uetlightgray}
@@ -1913,230 +1909,198 @@
 				\end{tabularx}
 				\vspace{2.0pt}
 				\raggedright
-				{\fontsize{4.9pt}{5.9pt}\selectfont\color{uetgray}*Nguồn [14] (Phụ lục A, bảng 4--6): Hệ số = kết nối/giây(\texttt{Ed25519}) $\div$ kết nối/giây(thuật toán ký); lớn hơn 1 là chậm hơn \texttt{Ed25519} (OQS-OpenSSL).\par}
-				\vspace{1.5pt}
-				\begin{itemize}\setlength{\itemsep}{0.6pt}\setlength{\topsep}{0pt}\fontsize{5.75pt}{6.95pt}\selectfont
-					\item \textbf{Nhận xét}: \texttt{Dilithium} (\textbf{ML-DSA / FIPS 204}) và \texttt{Falcon} cân bằng tốt nhất; \texttt{SPHINCS+} (\textbf{SLH-DSA / FIPS 205}) có chữ ký lớn.
-					\item \textbf{Hybrid authentication}: Ghép chữ ký cổ điển + hậu lượng tử; mức chậm thay đổi tùy cặp thuật toán kết hợp [14].
-				\end{itemize}
+				{\fontsize{4.6pt}{5.6pt}\selectfont\color{uetgray}*Nguồn [14] (Phụ lục A, bảng 4–6): Hệ số = kết nối/giây(\texttt{Ed25519}) $\div$ kết nối/giây(thuật toán ký); lớn hơn 1 là chậm hơn \texttt{Ed25519} (OQS-OpenSSL).\par}
 			\end{accentcard}
 		\end{column}
 
-		\begin{column}{0.49\textwidth}
-			\begin{accentcard}[uetblue]{Hướng 2: Trao Đổi Khóa Lai (RFC 10024)}[height=5.32cm, top=2.0pt, bottom=2.0pt]
-				\raggedright
-				\setlength{\leftmargini}{9pt}
-				\begin{itemize}\setlength{\itemsep}{0.2pt}\setlength{\topsep}{0pt}\fontsize{5.65pt}{6.75pt}\selectfont
-					\item \textbf{Cơ chế nhóm lai}: Ghép \textbf{ML-KEM-768} (FIPS 203) và \textbf{X25519} (RFC 7748) để đạt \textbf{an toàn kép}: an toàn chừng nào $\ge 1$ thuật toán chưa bị bẻ gãy.
-					\item \textbf{Đóng gói hai chiều}: Kích thước chia tách rõ rệt giữa khóa công khai và bản mã [RFC 10024, mục 4]:
-				\end{itemize}
-				\vspace{1.0pt}
-				\centering
-				\begin{tikzpicture}[
-					scale=0.72, every node/.style={transform shape},
-					pqcbar/.style={draw=uetgreen, fill=uetgreenbg, sharp corners, minimum height=0.48cm, align=center, font=\fontsize{5.2pt}{6.0pt}\selectfont\bfseries, text=uetdarkgreen, inner sep=1.8pt},
-					ecbar/.style={draw=uetblue, fill=uetblue!14, sharp corners, minimum height=0.48cm, align=center, font=\fontsize{5.2pt}{6.0pt}\selectfont\bfseries, text=uetdarkblue, inner sep=1.8pt},
-					lbl/.style={font=\fontsize{5.2pt}{6.0pt}\selectfont\bfseries\color{uetblue}, anchor=west}
-				]
-					% Client Share Bar (1216 B)
-					\node[lbl] at (0, 2.30) {Client Share (\texttt{ClientHello}): \textbf{1.216 B}};
-					\node[pqcbar, minimum width=4.75cm] (c_pqc) at (2.375, 1.80) {\textbf{ML-KEM-768 Public Key (1.184 B)}\\{\fontsize{4.6pt}{5.2pt}\selectfont Mạng tinh thể (Lattice) chống máy tính lượng tử}};
-					\node[ecbar, minimum width=1.45cm] (c_ec) at (5.475, 1.80) {\textbf{X25519}\\\fontsize{4.6pt}{5.2pt}\selectfont 32 B};
-
-					% Server Share Bar (1120 B)
-					\node[lbl] at (0, 1.20) {Server Share (\texttt{ServerHello}): \textbf{1.120 B}};
-					\node[pqcbar, minimum width=4.75cm] (s_pqc) at (2.375, 0.70) {\textbf{ML-KEM-768 Ciphertext (1.088 B)}\\{\fontsize{4.5pt}{5.1pt}\selectfont Client dùng bản mã để khôi phục bí mật chung qua \texttt{Decaps}}};
-					\node[ecbar, minimum width=1.45cm] (s_ec) at (5.475, 0.70) {\textbf{X25519}\\\fontsize{4.6pt}{5.2pt}\selectfont 32 B};
-
-					% Shared Secret Combination (RFC 10024, section 4.3: ss_ML-KEM || ss_X25519)
-					\draw[dashed, color=uetgray!70] (0, 0.22) -- (6.20, 0.22);
-					\node[draw=uetblue!70, fill=uetaccentbg, sharp corners, inner sep=1.8pt, font=\fontsize{4.9pt}{5.8pt}\selectfont, align=center] at (3.10, -0.12) {
-						\textbf{Dẫn xuất bí mật chung [RFC 10024]}: $ss = ss_{\text{ML-KEM}} \,\|\, ss_{\text{X25519}}$ $\rightarrow$ nạp vào \texttt{HKDF-Extract} TLS 1.3.
-					};
-				\end{tikzpicture}\\[1.5pt]
-				\raggedright
-				\setlength{\leftmargini}{9pt}
-				\begin{itemize}\setlength{\itemsep}{0.2pt}\setlength{\topsep}{0pt}\fontsize{5.65pt}{6.75pt}\selectfont
-					\item \textbf{Khớp thực chứng}: Server share \textbf{1.120 B} kết nối trực tiếp với trường \texttt{key\_share} trong gói tin Wireshark ở \textbf{Slide 28}.
-					\item \textbf{Hiệu năng}: Hệ số chậm tương đối của Kyber L1 chỉ \textbf{1,06$\times$} so với X25519 (xem \textbf{Phụ lục} cho benchmark đầy đủ).
-				\end{itemize}
+		\begin{column}{0.475\textwidth}
+			\begin{accentcard}[uetgreen]{Đánh Giá \& Thuật Toán Lai}[height=5.35cm, top=3.0pt, bottom=3.0pt]
+				\begin{uetcard}[colback=uetaccentbg, height=2.45cm, top=2.0pt, bottom=2.0pt]
+					\raggedright\fontsize{5.8pt}{7.2pt}\selectfont
+					\textbf{\color{uetblue}Nhận xét:}\par\vspace{2pt}
+					\setlength{\leftmargini}{9pt}
+					\begin{itemize}\setlength{\itemsep}{2.0pt}\setlength{\topsep}{0pt}\fontsize{5.7pt}{7.0pt}\selectfont
+						\item \textbf{Nhận xét:} \texttt{Dilithium} (\textbf{ML-DSA / FIPS 204}) và \texttt{Falcon} cân bằng tốt nhất; \texttt{SPHINCS+} (\textbf{SLH-DSA / FIPS 205}) có chữ ký lớn.
+					\end{itemize}
+				\end{uetcard}\par\nointerlineskip\vspace{0.10cm}\noindent
+				\begin{uetcard}[colback=uetgreenbg, height=2.35cm, top=2.0pt, bottom=2.0pt]
+					\raggedright\fontsize{5.8pt}{7.2pt}\selectfont
+					\textbf{\color{uetdarkgreen}Các thuật toán lai:}\par\vspace{2pt}
+					\setlength{\leftmargini}{9pt}
+					\begin{itemize}\setlength{\itemsep}{2.0pt}\setlength{\topsep}{0pt}\fontsize{5.7pt}{7.0pt}\selectfont
+						\item \textbf{Hybrid authentication:} Ghép chữ ký cổ điển + hậu lượng tử; mức chậm thay đổi tùy cặp thuật toán kết hợp [14].
+					\end{itemize}
+				\end{uetcard}
 			\end{accentcard}
 		\end{column}
 	\end{columns}
 \end{frame}
 
 % -----------------------------------------------------------------------------
-% SLIDE 27: HƯỚNG 3 (PQ-AKE: KEMTLS) & CÁC VẤN ĐỀ CÒN MỞ
+% SLIDE 32: HƯỚNG 2: POST-QUANTUM KEY EXCHANGE (RFC 10024) (trang_32.md)
 % -----------------------------------------------------------------------------
-\begin{frame}{Hướng 3: PQ-AKE (KEMTLS) \& Vấn Đề Còn Mở}
-	% Top: 2 cột AKE truyền thống vs KEMTLS
+\begin{frame}{Hướng 2: Post-Quantum Key Exchange (RFC 10024)}
 	\begin{columns}[T]
-		\begin{column}{0.48\textwidth}
-			\begin{accentcard}[uetblue]{Bản Chất AKE \& Rủi Ro TLS 1.3 Truyền Thống}[height=3.48cm, top=2.0pt, bottom=2.0pt]
+		\begin{column}{0.505\textwidth}
+			\begin{accentcard}[uetblue]{Các Thuật Toán Thuần PQ (KEM)}[height=5.35cm, top=3.0pt, bottom=3.0pt]
+				\raggedright
+				{\fontsize{5.8pt}{7.2pt}\selectfont Chuyển từ Diffie-Hellman sang KEM (Key Encapsulation Mechanism).\par}
+				\setlength{\leftmargini}{9pt}
+				\begin{itemize}\setlength{\itemsep}{1.5pt}\setlength{\topsep}{0pt}\fontsize{5.5pt}{6.8pt}\selectfont
+					\item \textbf{Luồng gần giống DH:} client gửi khóa công khai tạm thời $\rightarrow$ server đóng gói ra (ciphertext, bí mật chung) và gửi ciphertext $\rightarrow$ client giải đóng gói lấy bí mật chung.
+				\end{itemize}
+				\vspace{1.5pt}
 				\centering
-				\fontsize{5.6pt}{6.9pt}\selectfont
-				\renewcommand{\arraystretch}{1.05}
-				\setlength{\tabcolsep}{3.0pt}
-				\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{1.65cm} >{\raggedright\arraybackslash}p{1.35cm} >{\raggedright\arraybackslash}X}
+				\fontsize{5.2pt}{6.4pt}\selectfont
+				\renewcommand{\arraystretch}{1.06}
+				\setlength{\tabcolsep}{2.5pt}
+				\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}X c c c}
 					\toprule
 					\rowcolor{uetaccentbg}
-					\textbf{\color{uetblue}Nhiệm vụ} & \textbf{\color{uetblue}Cơ chế cũ} & \textbf{\color{uetblue}Rủi ro trước lượng tử} \\
+					\textbf{\color{uetblue}KEM (mức 1)} & \textbf{\color{uetblue}Khóa công khai (byte)} & \textbf{\color{uetblue}Ciphertext (byte)} & \textbf{\color{uetblue}Hệ số chậm đi*} \\
 					\midrule
-					Trao đổi khóa & \texttt{ECDHE} & Bị phá vỡ bởi thuật toán Shor \\
+					\rowcolor{uetgreenbg}
+					\textbf{Kyber} & \textbf{800} & \textbf{768} & \textbf{1,06} \\
+					\textbf{Saber} & 672 & 736 & 1,07 \\
 					\rowcolor{uetlightgray}
-					Xác thực & \texttt{RSA/ECDSA} & Có thể bị giả mạo nếu lượng tử đủ mạnh \\
+					\textbf{NTRU} & 930 & 930 & 1,13 \\
+					\textbf{HQC} & 2 249 & 4 481 & 1,23 \\
+					\rowcolor{uetlightgray}
+					\textbf{FrodoKEM} & 9 616 & 9 720 & 2,53 \\
+					\textbf{BIKE} & 1 540 & 1 572 & 2,55 \\
 					\bottomrule
 				\end{tabularx}
-				\vspace{2.5pt}
+				\vspace{2.0pt}
 				\raggedright
-				\setlength{\leftmargini}{8pt}
-				\begin{itemize}\setlength{\itemsep}{0.6pt}\setlength{\topsep}{0pt}\fontsize{5.85pt}{7.1pt}\selectfont
-					\item \textbf{Hai vấn đề bắt tay}: \textit{Secrecy} (khóa phiên bí mật) \& \textit{Authenticity} (xác minh đúng Server).
-					\item \textbf{Yêu cầu AKE}: Xác thực danh tính; tạo khóa bí mật chung; ngăn giả mạo/can thiệp; bảo vệ khóa phiên trên mạng không an toàn.
-				\end{itemize}
+				{\fontsize{5.5pt}{6.8pt}\selectfont\textbf{\color{uetdarkgreen}Một thuật toán KEM tiêu biểu là Kyber (nhanh nhất)}\par}
 			\end{accentcard}
 		\end{column}
 
-		\begin{column}{0.49\textwidth}
-			\begin{accentcard}[uetblue]{Giải Pháp PQ-AKE: Giao Thức KEMTLS}[height=3.48cm, top=2.0pt, bottom=2.0pt]
+		\begin{column}{0.475\textwidth}
+			\begin{accentcard}[uetgreen]{Các Thuật Toán Lai}[height=5.35cm, top=3.0pt, bottom=3.0pt]
+				\raggedright
+				\setlength{\leftmargini}{9pt}
+				\begin{itemize}\setlength{\itemsep}{2.5pt}\setlength{\topsep}{0pt}\fontsize{5.8pt}{7.2pt}\selectfont
+					\item \textbf{Hybrid key exchange:} ghép DH cổ điển + KEM hậu lượng tử, nối khóa/ciphertext thành một phần tử duy nhất-- đã được triển khai và thử nghiệm nhiều nhất (ví dụ: \textbf{\color{uetdarkgreen}x25519 + Kyber}).
+				\end{itemize}
+				\vspace{0.15cm}
+				\begin{uetcard}[colback=uetgreenbg, height=2.45cm, top=3.0pt, bottom=3.0pt]
+					\raggedright\fontsize{5.8pt}{7.2pt}\selectfont
+					\textbf{\color{uetdarkgreen}Thực tế:}\par\vspace{2pt}
+					Google và Cloudflare đã thử nghiệm (CECPQ1, CECPQ2), và từ Chrome 116 (08/2023) trình duyệt hỗ trợ lai x25519 + Kyber‑768.
+				\end{uetcard}
+			\end{accentcard}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+% SLIDE 33: HƯỚNG 3: POST-QUANTUM AUTHENTICATED KEY EXCHANGE (KEMTLS) (trang_33.md)
+% -----------------------------------------------------------------------------
+\begin{frame}{Hướng 3: Post-Quantum Authenticated Key Exchange}
+	\begin{columns}[T]
+		\begin{column}{0.495\textwidth}
+			\begin{accentcard}[uetblue]{Bản Chất AKE \& Giao Thức KEMTLS}[height=2.65cm, top=2.0pt, bottom=2.0pt]
+				\raggedright\fontsize{5.6pt}{6.9pt}\selectfont
+				\textbf{Bản Chất AKE:}\par
+				Do chữ ký PQ có kích thước khá to trong quá trình handshake, vì vậy đề xuất sử dụng KEM cho cả trao đổi khóa và xác thực danh tính.\par\vspace{2pt}
+				\textbf{\color{uetblue}Giải Pháp PQ-AKE: Giao Thức KEMTLS:}\par
+				\setlength{\leftmargini}{8pt}
+				\begin{itemize}\setlength{\itemsep}{1.2pt}\setlength{\topsep}{0pt}\fontsize{5.3pt}{6.5pt}\selectfont
+					\item \textbf{Ý tưởng cốt lõi:} Ký thông điệp là một cách xác thực, nhưng \textbf{không phải cách duy nhất}.
+					\item \textbf{Cơ chế KEMTLS:} Thay vì dùng chữ ký số chứng minh danh tính Server, Client dùng khóa công khai KEM trong chứng chỉ để đóng gói một bí mật và thông qua thông điệp mới gửi cho server. Chỉ Server nắm khóa bí mật mới giải đóng gói được và tính ra khóa đúng khớp với khóa chung.
+				\end{itemize}
+				\vspace{1.5pt}
+				{\fontsize{5.3pt}{6.5pt}\selectfont\textbf{\color{uetred}Không có CertificateVerify (khác TLS 1.3)}\par}
+			\end{accentcard}\par\nointerlineskip\vspace{0.06cm}\noindent
+			\begin{accentcard}[uetred]{Hạn chế}[height=2.65cm, top=2.0pt, bottom=2.0pt]
 				\raggedright
 				\setlength{\leftmargini}{8pt}
-				\begin{itemize}\setlength{\itemsep}{1.0pt}\setlength{\topsep}{0pt}\fontsize{6.0pt}{7.4pt}\selectfont
-					\item \textbf{Ý tưởng cốt lõi}: Ký thông điệp là một cách xác thực, nhưng \textbf{không phải cách duy nhất}.
-					\item \textbf{Cơ chế KEMTLS}: Thay vì dùng chữ ký số chứng minh danh tính Server, KEMTLS dùng chính \textbf{KEM} để chứng minh Server sở hữu khóa bí mật khớp với khóa công khai đã chứng thực trong certificate.
+				\begin{itemize}\setlength{\itemsep}{1.2pt}\setlength{\topsep}{0pt}\fontsize{5.4pt}{6.6pt}\selectfont
+					\item Vẫn dùng \textbf{chữ ký cho chứng chỉ}, nên chưa bỏ hẳn được chữ ký PQ.
+					\item Cần KEM \textbf{IND-CCA}.
+					\item Thêm một lượt thông điệp (Finished của Server bị hoãn); xác thực hai chiều cần thêm một round trip.
+					\item Với cặp Kyber/Dilithium hiệu năng gần như không khác cách ghép riêng.
 				\end{itemize}
-				\vspace{4pt}
-				\centering
-				\begin{tikzpicture}[
-					scale=0.78, every node/.style={transform shape},
-					boxa/.style={draw=uetblue!75, fill=uetaccentbg, sharp corners, minimum height=0.40cm, align=center, font=\fontsize{5.4pt}{6.2pt}\selectfont, inner sep=2.0pt},
-					boxg/.style={draw=uetgreen, fill=uetgreenbg, sharp corners, minimum height=0.40cm, align=center, font=\fontsize{5.4pt}{6.2pt}\selectfont, inner sep=2.0pt},
-					arr/.style={-{Stealth[scale=0.62]}, thick, color=uetblue}
-				]
-					\node[font=\fontsize{5.2pt}{6.0pt}\selectfont\bfseries\color{uetgray}, anchor=east] at (-0.1, 0.56) {TLS 1.3 PQC:};
-					\node[boxa, minimum width=2.35cm] (t1) at (1.18, 0.56) {KEM tạm (Trao đổi khóa)};
-					\node[boxa, minimum width=2.60cm] (t2) at (4.10, 0.56) {Chữ ký số PQC (Xác thực)};
-					\draw[arr] (t1.east) -- (t2.west);
+				\vspace{1.5pt}
+				\begin{uetcard}[colback=uetaccentbg, height=0.62cm, top=1.0pt, bottom=1.0pt]
+					\raggedright\fontsize{5.2pt}{6.3pt}\selectfont
+					\textbf{\color{uetdarkgreen}Kết luận:} KEMTLS có ích nhất khi băng thông hoặc thiết bị bị hạn chế (mạng kém, IoT).
+				\end{uetcard}
+			\end{accentcard}
+		\end{column}
 
-					\node[font=\fontsize{5.2pt}{6.0pt}\selectfont\bfseries\color{uetdarkgreen}, anchor=east] at (-0.1, 0.00) {KEMTLS:};
-					\node[boxg, minimum width=2.35cm] (k1) at (1.18, 0.00) {KEM tạm (Trao đổi khóa)};
-					\node[boxg, minimum width=2.60cm] (k2) at (4.10, 0.00) {\textbf{KEM Cert} (\texttt{Decaps} xác thực)};
-					\draw[arr, color=uetgreen] (k1.east) -- (k2.west);
+		\begin{column}{0.485\textwidth}
+			\begin{accentcard}[uetgreen]{So Sánh Luồng Handshake: TLS 1.3 vs KEMTLS}[height=5.36cm, top=2.0pt, bottom=2.0pt]
+				\centering
+				\vspace{1pt}
+				\begin{tikzpicture}[
+					scale=0.74, every node/.style={transform shape},
+					arr/.style={-{Stealth[scale=0.75]}, thick},
+					flowlbl/.style={font=\fontsize{6.2pt}{7.2pt}\selectfont\bfseries},
+					msgline/.style={font=\fontsize{5.7pt}{6.8pt}\selectfont}
+				]
+					% TLS 1.3 Column
+					\node[flowlbl, color=uetblue] at (1.1, 5.8) {TLS 1.3};
+					\node[msgline, color=uetdark] at (0.3, 5.4) {Client};
+					\node[msgline, color=uetdark] at (1.9, 5.4) {Server};
+					\draw[thick, color=uetborder] (0.3, 5.2) -- (0.3, 0.4);
+					\draw[thick, color=uetborder] (1.9, 5.2) -- (1.9, 0.4);
+
+					\draw[arr, color=uetblue] (0.3, 4.8) -- node[above, font=\fontsize{4.8pt}{5.6pt}\selectfont] {\texttt{ClientHello}} (1.9, 4.5);
+					\draw[arr, color=uetblue] (1.9, 4.1) -- node[above, font=\fontsize{4.8pt}{5.6pt}\selectfont] {\texttt{ServerHello}} (0.3, 3.8);
+					\draw[arr, color=uetblue] (1.9, 3.4) -- node[above, font=\fontsize{4.8pt}{5.6pt}\selectfont] {\texttt{Certificate}} (0.3, 3.1);
+					\draw[arr, color=uetred] (1.9, 2.7) -- node[above, font=\fontsize{4.8pt}{5.6pt}\selectfont\color{uetred}] {\textbf{CertVerify} \ding{55} bỏ} (0.3, 2.4);
+					\draw[arr, color=uetblue] (1.9, 2.0) -- node[above, font=\fontsize{4.8pt}{5.6pt}\selectfont] {\texttt{Finished}} (0.3, 1.7);
+					\draw[arr, color=uetblue] (0.3, 1.3) -- node[above, font=\fontsize{4.8pt}{5.6pt}\selectfont] {\texttt{Finished}} (1.9, 1.0);
+
+					% Separator line
+					\draw[dashed, color=uetborder] (2.9, 5.8) -- (2.9, 0.4);
+
+					% KEMTLS Column
+					\node[flowlbl, color=uetdarkgreen] at (4.7, 5.8) {KEMTLS};
+					\node[msgline, color=uetdark] at (3.7, 5.4) {Client};
+					\node[msgline, color=uetdark] at (5.7, 5.4) {Server};
+					\draw[thick, color=uetborder] (3.7, 5.2) -- (3.7, 0.4);
+					\draw[thick, color=uetborder] (5.7, 5.2) -- (5.7, 0.4);
+
+					\draw[arr, color=uetgreen] (3.7, 4.8) -- node[above, font=\fontsize{4.8pt}{5.6pt}\selectfont] {\texttt{ClientHello (khóa KEM tạm)}} (5.7, 4.5);
+					\draw[arr, color=uetgreen] (5.7, 4.1) -- node[above, font=\fontsize{4.8pt}{5.6pt}\selectfont] {\texttt{ServerHello (ciphertext tạm)}} (3.7, 3.8);
+					\draw[arr, color=uetgreen] (5.7, 3.4) -- node[above, font=\fontsize{4.8pt}{5.6pt}\selectfont] {\texttt{Certificate (khóa KEM tĩnh)}} (3.7, 3.1);
+
+					\node[draw=uetgreen!60, fill=uetgreenbg, sharp corners, inner sep=1.5pt, font=\fontsize{4.7pt}{5.5pt}\selectfont\color{uetdarkgreen}] at (4.7, 2.5) {(không có CertificateVerify)};
+
+					\draw[arr, color=uetdarkgreen] (3.7, 1.9) -- node[above, font=\fontsize{4.8pt}{5.6pt}\selectfont\bfseries\color{uetdarkgreen}] {\texttt{ClientKemCiphertext + Finished $\leftarrow$ mới}} (5.7, 1.5);
+					\draw[arr, color=uetgreen] (5.7, 1.1) -- node[above, font=\fontsize{4.8pt}{5.6pt}\selectfont] {\texttt{Finished (gửi sau)}} (3.7, 0.7);
 				\end{tikzpicture}
 			\end{accentcard}
 		\end{column}
 	\end{columns}
-	\vspace{0.08cm}
-
-	% Bottom: 3 Vấn đề còn mở
-	\begin{columns}[T]
-		\begin{column}{0.315\textwidth}
-			\begin{accentcard}[uetblue]{1. Phân Tích Hình Thức}[height=1.98cm, top=2.0pt, bottom=2.0pt, left=4.5pt, right=4.5pt]
-				{\raggedright\fontsize{6.0pt}{7.5pt}\selectfont
-				Chưa có phân tích đầy đủ cho TLS với KEM làm trao đổi khóa (đặc biệt \textit{hybrid}) và TLS với nhiều chữ ký (\textit{hybrid authentication}).\par}
-			\end{accentcard}
-		\end{column}
-		\begin{column}{0.315\textwidth}
-			\begin{accentcard}[uetblue]{2. Đa Dạng Hóa Giải Pháp}[height=1.98cm, top=2.0pt, bottom=2.0pt, left=4.5pt, right=4.5pt]
-				{\raggedright\fontsize{6.0pt}{7.5pt}\selectfont
-				Cần bổ sung các giải pháp mật mã hậu lượng tử có chi phí truyền thông thấp cho những môi trường mạng kém.\par}
-			\end{accentcard}
-		\end{column}
-		\begin{column}{0.315\textwidth}
-			\begin{accentcard}[uetblue]{3. Trạng Thái Chuẩn Hóa}[height=1.98cm, top=1.8pt, bottom=1.8pt, left=4.5pt, right=4.5pt]
-				{\raggedright\fontsize{5.2pt}{6.25pt}\selectfont
-				\textbf{Trao đổi khóa lai} đã chuẩn hóa trong TLS 1.3: \textbf{RFC 10024} đặc tả các nhóm lai cụ thể (\texttt{X25519MLKEM768}), còn \textbf{RFC 9954} (trạng thái \textit{Informational}) mô tả cấu trúc chung; \textbf{KEMTLS} là bản nháp IETF (\href{https://datatracker.ietf.org/doc/draft-celi-wiggers-tls-authkem/}{\texttt{draft-celi-wiggers-tls-authkem}}) [12].\par}
-			\end{accentcard}
-		\end{column}
-	\end{columns}
 \end{frame}
 
 % -----------------------------------------------------------------------------
-% SLIDE 29: THỰC CHỨNG TRIỂN KHAI TRÊN INTERNET (TLS 1.3 & PQ HYBRID 11/2026)
+% SLIDE 34: CÁC VẤN ĐỀ CÒN MỞ (trang_34.md)
 % -----------------------------------------------------------------------------
-\begin{frame}{Thực Chứng Triển Khai: TLS 1.3 \& PQ-TLS (11/2026)}
+\begin{frame}{Các Vấn Đề Còn Mở}
 	\begin{columns}[T]
-		\begin{column}{0.485\textwidth}
-			\begin{uetcard}[height=3.05cm, before skip=0pt, after skip=0pt, colback=white, valign=center, top=2.0pt, bottom=2.0pt, left=2.5pt, right=2.5pt]
-				\centering
-				{\fontsize{6.1pt}{6.9pt}\selectfont\color{uetblue}\textbf{Tỷ Lệ Website Hỗ Trợ Trao Đổi Khóa Lai \texttt{X25519MLKEM768}}}\par\vspace{1.5pt}
-				\includegraphics[width=0.98\linewidth, height=2.40cm, keepaspectratio]{assets/slide29_pq_adoption_2026.png}\par\vspace{1.0pt}
-				{\fontsize{4.65pt}{5.4pt}\selectfont\color{uetgray}Khảo sát CrawlCheck 03/11/2026 (\href{https://commons.wikimedia.org/wiki/File:Websites_supporting_post-quantum_key_exchange,_November_2026.svg}{Wikimedia}, CC BY 4.0; \href{https://crawlcheck.io/blog/post-quantum-key-exchange-six-in-ten-websites-november-2026\#how-this-was-measured}{phương pháp đo}).\par}
-			\end{uetcard}\par\nointerlineskip\vspace{0.08cm}\noindent
-			\begin{accentcard}[uetblue]{Thực Trạng Chuyển Dịch PQ-TLS (RFC 10024)}[height=2.36cm, before skip=0pt, after skip=0pt, top=1.8pt, bottom=1.8pt, fonttitle=\fontsize{7.4pt}{8.8pt}\bfseries\raggedright]
-				\raggedright
-				\setlength{\leftmargini}{9pt}
-				\begin{itemize}\setlength{\itemsep}{1.6pt}\setlength{\topsep}{0pt}\fontsize{5.55pt}{6.7pt}\selectfont
-					\item \textbf{Tỷ lệ triển khai}: \textbf{59,6\%} (\textbf{772/1.295} website mẫu) hoàn tất bắt tay TLS 1.3 khi client \textbf{chỉ đề xuất} \texttt{X25519MLKEM768} [CrawlCheck, 11/2026].
-					\item \textbf{Vai trò Cloudflare}: Đạt \textbf{99,7\%} (149/150 site) do CDN kích hoạt sẵn; nhóm website tự quản trị đạt \textbf{44,8\%} (423/945) và đang tăng.
-					\item \textbf{Khả năng tương thích}: Không gặp trở ngại phân mảnh gói tin hay đứt gãy kết nối, khẳng định nhóm lai PQ đã sẵn sàng môi trường thực tế.
-				\end{itemize}
+		\begin{column}{0.315\textwidth}
+			\begin{accentcard}[uetblue]{1. Phân Tích Hình Thức:}[height=5.35cm, top=4.0pt, bottom=4.0pt, left=5.5pt, right=5.5pt]
+				\raggedright\fontsize{6.2pt}{8.0pt}\selectfont
+				Chưa có phân tích đầy đủ cho TLS với KEM làm trao đổi khóa (đặc biệt \textit{hybrid}) và TLS với nhiều chữ ký (\textit{hybrid authentication}).
 			\end{accentcard}
 		\end{column}
 
-		\begin{column}{0.485\textwidth}
-			\begin{uetcard}[height=3.05cm, before skip=0pt, after skip=0pt, colback=white, valign=center, top=2.0pt, bottom=2.0pt, left=2.5pt, right=2.5pt]
-				\centering
-				{\fontsize{6.1pt}{6.9pt}\selectfont\color{uetblue}\textbf{Bắt Tay Wireshark Thật: ServerHello Chọn X25519MLKEM768}}\par\vspace{1.5pt}
-				\includegraphics[width=0.98\linewidth, height=2.40cm, keepaspectratio]{assets/slide28_wireshark_serverhello.png}\par\vspace{1.0pt}
-				{\fontsize{4.45pt}{5.1pt}\selectfont\color{uetgray}Gói \texttt{ServerHello} (bắt gói \texttt{127.0.0.1:8081} $\leftrightarrow$ \texttt{48266}): Nhóm KEX nằm riêng ở \texttt{key\_share}.\par}
-			\end{uetcard}\par\nointerlineskip\vspace{0.08cm}\noindent
-			\begin{accentcard}[uetblue]{Ba Trường Trong ServerHello}[height=2.36cm, before skip=0pt, after skip=0pt, top=1.8pt, bottom=1.8pt, fonttitle=\fontsize{7.4pt}{8.8pt}\bfseries\raggedright]
-				\raggedright
-				\setlength{\leftmargini}{9pt}
-				\begin{itemize}\setlength{\itemsep}{1.6pt}\setlength{\topsep}{0pt}\fontsize{5.55pt}{6.7pt}\selectfont
-					\item \textbf{1. Phiên bản TLS 1.3}: Header mang \texttt{0x0303} tương thích (\textit{legacy\_version}); bản chốt là \texttt{0x0304} ở \texttt{supported\_versions} [RFC 9846, 4.2.3].
-					\item \textbf{2. Bộ mã}: \texttt{TLS\_AES\_128\_GCM\_SHA256} gồm AEAD + băm (đã tách riêng nhóm KEX sang \texttt{key\_share}).
-					\item \textbf{3. Nhóm lai PQ}: \texttt{X25519MLKEM768 (0x11EC)} mang 1.120 B bản mã KEX [RFC 10024].
-				\end{itemize}
-			\end{accentcard}
-		\end{column}
-	\end{columns}
-\end{frame}
-
-% -----------------------------------------------------------------------------
-% SLIDE 30: PHỤ LỤC: BENCHMARK CHI TIẾT CÁC THUẬT TOÁN KEM (NIST LEVEL 1)
-% -----------------------------------------------------------------------------
-\begin{frame}{Phụ Lục: Benchmark Hiệu Năng KEM Hậu Lượng Tử (NIST L1)}
-	\begin{columns}[T]
-		\begin{column}{0.57\textwidth}
-			\begin{accentcard}[uetblue]{Hiệu Năng Các Cơ Chế KEM Mức An Toàn 1 (NIST Level 1)}[height=5.46cm, top=2.0pt, bottom=2.0pt]
-				\centering
-				\fontsize{5.85pt}{7.1pt}\selectfont
-				\renewcommand{\arraystretch}{1.08}
-				\setlength{\tabcolsep}{3.0pt}
-				\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}X c c c}
-					\toprule
-					\rowcolor{uetaccentbg}
-					\textbf{\color{uetblue}Thuật toán KEM (Mức 1)} & \textbf{\color{uetblue}PK (B)} & \textbf{\color{uetblue}Ciphertext (B)} & \textbf{\color{uetblue}Chậm tương đối*} \\
-					\midrule
-					\rowcolor{uetgreenbg}
-					\textbf{Kyber (L1)} & \textbf{800} & \textbf{768} & \textbf{1,06$\times$} \\
-					\textbf{Saber} & 672 & 736 & 1,07$\times$ \\
-					\rowcolor{uetlightgray}
-					\textbf{NTRU} & 930 & 930 & 1,13$\times$ \\
-					\textbf{HQC} & 2 249 & 4 481 & 1,23$\times$ \\
-					\rowcolor{uetlightgray}
-					\textbf{FrodoKEM} & 9 616 & 9 720 & 2,53$\times$ \\
-					\textbf{BIKE} & 1 540 & 1 572 & 2,55$\times$ \\
-					\bottomrule
-				\end{tabularx}
-				\vspace{2.5pt}
-				\raggedright
-				{\fontsize{4.8pt}{5.8pt}\selectfont\color{uetgray}*Nguồn: N. Alnahawi et al. [14] (Phụ lục A, bảng 4--6): Hệ số = kết nối/giây(\texttt{X25519}) $\div$ kết nối/giây(KEM) trên OQS-OpenSSL. \texttt{Kyber (L1)} đo theo cấu hình Kyber-512 ($800\text{ B} / 768\text{ B}$). Chuẩn hóa \textbf{ML-KEM-768} (FIPS 203 / RFC 10024) dùng cấu hình PK $1.184\text{ B}$ và bản mã $1.088\text{ B}$ (như Slide 26).\par}
+		\begin{column}{0.315\textwidth}
+			\begin{accentcard}[uetblue]{2. Đa Dạng Hóa Giải Pháp:}[height=5.35cm, top=4.0pt, bottom=4.0pt, left=5.5pt, right=5.5pt]
+				\raggedright\fontsize{6.2pt}{8.0pt}\selectfont
+				Cần bổ sung các giải pháp mật mã hậu lượng tử có chi phí truyền thông thấp cho những môi trường mạng kém.
 			\end{accentcard}
 		\end{column}
 
-		\begin{column}{0.40\textwidth}
-			\begin{accentcard}[uetblue]{Phân Tích Đánh Đổi An Toàn \& Băng Thông}[height=5.46cm, top=2.5pt, bottom=2.5pt]
-				\raggedright
-				\setlength{\leftmargini}{9pt}
-				\begin{itemize}\setlength{\itemsep}{2.0pt}\setlength{\topsep}{0pt}\fontsize{5.9pt}{7.2pt}\selectfont
-					\item \textbf{Kyber / ML-KEM}: Cân bằng tối ưu giữa kích thước ($800\text{ B} + 768\text{ B}$ ở L1) và tốc độ tính toán ($1{,}06\times$). Chuẩn \textbf{FIPS 203 (ML-KEM-768)} dùng $1.184\text{ B} / 1.088\text{ B}$ cho độ an toàn tương đương AES-192.
-					\item \textbf{Cấu trúc mạng tinh thể}: \texttt{Kyber}, \texttt{Saber}, \texttt{NTRU} dựa trên bài toán Module-LWE / NTRU, cho thông lượng cao vượt trội.
-					\item \textbf{Mã hóa dựa trên mã sửa sai}: \texttt{HQC}, \texttt{BIKE} có bản mã lớn ($> 1{,}5\text{ KB}$), làm tăng phân mảnh TCP.
-					\item \textbf{Mạng phi cấu trúc}: \texttt{FrodoKEM} độ an toàn cao nhưng khóa rất lớn ($> 9\text{ KB}$), độ trễ gấp $2{,}5\times$.
-				\end{itemize}
+		\begin{column}{0.315\textwidth}
+			\begin{accentcard}[uetdarkgreen]{3. Trạng Thái Chuẩn Hóa:}[height=5.35cm, top=4.0pt, bottom=4.0pt, left=5.5pt, right=5.5pt]
+				\raggedright\fontsize{6.2pt}{8.0pt}\selectfont
+				phiên bản TLS tương lai cần hỗ trợ KEM cho trao đổi khóa và nhiều chữ ký/nhiều trao đổi khóa song song để lai.
 			\end{accentcard}
 		\end{column}
 	\end{columns}
@@ -2148,7 +2112,7 @@
 \section{Tài Liệu Tham Khảo}
 
 % -----------------------------------------------------------------------------
-% SLIDE 30: DANH MỤC TÀI LIỆU THAM KHẢO (CHUẨN ĐỊNH DẠNG PAPER IEEE)
+% SLIDE 35: DANH MỤC TÀI LIỆU THAM KHẢO (CHUẨN ĐỊNH DẠNG PAPER IEEE)
 % -----------------------------------------------------------------------------
 \begin{frame}{Danh Mục Tài Liệu Tham Khảo}
 	\begin{columns}[T]
@@ -2205,7 +2169,7 @@
 \end{frame}
 
 % -----------------------------------------------------------------------------
-% SLIDE 31: CLOSING / Q&A
+% SLIDE 36: CLOSING / Q&A
 % -----------------------------------------------------------------------------
 \begin{frame}[plain]
 	\begin{tikzpicture}[remember picture, overlay]
