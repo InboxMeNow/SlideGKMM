@@ -1648,104 +1648,103 @@
 \section{9. Encrypted Client Hello (ECH)}
 
 % -----------------------------------------------------------------------------
-% SLIDE 23: VẤN ĐỀ LỘ SNI & CẤU TRÚC ECH / HPKE (RFC 9180)
+% SLIDE 25: VẤN ĐỀ LỘ SNI & GIẢI PHÁP ECH (trang_25.md)
 % -----------------------------------------------------------------------------
 \begin{frame}{Vấn Đề Lộ SNI \& Giải Pháp ECH (RFC 9849)}
-	% Top: 2 cột Vấn đề SNI vs Hai ClientHello
 	\begin{columns}[T]
-		\begin{column}{0.48\textwidth}
-			\begin{accentcard}[uetblue]{Vấn Đề: Rò Rỉ SNI Plaintext Trong TLS 1.3}[height=2.82cm, top=2.0pt, bottom=2.0pt]
+		\begin{column}{0.485\textwidth}
+			\begin{accentcard}[uetblue]{Vấn Đề: Rò Rỉ SNI Plaintext Trong TLS 1.3}[height=5.35cm, top=3.5pt, bottom=3.5pt]
 				\raggedright
 				\setlength{\leftmargini}{9pt}
-				\begin{itemize}\setlength{\itemsep}{1.1pt}\setlength{\topsep}{0pt}\fontsize{6.2pt}{7.7pt}\selectfont
-					\item \textbf{Lỗ hổng còn lại}: Dù TLS 1.3 mã hóa phần lớn handshake (kể cả certificate), trường \textbf{SNI} (\textit{Server Name Indication}) vẫn truyền dạng \textit{plaintext}.
-					\item \textbf{Lộ tên miền đích}: Thông điệp \texttt{ClientHello} ban đầu để lộ website người dùng muốn kết nối.
-					\item \textbf{Theo dõi \& Kiểm duyệt}: Kẻ nghe lén, nhà mạng (ISP) hoặc thiết bị trung gian theo dõi hành vi duyệt web và chặn theo SNI công khai.
+				\begin{itemize}\setlength{\itemsep}{8pt}\setlength{\topsep}{0pt}\fontsize{6.8pt}{8.8pt}\selectfont
+					\item \textbf{Lỗ hổng còn lại:} Dù TLS 1.3 mã hóa phần lớn handshake (kể cả certificate), trường \textbf{SNI} (\textit{Server Name Indication}) vẫn truyền dạng \textit{plaintext}.
+					\item \textbf{Lộ tên miền đích:} Thông điệp \texttt{ClientHello} ban đầu để lộ website người dùng muốn kết nối.
+					\item \textbf{Theo dõi \& Kiểm duyệt:} Kẻ nghe lén, nhà mạng (ISP) hoặc thiết bị trung gian theo dõi hành vi duyệt web và chặn theo SNI công khai.
 				\end{itemize}
 			\end{accentcard}
 		\end{column}
 
-		\begin{column}{0.48\textwidth}
-			\begin{accentcard}[uetblue]{Giải Pháp ECH: Tách Đôi ClientHello}[height=2.82cm, top=2.0pt, bottom=2.0pt]
+		\begin{column}{0.485\textwidth}
+			\begin{accentcard}[uetgreen]{Giải Pháp ECH: Tách Đôi ClientHello}[height=5.35cm, top=3.5pt, bottom=3.5pt]
 				\raggedright
 				\setlength{\leftmargini}{9pt}
-				\begin{itemize}\setlength{\itemsep}{1.3pt}\setlength{\topsep}{0pt}\fontsize{6.2pt}{7.7pt}\selectfont
-					\item \textbf{\texttt{ClientHelloInner} (Thật -- Được mã hóa)}: Chứa \texttt{SNI} thật, \texttt{ALPN} thật\ldots{} cần bảo vệ khỏi các thực thể trung gian.
-					\item \textbf{\texttt{ClientHelloOuter} (Vỏ ngoài -- Công khai)}: Chứa giá trị vô hại (\texttt{SNI} là \texttt{public\_name} của nhà cung cấp, VD tên miền chung của CDN) cùng extension \texttt{encrypted\_client\_hello} mang Inner đã mã hóa.
+				\begin{itemize}\setlength{\itemsep}{10pt}\setlength{\topsep}{0pt}\fontsize{6.8pt}{8.8pt}\selectfont
+					\item \textbf{\texttt{ClientHelloInner} (Thật -- Được mã hóa):} Chứa \texttt{SNI} thật, \ldots{} cần bảo vệ khỏi các thực thể trung gian.
+					\item \textbf{\texttt{ClientHelloOuter} (Vỏ ngoài -- Công khai):} Chứa giá trị vô hại (\texttt{SNI} là \texttt{public\_name} của nhà cung cấp, VD: tên miền chung của CDN) cùng extension \texttt{encrypted\_client\_hello} mang \texttt{Inner} đã mã hóa.
 				\end{itemize}
 			\end{accentcard}
 		\end{column}
 	\end{columns}
-	\vspace{0.07cm}
-
-	% Bottom: Cấu trúc bọc Outer/Inner + Bảng HPKE (RFC 9180)
-	\begin{uetcard}[height=2.56cm, valign=center, top=2.0pt, bottom=2.0pt, left=6pt, right=6pt, sharp corners, arc=0pt]
-		\centering
-		{\fontsize{6.4pt}{7.4pt}\selectfont\color{uetblue}\textbf{Cơ Chế HPKE (\textit{Hybrid Public Key Encryption} -- RFC 9180) Đóng Gói \texttt{ClientHelloInner}}}\\[4pt]
-		\begin{columns}[c]
-			\begin{column}{0.53\textwidth}
-				\centering
-				\begin{tikzpicture}[
-					scale=0.80, every node/.style={transform shape},
-					cbox/.style={draw=uetblue, fill=white, sharp corners, minimum height=0.46cm, align=center, font=\fontsize{5.6pt}{6.4pt}\selectfont, inner sep=2.2pt},
-					arr/.style={-{Stealth[scale=0.64]}, thick, color=uetgreen}
-				]
-					% Outer container (dedicated header band y=0.72..1.05)
-					\draw[draw=uetblue!70, fill=uetlightgray, rounded corners=2pt] (-0.20, -0.78) rectangle (7.45, 1.06);
-					\node[font=\fontsize{5.7pt}{6.5pt}\selectfont\bfseries\color{uetblue}, anchor=north west] at (-0.06, 0.98) {\texttt{ClientHelloOuter} (Truyền qua mạng công cộng)};
-
-					\node[cbox, minimum width=2.20cm] (pub) at (1.06, -0.06) {\textbf{Vỏ Công Khai}\\\texttt{SNI = public\_name}};
-
-					% Extension encrypted_client_hello (strictly below outer title band)
-					\draw[dashed, draw=uetgreen, fill=uetgreenbg, rounded corners=1.5pt] (2.36, -0.64) rectangle (7.28, 0.54);
-					\node[font=\fontsize{5.2pt}{6.0pt}\selectfont\bfseries\color{uetdarkgreen}, anchor=north west] at (2.46, 0.48) {Ext: \texttt{encrypted\_client\_hello} (HPKE)};
-
-					\node[cbox, draw=uetgreen, minimum width=1.15cm] (kem) at (3.08, -0.18) {\textbf{KEM}\\\color{uetgray}Bí mật};
-					\node[cbox, draw=uetgreen, minimum width=1.15cm] (kdf) at (4.58, -0.18) {\textbf{KDF}\\\color{uetgray}Sinh khóa};
-					\node[cbox, draw=uetgreen, fill=white, minimum width=1.55cm] (aead) at (6.28, -0.18) {\textbf{AEAD}\\\color{uetdarkgreen}\texttt{Inner} mã hóa};
-
-					\draw[arr] (kem.east) -- (kdf.west);
-					\draw[arr] (kdf.east) -- (aead.west);
-				\end{tikzpicture}
-			\end{column}
-			\begin{column}{0.43\textwidth}
-				\centering
-				\fontsize{5.9pt}{7.3pt}\selectfont
-				\renewcommand{\arraystretch}{1.15}
-				\setlength{\tabcolsep}{4pt}
-				\begin{tabularx}{\linewidth}{l >{\raggedright\arraybackslash}X}
-					\toprule
-					\rowcolor{uetaccentbg}
-					\textbf{\color{uetblue}Thành phần} & \textbf{\color{uetblue}Chức năng trong HPKE (RFC 9180)} \\
-					\midrule
-					\textbf{KEM} & Thiết lập bí mật dùng để mã hóa \\
-					\rowcolor{uetlightgray}
-					\textbf{KDF} & Sinh khóa mã hóa từ bí mật \\
-					\textbf{AEAD} & Mã hóa và xác thực dữ liệu \\
-					\bottomrule
-				\end{tabularx}
-			\end{column}
-		\end{columns}
-	\end{uetcard}
 \end{frame}
 
 % -----------------------------------------------------------------------------
-% SLIDE 24: QUY TRÌNH 5 BƯỚC ECH & THÁCH THỨC BẢO MẬT (RFC 9849)
+% SLIDE 26: CƠ CHẾ HPKE ĐÓNG GÓI CLIENTHELLOINNER (trang_26.md)
 % -----------------------------------------------------------------------------
-\begin{frame}{Quy Trình 5 Bước ECH \& Thách Thức Bảo Mật}
+\begin{frame}{Cơ Chế HPKE (\textit{Hybrid Public Key Encryption} -- RFC 9180) Đóng Gói \texttt{ClientHelloInner}}
+	% Top: Cấu trúc đóng gói qua mạng công cộng
+	\begin{uetcard}[height=2.30cm, valign=center, top=2.0pt, bottom=2.0pt, left=6pt, right=6pt, sharp corners, arc=0pt]
+		\centering
+		{\fontsize{6.5pt}{7.5pt}\selectfont\color{uetblue}\textbf{Cấu Trúc Đóng Gói Qua Mạng Công Cộng (\texttt{ClientHelloOuter})}}\\[3pt]
+		\begin{tikzpicture}[
+			scale=0.88, every node/.style={transform shape},
+			cbox/.style={draw=uetblue, fill=white, sharp corners, minimum height=0.46cm, align=center, font=\fontsize{5.6pt}{6.4pt}\selectfont, inner sep=2.2pt},
+			arr/.style={-{Stealth[scale=0.64]}, thick, color=uetgreen}
+		]
+			% Outer container
+			\draw[draw=uetblue!70, fill=uetlightgray, rounded corners=2pt] (-0.20, -0.78) rectangle (7.45, 1.06);
+			\node[font=\fontsize{5.7pt}{6.5pt}\selectfont\bfseries\color{uetblue}, anchor=north west] at (-0.06, 0.98) {\texttt{ClientHelloOuter} (Truyền qua mạng công cộng)};
+
+			\node[cbox, minimum width=2.20cm] (pub) at (1.06, -0.06) {\textbf{Vỏ Công Khai}\\\texttt{SNI = public\_name}};
+
+			% Extension encrypted_client_hello
+			\draw[dashed, draw=uetgreen, fill=uetgreenbg, rounded corners=1.5pt] (2.36, -0.64) rectangle (7.28, 0.54);
+			\node[font=\fontsize{5.2pt}{6.0pt}\selectfont\bfseries\color{uetdarkgreen}, anchor=north west] at (2.46, 0.48) {Ext: \texttt{encrypted\_client\_hello} (HPKE)};
+
+			\node[cbox, draw=uetgreen, minimum width=1.15cm] (kem) at (3.08, -0.18) {\textbf{KEM}\\\color{uetgray}Bí mật};
+			\node[cbox, draw=uetgreen, minimum width=1.15cm] (kdf) at (4.58, -0.18) {\textbf{KDF}\\\color{uetgray}Sinh khóa};
+			\node[cbox, draw=uetgreen, fill=white, minimum width=1.55cm] (aead) at (6.28, -0.18) {\textbf{AEAD}\\\color{uetdarkgreen}\texttt{Inner} mã hóa};
+
+			\draw[arr] (kem.east) -- (kdf.west);
+			\draw[arr] (kdf.east) -- (aead.west);
+		\end{tikzpicture}
+	\end{uetcard}
+	\vspace{0.08cm}
+
+	% Bottom: Bảng chức năng các thành phần HPKE (RFC 9180)
+	\begin{accentcard}[uetblue]{Chức Năng Các Thành Phần Trong HPKE (RFC 9180)}[height=2.96cm, top=2.0pt, bottom=2.0pt]
+		\centering
+		\fontsize{5.95pt}{7.5pt}\selectfont
+		\renewcommand{\arraystretch}{1.20}
+		\setlength{\tabcolsep}{5pt}
+		\begin{tabularx}{\linewidth}{l >{\raggedright\arraybackslash}X}
+			\toprule
+			\rowcolor{uetaccentbg}
+			\textbf{\color{uetblue}Thành phần} & \textbf{\color{uetblue}Chức năng trong HPKE (RFC 9180)} \\
+			\midrule
+			\textbf{KEM} & Thiết lập bí mật dùng để mã hóa (Sử dụng khóa công khai tĩnh của người nhận để tạo ra một khóa bí mật chung (\texttt{shared\_secret}) và một bản mã đóng gói khóa (\texttt{enc})) \\
+			\rowcolor{uetlightgray}
+			\textbf{KDF} & Sinh khóa mã hóa từ bí mật (Nhận \texttt{shared\_secret} thô từ KEM, kết hợp với thông tin ngữ cảnh để dẫn xuất ra các khóa mã hóa) \\
+			\textbf{AEAD} & Mã hóa và xác thực dữ liệu \\
+			\bottomrule
+		\end{tabularx}
+	\end{accentcard}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+% SLIDE 27: QUY TRÌNH 5 BƯỚC ECH (trang_27.md)
+% -----------------------------------------------------------------------------
+\begin{frame}{Quy Trình 5 Bước ECH}
 	\begin{columns}[T]
-		\begin{column}{0.47\textwidth}
-			% Top-left: Mô hình mạng Split-mode ECH (strict orthogonal corridors)
-			\begin{uetcard}[height=2.70cm, before skip=0pt, after skip=0pt, valign=center, top=2.0pt, bottom=2.0pt, left=4pt, right=4pt, sharp corners, arc=0pt]
+		\begin{column}{0.46\textwidth}
+			\begin{accentcard}[uetblue]{Mô Hình Truyền Tải ECH Qua Client-Facing Server (Split-mode ECH)}[height=5.32cm, top=2.5pt, bottom=2.5pt]
 				\centering
-				{\fontsize{6.3pt}{7.2pt}\selectfont\color{uetblue}\textbf{Mô Hình Truyền Tải ECH Qua Client-Facing Server}}\\[3pt]
 				\begin{tikzpicture}[
-					scale=0.75, every node/.style={transform shape},
+					scale=0.74, every node/.style={transform shape},
 					nd/.style={draw=uetblue, fill=white, sharp corners, minimum width=0.92cm, minimum height=0.40cm, font=\fontsize{5.7pt}{6.5pt}\selectfont\bfseries, align=center},
 					srv/.style={draw=uetgreen, fill=uetgreenbg, sharp corners, minimum width=0.92cm, minimum height=0.40cm, font=\fontsize{5.7pt}{6.5pt}\selectfont\bfseries, align=center},
 					arr/.style={-{Stealth[scale=0.62]}, thick, color=uetblue}
 				]
-					% Group boxes (top title band y=0.72..1.18, bottom status band y=-0.92..-0.64)
+					% Group boxes
 					\draw[draw=uetborder, fill=uetlightgray, rounded corners=2pt] (-0.15, -0.94) rectangle (1.35, 1.18);
 					\node[font=\fontsize{5.2pt}{6.0pt}\selectfont\bfseries\color{uetblue}] at (0.60, 0.96) {Clients};
 					\node[nd] (ca) at (0.60, 0.34) {Client A};
@@ -1764,43 +1763,54 @@
 					\node[srv] (s1) at (6.80, 0.34) {$S_1$};
 					\node[srv] (s2) at (6.80, -0.34) {$S_2$};
 
-					% Strictly horizontal perpendicular connectors
 					\draw[arr] (ca.east) -- (ca.east -| cf.west);
 					\draw[arr, dashed] (cb.east) -- (cb.east -| cf.west);
 					\draw[arr, color=uetgreen] (s1.west -| cf.east) -- (s1.west);
 					\draw[arr, dashed, color=uetgreen] (s2.west -| cf.east) -- (s2.west);
-				\end{tikzpicture}
-			\end{uetcard}\par\nointerlineskip\vspace{0.08cm}\noindent
-			% Bottom-left: Thách thức bảo mật
-			\begin{accentcard}[uetblue]{Thách Thức \& Cơ Chế Bảo Vệ (RFC 9849)}[height=2.54cm, before skip=0pt, after skip=0pt, top=1.5pt, bottom=1.5pt]
+				\end{tikzpicture}\\[6pt]
 				\raggedright
 				\setlength{\leftmargini}{9pt}
-				\begin{enumerate}\setlength{\itemsep}{0.9pt}\setlength{\topsep}{0pt}\fontsize{5.85pt}{7.0pt}\selectfont
-					\item \textbf{Rò rỉ DNS rõ \& IP đích}: Truy vấn DNS không mã hóa (thiếu DoH/DoT) hoặc IP đích vẫn lộ danh tính server.
-					\item \textbf{Chèn tham số \texttt{ClientHello}}: RFC 9849 (mục 10.12.3) ràng buộc \texttt{ClientHelloOuter} qua \texttt{AAD} để chặn sửa đổi.
-					\item \textbf{Theo dõi client (\textit{tracking})}: Server độc hại có thể phát \texttt{ECHConfig} riêng cho từng client.
-				\end{enumerate}
+				\begin{itemize}\setlength{\itemsep}{4pt}\setlength{\topsep}{0pt}\fontsize{6.0pt}{7.6pt}\selectfont
+					\item \textbf{Clients (Client A, Client B)}
+					\item $\longrightarrow$ \textbf{Public Network:} Chỉ thấy \texttt{Outer} (vỏ công khai)
+					\item $\longrightarrow$ \textbf{Client-Facing Server (F):} Giải mã HPKE
+					\item $\longrightarrow$ \textbf{Backend Servers ($S_1, S_2$):} Máy chủ dịch vụ thật
+				\end{itemize}
 			\end{accentcard}
 		\end{column}
 
-		\begin{column}{0.50\textwidth}
+		\begin{column}{0.52\textwidth}
 			\begin{accentcard}[uetblue]{Quy Trình Hoạt Động Chi Tiết (5 Bước)}[height=5.32cm, before skip=0pt, after skip=0pt, top=2.0pt, bottom=2.0pt]
 				\raggedright
 				\setlength{\leftmargini}{11pt}
-				\begin{enumerate}\setlength{\itemsep}{1.4pt}\setlength{\topsep}{0pt}\fontsize{6.0pt}{7.4pt}\selectfont
-					\item \textbf{Công bố cấu hình ECH qua DNS}: Máy chủ phát hành \texttt{ECHConfig} trong bản ghi \textbf{DNS \texttt{HTTPS}/\texttt{SVCB} (RFC 9848, RFC 9460)} gồm khóa công khai HPKE, thuật toán \texttt{KEM/KDF/AEAD}, \texttt{config\_id} và \texttt{public\_name}.
-					\item \textbf{Client tạo \texttt{ClientHelloInner}}: Thông điệp thật chứa SNI thật cần được bảo vệ.
-					\item \textbf{Client mã hóa \texttt{ClientHelloInner}}: Dùng khóa công khai HPKE nhận từ DNS để mã hóa.
-					\item \textbf{Client tạo \texttt{ClientHelloOuter}}: Đóng gói thông tin công khai kèm bản mã của \texttt{ClientHelloInner}.
-					\item \textbf{Máy chủ giải mã}: Dùng khóa riêng giải mã \texttt{ClientHelloInner}:
-					      \begin{itemize}\setlength{\itemsep}{0.6pt}\setlength{\topsep}{1pt}\fontsize{5.85pt}{7.1pt}\selectfont
-						      \item \cmark\ \textbf{Thành công}: Chấp nhận ECH, dùng \texttt{ClientHelloInner} tiếp tục Handshake và hoàn tất kết nối TLS.
+				\begin{enumerate}\setlength{\itemsep}{1.6pt}\setlength{\topsep}{0pt}\fontsize{6.0pt}{7.5pt}\selectfont
+					\item \textbf{Công bố cấu hình ECH qua DNS:} Máy chủ phát hành \texttt{ECHConfig} trong bản ghi \textbf{DNS \texttt{HTTPS}/\texttt{SVCB} (RFC 9848, RFC 9460)} gồm khóa công khai HPKE, thuật toán \texttt{KEM/KDF/AEAD}, \texttt{config\_id} và \texttt{public\_name}.
+					\item \textbf{Client tạo \texttt{ClientHelloInner}:} Thông điệp thật chứa SNI thật cần được bảo vệ.
+					\item \textbf{Client mã hóa \texttt{ClientHelloInner}:} Dùng khóa công khai HPKE nhận từ DNS để mã hóa.
+					\item \textbf{Client tạo \texttt{ClientHelloOuter}:} Đóng gói thông tin công khai kèm bản mã của \texttt{ClientHelloInner}.
+					\item \textbf{Máy chủ giải mã:} Dùng khóa riêng giải mã \texttt{ClientHelloInner}:
+					      \begin{itemize}\setlength{\itemsep}{0.8pt}\setlength{\topsep}{1pt}\fontsize{5.85pt}{7.1pt}\selectfont
+						      \item \cmark\ \textbf{Thành công:} Chấp nhận ECH, dùng \texttt{ClientHelloInner} tiếp tục Handshake và hoàn tất kết nối TLS.
 						      \item \xmark\ \textbf{Lỗi / Không hỗ trợ}: Từ chối ECH; Client kiểm tra xác nhận và thử lại với cấu hình ECH mới nhất.
 					      \end{itemize}
 				\end{enumerate}
 			\end{accentcard}
 		\end{column}
 	\end{columns}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+% SLIDE 28: THÁCH THỨC BẢO MẬT (trang_28.md)
+% -----------------------------------------------------------------------------
+\begin{frame}{Thách Thức Bảo Mật}
+	\begin{accentcard}[uetblue]{Thách Thức Bảo Mật}[height=5.35cm, before skip=0pt, after skip=0pt, top=8.0pt, bottom=8.0pt]
+		\raggedright
+		\setlength{\leftmargini}{14pt}
+		\begin{itemize}\setlength{\itemsep}{14pt}\setlength{\topsep}{6pt}\fontsize{7.5pt}{11.0pt}\selectfont
+			\item \textbf{Rò rỉ DNS rõ \& IP đích:} Truy vấn DNS không mã hóa (thiếu DoH/DoT) hoặc IP đích vẫn lộ danh tính server.
+			\item \textbf{Theo dõi client (\textit{tracking}):} Server độc hại có thể phát \texttt{ECHConfig} riêng cho từng client.
+		\end{itemize}
+	\end{accentcard}
 \end{frame}
 
 % =============================================================================
