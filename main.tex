@@ -34,6 +34,15 @@
 	citecolor=uetblue
 }
 
+% Compact bottom note legend for key technical abbreviations
+\newcommand{\abbrbar}[1]{%
+	\par\vspace{0.06cm}%
+	\begin{uetcard}[colback=uetlightgray, colframe=uetborder, boxrule=0.5pt, sharp corners, arc=0pt, left=5pt, right=5pt, top=1.6pt, bottom=1.6pt, boxsep=0.4pt, before skip=0pt, after skip=0pt, no shadow]
+		\raggedright\fontsize{5.35pt}{6.55pt}\selectfont\color{uetdark}%
+		{\color{uetblue}\textbf{Ghi chú:}} #1%
+	\end{uetcard}%
+}
+
 % -----------------------------------------------------------------------------
 % Presentation Metadata
 % -----------------------------------------------------------------------------
@@ -92,8 +101,8 @@
 \begin{frame}{Khái Niệm \& Định Vị SSL/TLS trong Mô Hình TCP/IP}
 	\begin{columns}[T]
 		\begin{column}{0.48\textwidth}
-			\begin{accentcard}[uetblue]{Khái Niệm, Định Nghĩa \& Vị Trí Kiến Trúc}[height=5.00cm, top=3pt, bottom=3pt]
-				\begin{itemize}\setlength{\itemsep}{1.6pt}\fontsize{7.4pt}{9.8pt}\selectfont
+			\begin{accentcard}[uetblue]{Khái Niệm, Định Nghĩa \& Vị Trí Kiến Trúc}[height=4.42cm, top=2.5pt, bottom=2.5pt]
+				\begin{itemize}\setlength{\itemsep}{1.0pt}\fontsize{7.3pt}{9.5pt}\selectfont
 					\item \textbf{SSL (\textit{Secure Sockets Layer})}: Netscape phát triển (1994), bảo mật Web.
 					\item \textbf{TLS (\textit{Transport Layer Security})}: Chuẩn IETF kế thừa, thay thế SSL.
 					\item \textbf{Mục tiêu}: Kênh end-to-end, bảo đảm bí mật, toàn vẹn và xác thực.
@@ -105,11 +114,11 @@
 
 		\begin{column}{0.48\textwidth}
 			\centering
-			\begin{uetcard}[height=5.00cm, valign=center]
+			\begin{uetcard}[height=4.42cm, valign=center]
 				\centering
-				{\fontsize{7.5pt}{8.8pt}\selectfont\color{uetblue}\textbf{Vị Trí Kiến Trúc Hai Tầng của SSL/TLS}}\\[3pt]
+				{\fontsize{7.5pt}{8.8pt}\selectfont\color{uetblue}\textbf{Vị Trí Kiến Trúc Hai Tầng của SSL/TLS}}\\[2pt]
 				\begin{tikzpicture}[
-					scale=0.76, every node/.style={transform shape},
+					scale=0.69, every node/.style={transform shape},
 					layer/.style={draw=uetblue, fill=white, sharp corners, minimum width=6.2cm, minimum height=0.46cm, align=center, font=\fontsize{6.8pt}{7.8pt}\selectfont},
 					applayer/.style={draw=uetblue!80, fill=uetaccentbg, sharp corners, minimum width=1.28cm, minimum height=0.52cm, align=center, font=\fontsize{5.7pt}{6.8pt}\selectfont},
 					protobox/.style={draw=uetblue, fill=uetblue!8, sharp corners, minimum width=1.28cm, minimum height=0.52cm, align=center, font=\fontsize{5.7pt}{6.8pt}\selectfont},
@@ -152,32 +161,33 @@
 			\end{uetcard}
 		\end{column}
 	\end{columns}
+	\abbrbar{\textbf{TCP/IP}: Transmission Control Protocol / Internet Protocol; \textbf{IETF}: Internet Engineering Task Force; \textbf{IPsec}: Internet Protocol Security; \textbf{MAC}: Message Authentication Code; \textbf{ISP}: Internet Service Provider.}
 \end{frame}
 
 % -----------------------------------------------------------------------------
 % SLIDE 4: 4 DỊCH VỤ BẢO MẬT CỐT LÕI (BỐ CỤC 4 CỘT TRỤ ĐỨNG NGANG HÀNG)
 % -----------------------------------------------------------------------------
 \begin{frame}{Bốn Dịch Vụ Bảo Mật Cốt Lõi của SSL/TLS}
-	\begin{uetcard}[colback=uetaccentbg, top=2.5pt, bottom=2.5pt, left=6pt, right=6pt, sharp corners, arc=0pt]
-		\fontsize{7.2pt}{9.0pt}\selectfont
+	\begin{uetcard}[colback=uetaccentbg, top=1.8pt, bottom=1.8pt, left=6pt, right=6pt, sharp corners, arc=0pt]
+		\fontsize{7.0pt}{8.6pt}\selectfont
 		{\color{uetblue}\textbf{Trụ cột trên TCP:}} Kết hợp \textbf{bất đối xứng} (xác thực, trao đổi khóa) và \textbf{đối xứng} (mã hóa, toàn vẹn, chống phát lại).
 	\end{uetcard}
-	\vspace{0.08cm}
+	\vspace{0.05cm}
 
 	\begin{columns}[T]
 		\begin{column}{0.232\textwidth}
-			\begin{accentcard}[uetblue]{1. Tính Bí Mật}[height=4.44cm, top=2.5pt, bottom=2.5pt, left=4.5pt, right=4.5pt]
+			\begin{accentcard}[uetblue]{1. Tính Bí Mật}[height=4.06cm, top=1.6pt, bottom=1.6pt, left=4.5pt, right=4.5pt]
 				\centering
-				\begin{tikzpicture}[scale=0.58]
+				\begin{tikzpicture}[scale=0.49]
 					\draw[uetblue, line width=0.8pt, fill=uetaccentbg, rounded corners=2pt] (-0.52,-0.52) rectangle (0.52,0.52);
 					\draw[uetblue, line width=1.0pt] (-0.18,0.02) -- (-0.18,0.18) arc[start angle=180, end angle=0, radius=0.18] -- (0.18,0.02);
 					\draw[uetblue, line width=0.9pt, fill=white, rounded corners=1pt] (-0.28,-0.32) rectangle (0.28,0.02);
 					\fill[uetblue] (0,-0.15) circle (0.055);
 				\end{tikzpicture}\\[-1pt]
-				{\fontsize{6.2pt}{7.2pt}\selectfont\color{uetgray}\textit{Confidentiality}\par}\vspace{2.5pt}
+				{\fontsize{5.8pt}{6.7pt}\selectfont\color{uetgray}\textit{Confidentiality}\par}\vspace{1.0pt}
 				\raggedright
 				\setlength{\leftmargini}{8pt}
-				\begin{itemize}\setlength{\itemsep}{2.5pt}\setlength{\topsep}{0pt}\fontsize{6.5pt}{8.1pt}\selectfont
+				\begin{itemize}\setlength{\itemsep}{1.1pt}\setlength{\topsep}{0pt}\fontsize{6.05pt}{7.3pt}\selectfont
 					\item \textbf{Mục tiêu}: Chống nghe lén trên đường truyền.
 					\item \textbf{Khóa phiên}: Mã hóa đối xứng tạo lúc bắt tay.
 					\item \textbf{Thuật toán}: \texttt{AES}, \texttt{ChaCha20}; \textit{padding} che độ dài.
@@ -186,17 +196,17 @@
 		\end{column}
 
 		\begin{column}{0.232\textwidth}
-			\begin{accentcard}[uetblue]{2. Tính Toàn Vẹn}[height=4.44cm, top=2.5pt, bottom=2.5pt, left=4.5pt, right=4.5pt]
+			\begin{accentcard}[uetblue]{2. Tính Toàn Vẹn}[height=4.06cm, top=1.6pt, bottom=1.6pt, left=4.5pt, right=4.5pt]
 				\centering
-				\begin{tikzpicture}[scale=0.58]
+				\begin{tikzpicture}[scale=0.49]
 					\draw[uetblue, line width=0.8pt, fill=uetaccentbg, rounded corners=2pt] (-0.52,-0.52) rectangle (0.52,0.52);
 					\draw[uetblue, line width=0.9pt, fill=white] (0,0.34) -- (0.27,0.22) -- (0.27,-0.06) .. controls (0.27,-0.22) and (0.10,-0.32) .. (0,-0.36) .. controls (-0.10,-0.32) and (-0.27,-0.22) .. (-0.27,-0.06) -- (-0.27,0.22) -- cycle;
 					\draw[uetgreen, line width=1.1pt] (-0.12,-0.02) -- (-0.02,-0.12) -- (0.15,0.09);
 				\end{tikzpicture}\\[-1pt]
-				{\fontsize{6.2pt}{7.2pt}\selectfont\color{uetgray}\textit{Message Integrity}\par}\vspace{2.5pt}
+				{\fontsize{5.8pt}{6.7pt}\selectfont\color{uetgray}\textit{Message Integrity}\par}\vspace{1.0pt}
 				\raggedright
 				\setlength{\leftmargini}{8pt}
-				\begin{itemize}\setlength{\itemsep}{2.5pt}\setlength{\topsep}{0pt}\fontsize{6.5pt}{8.1pt}\selectfont
+				\begin{itemize}\setlength{\itemsep}{1.1pt}\setlength{\topsep}{0pt}\fontsize{6.05pt}{7.3pt}\selectfont
 					\item \textbf{Mục tiêu}: Phát hiện sửa đổi hoặc cắt gói tin.
 					\item \textbf{MAC}: \texttt{HMAC} (\texttt{SHA-256}, \texttt{SHA-384}).
 					\item \textbf{Chuẩn mới}: Tích hợp nguyên tử \textbf{AEAD} (\texttt{GCM}).
@@ -205,9 +215,9 @@
 		\end{column}
 
 		\begin{column}{0.232\textwidth}
-			\begin{accentcard}[uetblue]{3. Xác Thực}[height=4.44cm, top=2.5pt, bottom=2.5pt, left=4.5pt, right=4.5pt]
+			\begin{accentcard}[uetblue]{3. Xác Thực}[height=4.06cm, top=1.6pt, bottom=1.6pt, left=4.5pt, right=4.5pt]
 				\centering
-				\begin{tikzpicture}[scale=0.58]
+				\begin{tikzpicture}[scale=0.49]
 					\draw[uetblue, line width=0.8pt, fill=uetaccentbg, rounded corners=2pt] (-0.52,-0.52) rectangle (0.52,0.52);
 					\draw[uetblue, line width=0.9pt, fill=white, rounded corners=1pt] (-0.33,-0.22) rectangle (0.33,0.26);
 					\draw[uetblue, line width=0.8pt] (-0.21,0.08) -- (0.08,0.08);
@@ -215,10 +225,10 @@
 					\draw[uetblue, line width=0.8pt, fill=uetaccentbg] (0.18,-0.04) circle (0.11);
 					\draw[uetblue, line width=0.8pt] (0.13,-0.14) -- (0.13,-0.32) -- (0.18,-0.27) -- (0.23,-0.32) -- (0.23,-0.14);
 				\end{tikzpicture}\\[-1pt]
-				{\fontsize{6.2pt}{7.2pt}\selectfont\color{uetgray}\textit{Authentication}\par}\vspace{2.5pt}
+				{\fontsize{5.8pt}{6.7pt}\selectfont\color{uetgray}\textit{Authentication}\par}\vspace{1.0pt}
 				\raggedright
 				\setlength{\leftmargini}{8pt}
-				\begin{itemize}\setlength{\itemsep}{2.5pt}\setlength{\topsep}{0pt}\fontsize{6.5pt}{8.1pt}\selectfont
+				\begin{itemize}\setlength{\itemsep}{1.1pt}\setlength{\topsep}{0pt}\fontsize{6.05pt}{7.3pt}\selectfont
 					\item \textbf{Mục tiêu}: Chống mạo danh máy chủ, đầu cuối.
 					\item \textbf{Chiều}: Server bắt buộc; Client tùy chọn (\texttt{mTLS}).
 					\item \textbf{Cơ chế}: \texttt{RSA}, \texttt{ECDSA} + X.509 hoặc \texttt{PSK}.
@@ -227,19 +237,19 @@
 		\end{column}
 
 		\begin{column}{0.232\textwidth}
-			\begin{accentcard}[uetblue]{4. Chống Phát Lại}[height=4.44cm, top=2.5pt, bottom=2.5pt, left=4.5pt, right=4.5pt]
+			\begin{accentcard}[uetblue]{4. Chống Phát Lại}[height=4.06cm, top=1.6pt, bottom=1.6pt, left=4.5pt, right=4.5pt]
 				\centering
-				\begin{tikzpicture}[scale=0.58]
+				\begin{tikzpicture}[scale=0.49]
 					\draw[uetblue, line width=0.8pt, fill=uetaccentbg, rounded corners=2pt] (-0.52,-0.52) rectangle (0.52,0.52);
 					\draw[uetblue, line width=0.9pt, -{Stealth[scale=0.52]}] (-0.09,0.21) arc[start angle=132, end angle=-125, radius=0.21];
 					\draw[uetblue, line width=0.85pt] (0.05,0.06) -- (0.05,0.20) (0.05,0.06) -- (0.17,0.00);
 					\fill[white] (-0.23,-0.23) circle (0.15);
 					\draw[uetred, line width=0.95pt] (-0.31,-0.31) -- (-0.15,-0.15) (-0.31,-0.15) -- (-0.15,-0.31);
 				\end{tikzpicture}\\[-1pt]
-				{\fontsize{6.2pt}{7.2pt}\selectfont\color{uetgray}\textit{Replay Protection}\par}\vspace{2.5pt}
+				{\fontsize{5.8pt}{6.7pt}\selectfont\color{uetgray}\textit{Replay Protection}\par}\vspace{1.0pt}
 				\raggedright
 				\setlength{\leftmargini}{8pt}
-				\begin{itemize}\setlength{\itemsep}{2.5pt}\setlength{\topsep}{0pt}\fontsize{6.5pt}{8.1pt}\selectfont
+				\begin{itemize}\setlength{\itemsep}{1.1pt}\setlength{\topsep}{0pt}\fontsize{6.05pt}{7.3pt}\selectfont
 					\item \textbf{Mục tiêu}: Ngăn phát lại gói tin hợp lệ.
 					\item \textbf{Bắt tay}: Cặp nonces ngẫu nhiên độc lập.
 					\item \textbf{Truyền tải}: Đánh số \texttt{sequence\_number} 64-bit; \texttt{0-RTT early\_data} vẫn có số thứ tự nhưng phát lại được giữa các kết nối.
@@ -247,6 +257,7 @@
 			\end{accentcard}
 		\end{column}
 	\end{columns}
+	\abbrbar{\textbf{AES}: Advanced Encryption Standard; \textbf{HMAC}: Hash-based Message Authentication Code; \textbf{SHA}: Secure Hash Algorithm; \textbf{AEAD}: Authenticated Encryption with Associated Data; \textbf{GCM}: Galois/Counter Mode; \textbf{mTLS}: Mutual Transport Layer Security; \textbf{RSA}: Rivest--Shamir--Adleman; \textbf{ECDSA}: Elliptic Curve Digital Signature Algorithm; \textbf{PSK}: Pre-Shared Key; \textbf{RTT}: Round-Trip Time.}
 \end{frame}
 
 % =============================================================================
@@ -258,17 +269,17 @@
 % SLIDE 5: GIAI ĐOẠN KHỞI NGUYÊN NETSCAPE (SSL 1.0 -> SSL 3.0)
 % -----------------------------------------------------------------------------
 \begin{frame}{Khởi Nguyên tại Netscape: Từ SSL 1.0 đến SSL 3.0}
-	\begin{uetcard}[colback=uetaccentbg, top=1.5pt, bottom=1.5pt, left=6pt, right=6pt, sharp corners, arc=0pt]
-		\fontsize{6.9pt}{8.4pt}\selectfont
+	\begin{uetcard}[colback=uetaccentbg, top=1.2pt, bottom=1.2pt, left=6pt, right=6pt, sharp corners, arc=0pt]
+		\fontsize{6.6pt}{7.9pt}\selectfont
 		{\color{uetblue}\textbf{Khởi nguồn (1994):}} Netscape thiết kế SSL cho thương mại điện tử (Taher Elgamal). \textbf{SSL 1.0} chỉ dùng nội bộ do tồn tại lỗi an toàn nghiêm trọng.
 	\end{uetcard}
-	\vspace{0.04cm}
+	\vspace{0.03cm}
 
 	\begin{columns}[T]
 		\begin{column}{0.48\textwidth}
-			\begin{accentcard}[uetblue]{SSL 2.0 (02/1995) -- Cấm RFC 6176 (03/2011)}[height=2.34cm, top=1.5pt, bottom=1.5pt, left=5pt, right=5pt]
+			\begin{accentcard}[uetblue]{SSL 2.0 (02/1995) -- Cấm RFC 6176 (03/2011)}[height=2.02cm, top=1.0pt, bottom=1.0pt, left=5pt, right=5pt]
 				\setlength{\leftmargini}{9pt}
-				\begin{itemize}\setlength{\itemsep}{0.3pt}\setlength{\topsep}{0pt}\fontsize{6.4pt}{7.9pt}\selectfont
+				\begin{itemize}\setlength{\itemsep}{0.1pt}\setlength{\topsep}{0pt}\fontsize{5.85pt}{6.95pt}\selectfont
 					\item \xmark\ \textbf{Chung khóa Enc \& MAC}: Dùng 1 khóa cho cả 2 tác vụ.
 					\item \xmark\ \textbf{MAC MD5 yếu}: Dễ bị tấn công mở rộng độ dài.
 					\item \xmark\ \textbf{Bắt tay hở}: MITM dễ ép hạ cấp bộ mã (\textit{downgrade}).
@@ -278,9 +289,9 @@
 		\end{column}
 
 		\begin{column}{0.48\textwidth}
-			\begin{accentcard}[uetblue]{SSL 3.0 (11/1996) -- Khai Tử RFC 7568 (06/2015)}[height=2.34cm, top=1.5pt, bottom=1.5pt, left=5pt, right=5pt]
+			\begin{accentcard}[uetblue]{SSL 3.0 (11/1996) -- Khai Tử RFC 7568 (06/2015)}[height=2.02cm, top=1.0pt, bottom=1.0pt, left=5pt, right=5pt]
 				\setlength{\leftmargini}{9pt}
-				\begin{itemize}\setlength{\itemsep}{0.8pt}\setlength{\topsep}{0pt}\fontsize{6.4pt}{7.9pt}\selectfont
+				\begin{itemize}\setlength{\itemsep}{0.2pt}\setlength{\topsep}{0pt}\fontsize{5.85pt}{6.95pt}\selectfont
 					\item \cmark\ \textbf{Kiến trúc nền}: Tách Record/Handshake, tách khóa, thêm \texttt{Finished} \& \texttt{close\_notify}.
 					\item \xmark\ \textbf{Lỗ hổng POODLE (2014)}: Lỗi đệm khối CBC $\rightarrow$ giải mã từng byte bản rõ.
 					\item \xmark\ \textbf{RC4 yếu \& thiếu Extensions}: RC4 lệch thống kê; không có trường mở rộng để vá CBC.
@@ -288,22 +299,23 @@
 			\end{accentcard}
 		\end{column}
 	\end{columns}
-	\vspace{0.05cm}
+	\vspace{0.03cm}
 
-	\begin{uetcard}[height=1.84cm, colback=white, valign=center, top=1.5pt, bottom=1.5pt, left=5pt, right=5pt, sharp corners, arc=0pt]
+	\begin{uetcard}[height=1.38cm, colback=white, valign=center, top=1.0pt, bottom=1.0pt, left=5pt, right=5pt, sharp corners, arc=0pt]
 		\begin{columns}[c]
 			\begin{column}{0.53\textwidth}
 				\centering
-				\includegraphics[width=0.96\linewidth, height=1.64cm, keepaspectratio]{assets/slide5_cbc_decryption.png}
+				\includegraphics[width=0.96\linewidth, height=1.22cm, keepaspectratio]{assets/slide5_cbc_decryption.png}
 			\end{column}
 			\begin{column}{0.45\textwidth}
 				\raggedright
-				\fontsize{6.2pt}{7.8pt}\selectfont
-				{\color{uetblue}\textbf{Tại sao CBC là tử huyệt của SSL 3.0?}}\\[1.5pt]
+				\fontsize{5.65pt}{6.75pt}\selectfont
+				{\color{uetblue}\textbf{Tại sao CBC là tử huyệt của SSL 3.0?}}\\[1.0pt]
 				Giải mã chuỗi khối $P_i = D_K(C_i) \oplus C_{i-1}$ cho phép kẻ tấn công sửa byte đệm của $C_{i-1}$ để dò từng byte bản rõ (\textbf{POODLE}). Do không có \textit{Extensions} vá lỗi, RFC 7568 khai tử hoàn toàn SSL 3.0.
 			\end{column}
 		\end{columns}
 	\end{uetcard}
+	\abbrbar{\textbf{RFC}: Request for Comments; \textbf{MD5}: Message-Digest Algorithm 5; \textbf{MITM}: Man-in-the-Middle; \textbf{POODLE}: Padding Oracle On Downgraded Legacy Encryption; \textbf{CBC}: Cipher Block Chaining; \textbf{RC4}: Rivest Cipher 4.}
 \end{frame}
 
 % -----------------------------------------------------------------------------
@@ -311,11 +323,11 @@
 % -----------------------------------------------------------------------------
 \begin{frame}{Chuẩn Hóa IETF (TLS 1.0 -- 1.3) \& Khai Tử Thế Hệ Cũ}
 	% Top: Sơ đồ Timeline toàn màn hình
-	\begin{uetcard}[height=2.35cm, top=2pt, bottom=2pt, left=8pt, right=8pt, sharp corners, arc=0pt]
+	\begin{uetcard}[height=1.74cm, top=1.0pt, bottom=1.0pt, left=8pt, right=8pt, sharp corners, arc=0pt]
 		\centering
-		{\fontsize{7.2pt}{8.4pt}\selectfont\textbf{\color{uetblue}Vòng Đời Hoạt Động \& Mốc Khai Tử Các Thế Hệ SSL/TLS (1994--2026)}}\\[1pt]
+		{\fontsize{6.6pt}{7.5pt}\selectfont\textbf{\color{uetblue}Vòng Đời Hoạt Động \& Mốc Khai Tử Các Thế Hệ SSL/TLS (1994--2026)}}\\[0.5pt]
 		\begin{tikzpicture}[
-			x=0.33cm, y=0.22cm,
+			x=0.33cm, y=0.165cm,
 			bar/.style={sharp corners, rounded corners=0.8pt, line width=0.4pt},
 			deadbar/.style={bar, draw=uetgray!65, fill=uetgray!14},
 			okbar/.style={bar, draw=uetblue!70, fill=uetblue!12},
@@ -325,7 +337,7 @@
 			\draw[color=uetgray!40, line width=0.4pt] (0, 6.7) -- (32, 6.7);
 			\foreach \yr/\pos in {1994/0, 1998/4, 2002/8, 2006/12, 2010/16, 2014/20, 2018/24, 2021/27, 2026/32} {
 				\draw[color=uetgray!20, line width=0.3pt] (\pos, 0.35) -- (\pos, 6.7);
-				\node[above, color=uetgray, font=\fontsize{4.6pt}{5.4pt}\selectfont, inner sep=0.5pt] at (\pos, 6.7) {\yr};
+				\node[above, color=uetgray, font=\fontsize{4.5pt}{5.3pt}\selectfont, inner sep=0.5pt] at (\pos, 6.7) {\yr};
 			}
 
 			% Mốc khai tử IETF BCP 195 (Năm 2021) - Chỉ vẽ tới đáy TLS 1.1
@@ -333,44 +345,44 @@
 
 			% Các phiên bản: y=5.8 xuống y=0.8
 			% SSL 2.0 (1995 -> 2011)
-			\node[anchor=east, font=\fontsize{5.5pt}{6.5pt}\selectfont\bfseries] at (-0.2, 5.8) {SSL 2.0};
+			\node[anchor=east, font=\fontsize{5.1pt}{5.9pt}\selectfont\bfseries] at (-0.2, 5.8) {SSL 2.0};
 			\draw[deadbar] (1, 5.48) rectangle (17, 6.12);
-			\node[anchor=west, color=uetred, font=\fontsize{4.7pt}{5.6pt}\selectfont\bfseries, inner sep=1pt] at (17.2, 5.8) {RFC 6176 (Cấm 2011)};
+			\node[anchor=west, color=uetred, font=\fontsize{4.5pt}{5.4pt}\selectfont\bfseries, inner sep=1pt] at (17.2, 5.8) {RFC 6176 (Cấm 2011)};
 
 			% SSL 3.0 (1996 -> 2015)
-			\node[anchor=east, font=\fontsize{5.5pt}{6.5pt}\selectfont\bfseries] at (-0.2, 4.8) {SSL 3.0};
+			\node[anchor=east, font=\fontsize{5.1pt}{5.9pt}\selectfont\bfseries] at (-0.2, 4.8) {SSL 3.0};
 			\draw[deadbar] (2, 4.48) rectangle (21, 5.12);
-			\node[anchor=west, color=uetred, font=\fontsize{4.6pt}{5.5pt}\selectfont\bfseries, inner sep=0.8pt] at (21.15, 4.8) {RFC 7568 (Cấm 2015)};
+			\node[anchor=west, color=uetred, font=\fontsize{4.5pt}{5.4pt}\selectfont\bfseries, inner sep=0.8pt] at (21.15, 4.8) {RFC 7568 (Cấm 2015)};
 
 			% TLS 1.0 (1999 -> 2021)
-			\node[anchor=east, font=\fontsize{5.5pt}{6.5pt}\selectfont\bfseries] at (-0.2, 3.8) {TLS 1.0};
+			\node[anchor=east, font=\fontsize{5.1pt}{5.9pt}\selectfont\bfseries] at (-0.2, 3.8) {TLS 1.0};
 			\draw[deadbar] (5, 3.48) rectangle (27, 4.12);
-			\node[anchor=west, color=uetred, font=\fontsize{4.8pt}{5.8pt}\selectfont\bfseries, inner sep=1pt] at (27.2, 3.8) {BCP 195 (Cấm 2021)};
+			\node[anchor=west, color=uetred, font=\fontsize{4.6pt}{5.5pt}\selectfont\bfseries, inner sep=1pt] at (27.2, 3.8) {BCP 195 (Cấm 2021)};
 
 			% TLS 1.1 (2006 -> 2021)
-			\node[anchor=east, font=\fontsize{5.5pt}{6.5pt}\selectfont\bfseries] at (-0.2, 2.8) {TLS 1.1};
+			\node[anchor=east, font=\fontsize{5.1pt}{5.9pt}\selectfont\bfseries] at (-0.2, 2.8) {TLS 1.1};
 			\draw[deadbar] (12, 2.48) rectangle (27, 3.12);
-			\node[anchor=west, color=uetred, font=\fontsize{4.8pt}{5.8pt}\selectfont\bfseries, inner sep=1pt] at (27.2, 2.8) {RFC 8996 (Cấm 2021)};
+			\node[anchor=west, color=uetred, font=\fontsize{4.6pt}{5.5pt}\selectfont\bfseries, inner sep=1pt] at (27.2, 2.8) {RFC 8996 (Cấm 2021)};
 
 			% TLS 1.2 (2008 -> 2026+)
-			\node[anchor=east, font=\fontsize{5.5pt}{6.5pt}\selectfont\bfseries] at (-0.2, 1.8) {TLS 1.2};
+			\node[anchor=east, font=\fontsize{5.1pt}{5.9pt}\selectfont\bfseries] at (-0.2, 1.8) {TLS 1.2};
 			\draw[okbar] (14, 1.48) rectangle (32, 2.12);
-			\node[color=uetdarkblue, font=\fontsize{4.9pt}{5.9pt}\selectfont\bfseries] at (23, 1.8) {RFC 5246 (Đang dùng -- Hỗ trợ AEAD/SHA-2)};
+			\node[color=uetdarkblue, font=\fontsize{4.5pt}{5.4pt}\selectfont\bfseries] at (23, 1.8) {RFC 5246 (Đang dùng -- Hỗ trợ AEAD/SHA-2)};
 
 			% TLS 1.3 (2018 -> 2026+)
-			\node[anchor=east, font=\fontsize{5.5pt}{6.5pt}\selectfont\bfseries] at (-0.2, 0.8) {TLS 1.3};
+			\node[anchor=east, font=\fontsize{5.1pt}{5.9pt}\selectfont\bfseries] at (-0.2, 0.8) {TLS 1.3};
 			\draw[bestbar] (24, 0.48) rectangle (32, 1.12);
-			\node[color=uetdarkgreen, font=\fontsize{4.6pt}{5.5pt}\selectfont\bfseries] at (28, 0.8) {RFC 9846 (Chuẩn hiện hành)};
+			\node[anchor=east, color=uetdarkgreen, font=\fontsize{4.5pt}{5.4pt}\selectfont\bfseries, inner sep=1pt] at (23.75, 0.8) {RFC 9846 (Chuẩn hiện hành)};
 		\end{tikzpicture}
 	\end{uetcard}
 
-	\vspace{0.03cm}
+	\vspace{0.02cm}
 
 	% Bottom: 2 Cột nội dung phân tích đối xứng
 	\begin{columns}[T]
 		\begin{column}{0.50\textwidth}
-			\begin{accentcard}[uetblue]{4 Thế Hệ Chuẩn Hóa TLS tại IETF}[height=3.02cm, top=2.0pt, bottom=2.0pt]
-				\begin{itemize}\setlength{\itemsep}{0.4pt}\setlength{\topsep}{0pt}\setlength{\parsep}{0pt}\fontsize{6.3pt}{7.9pt}\selectfont
+			\begin{accentcard}[uetblue]{4 Thế Hệ Chuẩn Hóa TLS tại IETF}[height=2.36cm, top=1.0pt, bottom=1.0pt]
+				\begin{itemize}\setlength{\itemsep}{0.08pt}\setlength{\topsep}{0pt}\setlength{\parsep}{0pt}\fontsize{5.45pt}{6.35pt}\selectfont
 					\item \textbf{TLS 1.0 (1999, RFC 2246)}: Chuẩn hóa HMAC, PRF (\texttt{MD5+SHA-1}); yếu do IV ngầm định CBC (BEAST).
 					\item \textbf{TLS 1.1 (2006, RFC 4346)}: Explicit IV cho bản ghi CBC; ẩn lỗi đệm chống tấn công định thời.
 					\item \textbf{TLS 1.2 (2008, RFC 5246)}: PRF SHA-2, AEAD (\texttt{AES-GCM}); RFC 10015 (2026) loại RSA tĩnh/DHE.
@@ -380,8 +392,8 @@
 		\end{column}
 
 		\begin{column}{0.48\textwidth}
-			\begin{accentcard}[uetblue]{3 Lý Do Cấm TLS 1.0 \& 1.1 (BCP 195)}[height=3.02cm, top=2.0pt, bottom=2.0pt]
-				\begin{enumerate}\setlength{\itemsep}{1.5pt}\setlength{\topsep}{0pt}\setlength{\parsep}{0pt}\fontsize{6.6pt}{8.4pt}\selectfont
+			\begin{accentcard}[uetblue]{3 Lý Do Cấm TLS 1.0 \& 1.1 (BCP 195)}[height=2.36cm, top=1.0pt, bottom=1.0pt]
+				\begin{enumerate}\setlength{\itemsep}{0.4pt}\setlength{\topsep}{0pt}\setlength{\parsep}{0pt}\fontsize{5.85pt}{6.95pt}\selectfont
 					\item \textbf{Thiếu AEAD}: Buộc duy trì bộ mã khối CBC cũ như \texttt{3DES-EDE-CBC-SHA}.
 					\item \textbf{Phụ thuộc MD5 + SHA-1}: Hàm PRF và chữ ký bắt tay gắn cứng hai hàm băm đã bị phá (va chạm SHA-1 $\approx 2^{63}$).
 					\item \textbf{Phình đại mã nguồn}: Tăng bề mặt tấn công; PCI DSS yêu cầu loại bỏ từ 2018.
@@ -389,6 +401,7 @@
 			\end{accentcard}
 		\end{column}
 	\end{columns}
+	\abbrbar{\textbf{BCP}: Best Current Practice; \textbf{PRF}: Pseudorandom Function; \textbf{IV}: Initialization Vector; \textbf{BEAST}: Browser Exploit Against SSL/TLS; \textbf{DHE}: Diffie--Hellman Ephemeral; \textbf{HKDF}: HMAC-based Extract-and-Expand Key Derivation Function; \textbf{PFS}: Perfect Forward Secrecy; \textbf{3DES-EDE}: Triple Data Encryption Standard -- Encrypt-Decrypt-Encrypt; \textbf{PCI DSS}: Payment Card Industry Data Security Standard.}
 \end{frame}
 
 % =============================================================================
@@ -402,11 +415,11 @@
 \begin{frame}{Record Protocol: 5 Bước Đóng Gói (TLS 1.2 CBC)}
 	\begin{columns}[T]
 		\begin{column}{0.46\textwidth}
-			\begin{uetcard}[height=5.20cm, colback=white, valign=center, top=2.5pt, bottom=2.5pt, left=3pt, right=3pt]
+			\begin{uetcard}[height=4.74cm, colback=white, valign=center, top=2.0pt, bottom=2.0pt, left=3pt, right=3pt]
 				\centering
-				{\fontsize{6.9pt}{8.0pt}\selectfont\color{uetblue}\textbf{Sơ Đồ Đóng Gói TLS 1.2 CBC (RFC 5246, mục 6.2.3.2)}}\\[4pt]
+				{\fontsize{6.8pt}{7.8pt}\selectfont\color{uetblue}\textbf{Sơ Đồ Đóng Gói TLS 1.2 CBC (RFC 5246, mục 6.2.3.2)}}\\[3pt]
 				\begin{tikzpicture}[
-					scale=0.77, every node/.style={transform shape},
+					scale=0.71, every node/.style={transform shape},
 					rbox/.style={draw=uetblue!80, fill=uetaccentbg, sharp corners, minimum height=0.44cm, align=center, font=\fontsize{5.7pt}{6.6pt}\selectfont, inner sep=2.2pt},
 					encbox/.style={draw=uetdarkblue, fill=uetblue!15, sharp corners, minimum height=0.52cm, align=center, font=\fontsize{5.4pt}{6.2pt}\selectfont, inner sep=2.0pt},
 					ivbox/.style={draw=uetgreen, fill=uetgreenbg, sharp corners, minimum height=0.52cm, align=center, font=\fontsize{5.4pt}{6.2pt}\selectfont, inner sep=2.0pt},
@@ -435,14 +448,14 @@
 					\draw[arr] (s2.south) -- (s3.north);
 					\draw[arr] (s3.south) -- (0, 1.60);
 					\draw[arr] (0, 1.16) -- (0, 0.82);
-				\end{tikzpicture}\\[3pt]
-				{\fontsize{5.0pt}{6.0pt}\selectfont\color{uetgray}\texttt{Header 5 B | IV tường minh | CBC(dữ liệu + MAC + đệm + độ dài đệm)}.\par}
+				\end{tikzpicture}\\[2pt]
+				{\fontsize{4.9pt}{5.8pt}\selectfont\color{uetgray}\texttt{Header 5 B | IV tường minh | CBC(dữ liệu + MAC + đệm + độ dài đệm)}.\par}
 			\end{uetcard}
 		\end{column}
 
 		\begin{column}{0.50\textwidth}
-			\begin{accentcard}[uetblue]{5 Công Đoạn Tuần Tự (TLS 1.2 Dùng CBC)}[height=5.20cm, top=2.0pt, bottom=2.0pt]
-				\begin{enumerate}\setlength{\itemsep}{0.5pt}\setlength{\topsep}{0.5pt}\fontsize{6.4pt}{7.75pt}\selectfont
+			\begin{accentcard}[uetblue]{5 Công Đoạn Tuần Tự (TLS 1.2 Dùng CBC)}[height=4.74cm, top=1.5pt, bottom=1.5pt]
+				\begin{enumerate}\setlength{\itemsep}{0.15pt}\setlength{\topsep}{0.2pt}\fontsize{6.0pt}{7.15pt}\selectfont
 					\item \textbf{Phân mảnh}: Cắt dữ liệu thành từng mảnh $\le 2^{14}\text{ B}$ ($16\,384\text{ B}$) dạng \texttt{TLSPlaintext}.
 					\item \textbf{Nén}: Mặc định \texttt{null}, loại rò rỉ độ dài (chống \textbf{CRIME}).
 					\item \textbf{Gắn MAC}: Tính \texttt{HMAC} bằng \texttt{write\_mac\_secret} kèm \texttt{sequence\_number} 64-bit ngầm định.
@@ -450,79 +463,14 @@
 					\item \textbf{Record Header (5B)}: Content Type (1B: \texttt{CCS}, \texttt{Alert}, \texttt{Handshake}, \texttt{App}), Version (2B), Length (2B).
 				\end{enumerate}
 				\vspace{1.0pt}
-				\begin{uetcard}[colback=uetaccentbg, top=1.8pt, bottom=1.8pt, left=4.5pt, right=4.5pt, sharp corners, arc=0pt]
-					\fontsize{5.65pt}{6.85pt}\selectfont
+				\begin{uetcard}[colback=uetaccentbg, top=1.3pt, bottom=1.3pt, left=4.5pt, right=4.5pt, sharp corners, arc=0pt]
+					\fontsize{5.3pt}{6.35pt}\selectfont
 					{\color{uetblue}\textbf{AEAD (TLS 1.2 \& TLS 1.3):}} TLS 1.2 cũng hỗ trợ AEAD (không MAC rời/CBC). Ở TLS 1.3 (bắt buộc AEAD, bỏ nén), bản ghi đã mã hóa (\texttt{TLSCiphertext}) đặt \texttt{Type = 23} để che loại bản tin thật [RFC 9846, mục 5].
 				\end{uetcard}
 			\end{accentcard}
 		\end{column}
 	\end{columns}
-\end{frame}
-
-% -----------------------------------------------------------------------------
-% SLIDE 9: NHÓM GIAO THỨC QUẢN LÝ: CHANGE CIPHER SPEC & ALERT (BỐ CỤC 2 TẦNG NGANG)
-% -----------------------------------------------------------------------------
-\begin{frame}{Giao Thức Quản Lý: Change Cipher Spec \& Alert}
-	% Tầng 1: Change Cipher Spec Protocol (Ngang toàn khung)
-	\begin{accentcard}[uetblue]{1. Change Cipher Spec Protocol (Content Type = 20)}[height=2.24cm, top=2.0pt, bottom=2.0pt]
-		\begin{minipage}[t]{0.38\linewidth}\vspace{0pt}
-			\centering
-			\begin{tikzpicture}[
-				scale=0.80, every node/.style={transform shape},
-				fbox/.style={draw=uetblue, fill=uetaccentbg, sharp corners, minimum height=0.48cm, font=\fontsize{6.0pt}{7.0pt}\selectfont\bfseries, inner sep=2.5pt}
-			]
-				\node[fbox, minimum width=1.45cm] at (0, 0) {Type = 20};
-				\node[fbox, minimum width=1.25cm, fill=white] at (1.35, 0) {Ver (2B)};
-				\node[fbox, minimum width=1.25cm, fill=white] at (2.60, 0) {Len = 1};
-				\node[fbox, minimum width=1.55cm, draw=uetblue, fill=uetblue!12, text=uetblue] at (4.00, 0) {Payload = 1};
-			\end{tikzpicture}\\[3pt]
-			{\fontsize{6.1pt}{7.3pt}\selectfont\color{uetgray}Giao thức riêng trên Record (không thuộc Handshake).\par}
-		\end{minipage}\hfill
-		\begin{minipage}[t]{0.59\linewidth}\vspace{0pt}
-			\setlength{\leftmargini}{10pt}
-			\begin{itemize}\setlength{\itemsep}{0.6pt}\setlength{\topsep}{0pt}\fontsize{6.4pt}{7.7pt}\selectfont
-				\item \textbf{Chuyển trạng thái}: Báo hiệu đầu cuối sao chép \texttt{Pending State} đè sang \texttt{Current State}.
-				\item \textbf{Kích hoạt mật mã}: Áp dụng khóa và thuật toán mới ngay từ bản ghi kế tiếp (\texttt{Finished}); đặt lại \texttt{sequence\_number} về \texttt{0}.
-				\item \textbf{Trong TLS 1.3}: Bỏ vai trò chuyển khóa; chỉ gửi bản tin giả lập nhằm tương thích thiết bị mạng trung gian (\textit{middlebox}).
-			\end{itemize}
-		\end{minipage}
-	\end{accentcard}
-	\vspace{0.08cm}
-
-	% Tầng 2: Alert Protocol (Ngang toàn khung chia 3 ô con)
-	\begin{accentcard}[uetblue]{2. Alert Protocol (Content Type = 21)}[height=2.96cm, top=2.0pt, bottom=2.0pt]
-		\begin{minipage}[t]{0.30\linewidth}\vspace{0pt}
-			{\fontsize{6.6pt}{8.0pt}\selectfont\color{uetblue}\textbf{Cấu Trúc Bản Tin 2 Byte}\par}\vspace{2pt}
-			\begin{tikzpicture}[
-				scale=0.76, every node/.style={transform shape},
-				abox/.style={draw=uetblue!80, fill=uetaccentbg, sharp corners, minimum height=0.46cm, font=\fontsize{5.8pt}{6.6pt}\selectfont\bfseries, inner sep=2pt}
-			]
-				\node[abox, minimum width=2.15cm] at (0, 0) {Byte 1: Severity};
-				\node[abox, minimum width=2.25cm, fill=white] at (2.20, 0) {Byte 2: Alert Code};
-			\end{tikzpicture}\\[3pt]
-			{\fontsize{6.2pt}{7.6pt}\selectfont
-			\textbf{Byte 1}: \texttt{1 = Warning}, \texttt{2 = Fatal}.\par
-			\textbf{Bảo vệ}: Được nén và mã hóa theo trạng thái phiên hiện hành.\par}
-		\end{minipage}\hfill
-		\begin{minipage}[t]{0.33\linewidth}\vspace{0pt}
-			{\fontsize{6.6pt}{8.0pt}\selectfont\color{uetred}\textbf{Mức Fatal (Level 2 -- Hủy Phiên)}\par}\vspace{1.5pt}
-			\setlength{\leftmargini}{8pt}
-			\begin{itemize}\setlength{\itemsep}{0.8pt}\setlength{\topsep}{0pt}\fontsize{6.3pt}{7.7pt}\selectfont
-				\item Chấm dứt kết nối ngay, xóa khóa phiên và cấm nối lại phiên đó.
-				\item \texttt{bad\_record\_mac}: Lỗi MAC/đệm CBC.
-				\item \texttt{handshake\_failure}: Lệch tham số mã.
-				\item \texttt{unexpected\_message}: Sai thứ tự pha.
-			\end{itemize}
-		\end{minipage}\hfill
-		\begin{minipage}[t]{0.32\linewidth}\vspace{0pt}
-			{\fontsize{6.6pt}{8.0pt}\selectfont\color{uetblue}\textbf{Mức Warning (Level 1 -- Cảnh Báo)}\par}\vspace{1.5pt}
-			\setlength{\leftmargini}{8pt}
-			\begin{itemize}\setlength{\itemsep}{0.6pt}\setlength{\topsep}{0pt}\fontsize{6.0pt}{7.3pt}\selectfont
-				\item \textbf{\texttt{close\_notify}}: Báo đóng phiên chuẩn 2 chiều, chống cắt cụt bằng cờ \texttt{TCP FIN} giả mạo.
-				\item \textbf{Chứng thư X.509}: \texttt{bad\_certificate}, \texttt{certificate\_expired}, \texttt{certificate\_revoked} {\color{uetgray}(TLS 1.2; TLS 1.3 luôn Fatal)}.
-			\end{itemize}
-		\end{minipage}
-	\end{accentcard}
+	\abbrbar{\textbf{CRIME}: Compression Ratio Info-leak Made Easy; \textbf{CCS}: Change Cipher Spec.}
 \end{frame}
 
 % -----------------------------------------------------------------------------
@@ -580,20 +528,20 @@
 	% Trái: Ảnh chứng thư Firefox 133 toàn chiều cao (phóng to rõ nét) | Phải: Chuỗi PKI + 2 thẻ lý thuyết
 	\begin{columns}[T]
 		\begin{column}{0.40\textwidth}
-			\begin{uetcard}[height=5.46cm, before skip=0pt, after skip=0pt, colback=white, valign=center, top=1.5pt, bottom=1.5pt, left=2.5pt, right=2.5pt]
+			\begin{uetcard}[height=4.88cm, before skip=0pt, after skip=0pt, colback=white, valign=center, top=1.5pt, bottom=1.5pt, left=2.5pt, right=2.5pt]
 				\centering
-				{\fontsize{6.2pt}{7.0pt}\selectfont\color{uetblue}\textbf{Đối Chiếu SAN \& Chuỗi CA (Firefox / RFC 9525)}}\par\vspace{1.5pt}
-				\includegraphics[width=0.98\linewidth, height=4.70cm, keepaspectratio]{assets/slide11_cert_san_annotated.png}\par\vspace{1.5pt}
-				{\fontsize{4.55pt}{5.2pt}\selectfont\color{uetgray}Ảnh minh họa năm 2025: Dấu \checkmark{} xác nhận tên miền \texttt{opensuse.org} khớp SAN (RFC 9525); CA: \texttt{Let's Encrypt E5}.\par}
+				{\fontsize{6.1pt}{6.9pt}\selectfont\color{uetblue}\textbf{Đối Chiếu SAN \& Chuỗi CA (Firefox / RFC 9525)}}\par\vspace{1.2pt}
+				\includegraphics[width=0.98\linewidth, height=4.14cm, keepaspectratio]{assets/slide11_cert_san_annotated.png}\par\vspace{1.2pt}
+				{\fontsize{4.5pt}{5.1pt}\selectfont\color{uetgray}Ảnh minh họa năm 2025: Dấu \checkmark{} xác nhận tên miền \texttt{opensuse.org} khớp SAN (RFC 9525); CA: \texttt{Let's Encrypt E5}.\par}
 			\end{uetcard}
 		\end{column}
 
 		\begin{column}{0.57\textwidth}
-			\begin{uetcard}[height=1.22cm, before skip=0pt, after skip=0pt, valign=center, top=1.5pt, bottom=1.5pt, left=2.5pt, right=2.5pt, sharp corners, arc=0pt]
+			\begin{uetcard}[height=1.12cm, before skip=0pt, after skip=0pt, valign=center, top=1.2pt, bottom=1.2pt, left=2.5pt, right=2.5pt, sharp corners, arc=0pt]
 				\centering
-				{\fontsize{5.9pt}{6.6pt}\selectfont\color{uetblue}\textbf{Chuỗi Tin Cậy PKI (Chain of Trust) Chống Tấn Công MITM}}\par\vspace{1.5pt}
+				{\fontsize{5.8pt}{6.5pt}\selectfont\color{uetblue}\textbf{Chuỗi Tin Cậy PKI (Chain of Trust) Chống Tấn Công MITM}}\par\vspace{1.2pt}
 				\begin{tikzpicture}[
-					scale=0.585, every node/.style={transform shape},
+					scale=0.56, every node/.style={transform shape},
 					cabox/.style={draw=uetblue, fill=uetaccentbg, sharp corners, minimum height=0.52cm, minimum width=2.62cm, align=center, font=\fontsize{6.4pt}{7.2pt}\selectfont, inner sep=2pt},
 					arr/.style={-{Stealth[scale=0.68]}, thick, color=uetblue}
 				]
@@ -606,20 +554,20 @@
 					\draw[arr] (inter.east) -- (srv.west) node[midway, above, font=\fontsize{5.6pt}{6.2pt}\selectfont\bfseries\color{uetblue}] {Ký};
 					\draw[arr] (srv.east) -- (cli.west) node[midway, above, font=\fontsize{5.6pt}{6.2pt}\selectfont\bfseries\color{uetblue}] {Kiểm};
 				\end{tikzpicture}\par
-			\end{uetcard}\par\nointerlineskip\vspace{0.08cm}\noindent
-			\begin{accentcard}[uetblue]{1. Nguyên Tắc, Định Dạng \& Trường Chuẩn}[height=2.04cm, before skip=0pt, after skip=0pt, top=1.5pt, bottom=1.5pt, left=4.5pt, right=4.5pt]
+			\end{uetcard}\par\nointerlineskip\vspace{0.05cm}\noindent
+			\begin{accentcard}[uetblue]{1. Nguyên Tắc, Định Dạng \& Trường Chuẩn}[height=1.83cm, before skip=0pt, after skip=0pt, top=1.2pt, bottom=1.2pt, left=4.5pt, right=4.5pt]
 				\raggedright
 				\setlength{\leftmargini}{8pt}
-				\begin{itemize}\setlength{\itemsep}{0.9pt}\setlength{\topsep}{0pt}\fontsize{6.2pt}{7.5pt}\selectfont
+				\begin{itemize}\setlength{\itemsep}{0.35pt}\setlength{\topsep}{0pt}\fontsize{5.75pt}{6.85pt}\selectfont
 					\item \textbf{Chống tráo khóa}: Gắn Public Key + danh tính (chứng thư công khai; Private Key lưu mật).
 					\item \textbf{Định dạng tệp}: Nhị phân \texttt{DER}, Base64 \texttt{PEM}, chuỗi \texttt{PKCS\#7}.
 					\item \textbf{Trường chuẩn}: \texttt{Version v3}, \texttt{Serial}, \texttt{Issuer/Subject (DN)}, \texttt{Validity (Not Before/After)}, \texttt{Public Key}.
 				\end{itemize}
-			\end{accentcard}\par\nointerlineskip\vspace{0.08cm}\noindent
-			\begin{accentcard}[uetblue]{2. Toàn Vẹn Chữ Ký CA, Kiểm Tra SAN \& Thu Hồi}[height=2.04cm, before skip=0pt, after skip=0pt, top=1.5pt, bottom=1.5pt, left=4.5pt, right=4.5pt]
+			\end{accentcard}\par\nointerlineskip\vspace{0.05cm}\noindent
+			\begin{accentcard}[uetblue]{2. Toàn Vẹn Chữ Ký CA, Kiểm Tra SAN \& Thu Hồi}[height=1.83cm, before skip=0pt, after skip=0pt, top=1.2pt, bottom=1.2pt, left=4.5pt, right=4.5pt]
 				\raggedright
 				\setlength{\leftmargini}{8pt}
-				\begin{itemize}\setlength{\itemsep}{0.6pt}\setlength{\topsep}{0pt}\fontsize{5.95pt}{7.2pt}\selectfont
+				\begin{itemize}\setlength{\itemsep}{0.35pt}\setlength{\topsep}{0pt}\fontsize{5.75pt}{6.85pt}\selectfont
 					\item \textbf{Chữ ký số CA}: Bảo vệ toàn vẹn nội dung và chuỗi xác thực tới Root CA.
 					\item \textbf{Kiểm tra SAN (RFC 9525)}: Trình duyệt xác minh chuỗi tin cậy, thời hạn và đối chiếu tên miền đang truy cập với trường \textbf{SAN} (thay \texttt{CN}).
 					\item \textbf{Thu hồi \& Bắt tay}: Tra cứu hủy hiệu lực qua \texttt{CRL}/\texttt{OCSP} (hoặc OCSP Stapling).
@@ -627,6 +575,7 @@
 			\end{accentcard}
 		\end{column}
 	\end{columns}
+	\abbrbar{\textbf{PKI}: Public Key Infrastructure; \textbf{CA}: Certificate Authority; \textbf{SAN}: Subject Alternative Name; \textbf{CN}: Common Name; \textbf{DN}: Distinguished Name; \textbf{DER}: Distinguished Encoding Rules; \textbf{PEM}: Privacy-Enhanced Mail; \textbf{PKCS\#7}: Public-Key Cryptography Standards \#7; \textbf{CRL}: Certificate Revocation List; \textbf{OCSP}: Online Certificate Status Protocol.}
 \end{frame}
 
 % =============================================================================
