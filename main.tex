@@ -1462,34 +1462,48 @@
 	\begin{accentcard}[uetgreen]{Cơ Chế Chống Phát Lại Dựa Trên Cửa Sổ Bitmap}[height=3.21cm, before skip=0pt, after skip=0pt, top=2.0pt, bottom=2.0pt]
 		\centering
 		\begin{tikzpicture}[
-			scale=0.85, every node/.style={transform shape},
-			bitcell/.style={draw=uetblue!75, fill=white, sharp corners, minimum width=0.55cm, minimum height=0.45cm, align=center, font=\fontsize{6.0pt}{7.0pt}\selectfont\ttfamily\bfseries},
+			scale=0.88, every node/.style={transform shape},
+			bitcell/.style={draw=uetblue!80, fill=white, sharp corners, minimum width=0.56cm, minimum height=0.42cm, align=center, font=\fontsize{6.0pt}{7.0pt}\selectfont\ttfamily\bfseries},
+			seqcell/.style={draw=none, fill=none, minimum width=0.56cm, align=center, font=\fontsize{5.5pt}{6.5pt}\selectfont\ttfamily\bfseries\color{uetdark}},
 			arr/.style={-{Stealth[scale=0.68]}, thick}
 		]
 			% Ngoài cửa sổ (Cũ)
-			\node[draw=uetred!75, fill=uetred!10, sharp corners, minimum width=2.40cm, minimum height=0.52cm, font=\fontsize{5.8pt}{6.8pt}\selectfont\bfseries\color{uetred}] (old) at (1.40, 0.15) {Ngoài cửa sổ (Cũ)};
-			\node[font=\fontsize{5.8pt}{6.8pt}\selectfont\bfseries\color{uetred}, align=center] (oldtxt) at (1.40, -0.60) {\xmark\ Loại bỏ};
-			\draw[arr, color=uetred] (old.south) -- (1.40, -0.38);
+			\node[draw=uetred!75, fill=uetred!10, sharp corners, minimum width=2.30cm, minimum height=0.76cm, align=center, font=\fontsize{5.8pt}{7.0pt}\selectfont\color{uetred}] (old) at (1.30, 0.22) {\textbf{Ngoài cửa sổ (Cũ)}\\\fontsize{5.0pt}{6.0pt}\selectfont\color{uetgray}(Seq $\le 4$)};
+			\node[font=\fontsize{5.8pt}{6.8pt}\selectfont\bfseries\color{uetred}, align=center] (oldtxt) at (1.30, -0.62) {\xmark\ Loại bỏ};
+			\draw[arr, color=uetred] (old.south) -- (oldtxt.north);
 
 			% Bitmap Window
-			\draw[draw=uetblue!80, fill=uetaccentbg!30, sharp corners] (2.95, -0.25) rectangle (8.45, 0.82);
-			\node[font=\fontsize{5.8pt}{6.8pt}\selectfont\bfseries\color{uetblue}] at (5.70, 0.62) {Bitmap Window};
-			\node[bitcell, fill=uetred!12, text=uetred] (b0) at (3.45, 0.15) {1};
-			\node[bitcell, fill=uetgreenbg, text=uetdarkgreen] (b1) at (4.15, 0.15) {0};
-			\node[bitcell, fill=uetred!12, text=uetred] (b2) at (4.85, 0.15) {1};
-			\node[bitcell, fill=uetred!12, text=uetred] (b3) at (5.55, 0.15) {1};
-			\node[bitcell, fill=uetgreenbg, text=uetdarkgreen] (b4) at (6.25, 0.15) {0};
-			\node[bitcell, fill=uetred!12, text=uetred] (b5) at (6.95, 0.15) {1};
+			\draw[draw=uetblue!80, fill=uetaccentbg!30, sharp corners] (2.90, -0.28) rectangle (8.40, 1.12);
+			\node[font=\fontsize{6.0pt}{7.0pt}\selectfont\bfseries\color{uetblue}] at (5.65, 0.92) {Bitmap Window};
 
-			\node[font=\fontsize{5.3pt}{6.3pt}\selectfont\bfseries\color{uetred}] at (4.30, -0.60) {\xmark\ Đã nhận (1): Loại bỏ};
-			\node[font=\fontsize{5.3pt}{6.3pt}\selectfont\bfseries\color{uetdarkgreen}] at (7.10, -0.60) {\cmark\ Chưa nhận (0): Xử lý};
+			% Hàng Seq_num
+			\node[font=\fontsize{5.3pt}{6.3pt}\selectfont\bfseries\color{uetblue}, anchor=east] at (4.00, 0.54) {Seq\_num:};
+			\node[seqcell] at (4.40, 0.54) {5};
+			\node[seqcell] at (5.08, 0.54) {6};
+			\node[seqcell] at (5.76, 0.54) {7};
+			\node[seqcell] at (6.44, 0.54) {8};
+			\node[seqcell] at (7.12, 0.54) {9};
+			\node[seqcell] at (7.80, 0.54) {10};
+
+			% Hàng Các ô bit
+			\node[font=\fontsize{5.3pt}{6.3pt}\selectfont\bfseries\color{uetblue}, anchor=east] at (4.00, 0.08) {Các ô bit:};
+			\node[bitcell, fill=uetred!15, draw=uetred, text=uetred] (b0) at (4.40, 0.08) {1};
+			\node[bitcell, fill=uetgreenbg, draw=uetgreen, text=uetdarkgreen] (b1) at (5.08, 0.08) {0};
+			\node[bitcell, fill=uetred!15, draw=uetred, text=uetred] (b2) at (5.76, 0.08) {1};
+			\node[bitcell, fill=uetred!15, draw=uetred, text=uetred] (b3) at (6.44, 0.08) {1};
+			\node[bitcell, fill=uetgreenbg, draw=uetgreen, text=uetdarkgreen] (b4) at (7.12, 0.08) {0};
+			\node[bitcell, fill=uetred!15, draw=uetred, text=uetred] (b5) at (7.80, 0.08) {1};
+
+			% Xử lý trong cửa sổ
+			\node[font=\fontsize{5.4pt}{6.4pt}\selectfont\bfseries\color{uetred}] at (4.75, -0.62) {\xmark\ Đã nhận (1): Loại bỏ};
+			\node[font=\fontsize{5.4pt}{6.4pt}\selectfont\bfseries\color{uetdarkgreen}] at (7.15, -0.62) {\cmark\ Chưa nhận (0): Xử lý};
 
 			% Bản ghi mới (> biên)
-			\node[draw=uetgreen, fill=uetgreenbg, sharp corners, minimum width=2.60cm, minimum height=0.52cm, font=\fontsize{5.8pt}{6.8pt}\selectfont\bfseries\color{uetdarkgreen}] (new) at (10.15, 0.15) {Bản ghi mới ($>$ biên)};
-			\node[font=\fontsize{5.8pt}{6.8pt}\selectfont\bfseries\color{uetdarkgreen}, align=center] (newtxt) at (10.15, -0.60) {\cmark\ Xử lý \& trượt cửa sổ};
-			\draw[arr, color=uetgreen] (new.south) -- (10.15, -0.38);
-		\end{tikzpicture}\\[4pt]
-		{\fontsize{5.6pt}{6.6pt}\selectfont\color{uetgray}Các ô bit: \texttt{[ 1 ]} \texttt{[ 0 ]} \texttt{[ 1 ]} \texttt{[ 1 ]} \texttt{[ 0 ]} \texttt{[ 1 ]}\par}
+			\node[draw=uetgreen, fill=uetgreenbg, sharp corners, minimum width=2.50cm, minimum height=0.76cm, align=center, font=\fontsize{5.8pt}{7.0pt}\selectfont\color{uetdarkgreen}] (new) at (10.00, 0.22) {\textbf{Bản ghi mới ($>$ biên)}\\\fontsize{5.0pt}{6.0pt}\selectfont\color{uetgray}(Seq $> 10$)};
+			\node[font=\fontsize{5.8pt}{6.8pt}\selectfont\bfseries\color{uetdarkgreen}, align=center] (newtxt) at (10.00, -0.62) {\cmark\ Xử lý \& trượt cửa sổ};
+			\draw[arr, color=uetgreen] (new.south) -- (newtxt.north);
+		\end{tikzpicture}\\[3pt]
+		{\fontsize{5.6pt}{6.8pt}\selectfont\color{uetdark}\textit{DTLS duy trì cửa sổ trượt bitmap để tiếp nhận gói tin đến lệch thứ tự nhưng loại bỏ triệt để các bản ghi bị phát lại.}\par}
 	\end{accentcard}
 \end{frame}
 
