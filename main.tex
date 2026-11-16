@@ -1590,19 +1590,18 @@
 \end{frame}
 
 % -----------------------------------------------------------------------------
-% SLIDE 24: CẢI TIẾN Ở GIAO THỨC BẮT TAY (trang_24.md)
+% SLIDE 24: Lợi Ích, Nhược Điểm \& Tổng Kết DTLS (trang_24.md)
 % -----------------------------------------------------------------------------
-\begin{frame}{Cải tiến ở Giao thức Bắt tay}
-	\begin{accentcard}[uetblue]{3. Lợi Ích, Nhược Điểm \& Tổng Kết DTLS}[height=5.35cm, before skip=0pt, after skip=0pt, top=3.5pt, bottom=3.5pt]
-		\raggedright
-		\setlength{\leftmargini}{9pt}
-		\begin{itemize}\setlength{\itemsep}{6.5pt}\setlength{\topsep}{0pt}\fontsize{6.6pt}{8.4pt}\selectfont
-			\item[\cmark] \textbf{Lợi ích:} Giảm độ trễ thời gian thực; bảo mật datagram; tái dùng hạ tầng TLS; chống DoS \& hỗ trợ mạng không dây.
-			\item[\xmark] \textbf{Overhead trên từng gói:} Mỗi datagram phải gánh riêng Record Header (\texttt{Epoch}/\texttt{SeqNum}), Nonce và AEAD Tag.
-			\item[\xmark] \textbf{Phân tách tin cậy:} Tầng DTLS xử lý timer truyền lại \& ghép mảnh cho \textbf{handshake}; ứng dụng tự lo độ tin cậy cho dữ liệu ứng dụng nếu cần.
-			\item[•] \textbf{Tham chiếu:} \textbf{RFC 6347} (DTLS 1.2) \& \textbf{RFC 9147} (DTLS 1.3).
-		\end{itemize}
-	\end{accentcard}
+\begin{frame}{Lợi Ích, Nhược Điểm \& Tổng Kết DTLS}
+    \raggedright
+    \setlength{\leftmargini}{12pt}
+    \begin{itemize}
+        \setlength{\itemsep}{8pt}
+        \small 
+        \item[\cmark] \textbf{Lợi ích:} Giảm độ trễ thời gian thực; bảo mật datagram; tái dùng hạ tầng TLS; chống DoS.
+        \item[\xmark] \textbf{Overhead trên từng gói:} Mỗi datagram phải gánh riêng Record Header (\texttt{Epoch}/\texttt{SeqNum}),...
+        \item[\xmark] \textbf{Phân tách tin cậy:} Tầng DTLS xử lý timer truyền lại \& ghép mảnh cho \textbf{handshake}; ứng dụng tự lo độ tin cậy cho dữ liệu ứng dụng nếu cần.
+    \end{itemize}
 \end{frame}
 
 % =============================================================================
